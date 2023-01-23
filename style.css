@@ -32,13 +32,14 @@ footer p {
 	background: var(--accent);
 	border-color: var(--accent);
 }
-
 .btn-primary:hover {
 	background: var(--accent-highlight);
 	border-color: var(--accent-highlight);
 }
-
 .btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
 	background: var(--accent-focused);
 	border-color: var(--accent-focused);
+}
+.dropdown-item.active, .dropdown-item:active {
+	background: var(--accent);
 }
