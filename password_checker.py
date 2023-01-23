@@ -1,3 +1,5 @@
+import string as alphabet_string
+
 # CONFIG VARS
 MIN_PASSWORD_LENGTH = 8
 MAX_PASSWORD_LENGTH = 32
@@ -7,6 +9,8 @@ MIN_AMOUNT_NUMBERS = 1
 MIN_AMOUNT_SPECIAL_CHAR = 1
 # Bitwarden generator and https://www.ibm.com/support/pages/password-policy-and-passwords-special-characters
 ALLOWED_SPECIAL_CHAR = "!@#$%^&*"  # Remember to manually update the pytest to match the new count
+
+
 # TODO: Finish finding which special character will be allowed by the policy
 
 
@@ -35,6 +39,20 @@ def count_special_char(string):
         if char in ALLOWED_SPECIAL_CHAR:
             count += 1
     return count
+
+
+def has_forbidden_characters(string):
+    arr = list(string)
+    for char in range(len(arr)):
+        test_char = string[char]
+        # Don't use isalpha() because it will accept chars that aren't A-Z
+        if not (test_char in alphabet_string.ascii_lowercase or test_char in alphabet_string.ascii_uppercase
+                or test_char.isdigit() or test_char in ALLOWED_SPECIAL_CHAR):
+            # print(test_char)
+            return True
+    # If it makes it here it's shouldn't have forbidden characters
+    return False
+
 
 
 """
@@ -71,16 +89,17 @@ def password_valid_to_policy_rules(password):
         return False
     return True
 
-
+"""
 test = [
     "123#%Txrte2323yrtyhrtyhrtyrtyrty3",  # 33 chars
     "sdfkjsdkf398njdssdifu83!@#ds",  # No cap
     "32SDJF9JDH29N0",  # no lower
     "1234567"  # too short
-    "你好"
+    "你好213AD!sxd"
 ]
 
-
+lowercase_letters = ""
 for i in range(len(test)):
     password_valid_to_policy_rules(test[i])
+"""
 

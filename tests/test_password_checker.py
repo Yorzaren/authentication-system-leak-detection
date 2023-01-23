@@ -5,6 +5,9 @@ This is a pytest to make sure that none of the helper functions in password_chec
 import pytest
 import password_checker
 
+# Each test string is testing for one particular thing for the functionality.
+# It is not necessary for them to match the password policy.
+
 
 class TestPasswordCheckerFunctions:
     def test_count_uppercase(self):
@@ -40,4 +43,17 @@ class TestPasswordCheckerFunctions:
         assert password_checker.count_digits("sdgKJKJKJjuuhbmhJHUGBHNBkjk") == 0
         assert password_checker.count_digits("-?rC5z}*") == 1
         assert password_checker.count_digits("SDF213DSDF") == 3
-    # TODO: Pytest for count_symbols
+
+    def test_count_special_char(self):
+        assert password_checker.count_special_char("-?rC5z}*") == 1  # Only thing allowed is *
+        assert password_checker.count_special_char("!@#$%^&*") == 8  # Matches all the allowed special chars
+        assert password_checker.count_special_char("!@#E3b$%^&*") == 8  # Matches all the allowed special chars
+
+    def test_has_forbidden_characters(self):
+        assert password_checker.has_forbidden_characters("你123123DS好ca2@$%@346,.") == True  # 你
+        assert password_checker.has_forbidden_characters("sdfkjsdēf398njdssdifu83!@#ds") == True  # ē
+        assert password_checker.has_forbidden_characters("32SDJАF9JDH29N0") == True  # А is a cyrillic letter A
+        assert password_checker.has_forbidden_characters("123.4567") == True  # dot is not in the list
+        assert password_checker.has_forbidden_characters("213AD!sxd你") == True  # 你
+        assert password_checker.has_forbidden_characters("123#%Txrte2323yrtyhrtyhrtyrtyrty3") == False  # This is fine
+
