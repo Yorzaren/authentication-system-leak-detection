@@ -2,6 +2,7 @@
 DONT USE
 
 """
+"""
 # TODO: FIX THIS
 
 from dotenv import load_dotenv
@@ -41,3 +42,4 @@ def test_can_send_with_smtp():
         assert "Test subject" in email.subject
 
 #test_can_send_with_smtp()
+"""
