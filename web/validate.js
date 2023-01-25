@@ -1,5 +1,6 @@
 /* 
 
+CONTAINS_USERNAMEPOLICY
 CONTAINS_PASSWORDPOLICY
 
 Must match the policy on the page and the policy checks in the other scripts
@@ -7,8 +8,8 @@ Must match the policy on the page and the policy checks in the other scripts
 */
 
 
-function LengthCheck(min, max) {
-	var pw = document.getElementById("password").value.length;
+function LengthCheck(target_id, min, max) {
+	var pw = document.getElementById(target_id).value.length;
 	return pw >= min && pw <= max;
 }
 function UppercaseCheck(min_number) {
@@ -52,11 +53,21 @@ function UsernameFeedback() {
 		document.getElementById('new-username').classList.remove('is-invalid');
 		document.getElementById('username-rule-no-weird').classList.add('d-none');
 	}
+	// Check username length
+	if (LengthCheck("new-username", 5, 50)) { document.getElementById('username-rule-length').classList.add('d-none'); } else { document.getElementById('username-rule-length').classList.remove('d-none'); }
+	// The previous code shows and hides rules if things are met. If everything is hidden, assume all is good.
+	if (document.querySelectorAll("#username-policy li:not(.d-none)").length == 1) { // The requirement on unique can't be checked, its just a note to the user.
+		document.getElementById('new-username').classList.add('is-valid');
+		document.getElementById('username-policy').classList.add('d-none');
+	} else {
+		document.getElementById('new-username').classList.remove('is-valid');
+		document.getElementById('username-policy').classList.remove('d-none');
+	}
 }
 
 function PasswordPolicyFeedback() {
 	// Hide using d-none (display:none from bootstrap) when condi is met.
-	if(LengthCheck(12, 32)) { document.getElementById('password-rule-length').classList.add('d-none'); } else { document.getElementById('password-rule-length').classList.remove('d-none'); }
+	if(LengthCheck("password", 12, 32)) { document.getElementById('password-rule-length').classList.add('d-none'); } else { document.getElementById('password-rule-length').classList.remove('d-none'); }
 	if(UppercaseCheck(1)) { document.getElementById('password-rule-uppercase').classList.add('d-none'); } else { document.getElementById('password-rule-uppercase').classList.remove('d-none'); }
 	if(LowercaseCheck(1)) { document.getElementById('password-rule-lowercase').classList.add('d-none'); } else { document.getElementById('password-rule-lowercase').classList.remove('d-none'); }
 	if(SymbolCheck(1)) { document.getElementById('password-rule-symbol').classList.add('d-none'); } else { document.getElementById('password-rule-symbol').classList.remove('d-none'); }
