@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>Password F.M. Demo Page</title>
+		<title>Password F.M. Demo</title>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -17,6 +17,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 		
 		<script src="main.js"></script>
+		<script src="validate.js"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -31,7 +32,7 @@
 							<a class="nav-link active" aria-current="page" href="index.html">Home</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="index.html" onclick="ShowAbout();return false;">About</a>
+							<a class="nav-link" href="index.html#about">About</a>
 						</li>
 					</ul>
 					<!-- Keep this outside so its align on the right of the screen -->
@@ -40,13 +41,13 @@
 						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> USERNAME </a>
 						<ul class="dropdown-menu dropdown-menu-lg-end">
 							<li>
-								<a href="admin.html" class="dropdown-item" type="button">Admin Dashboard</a>
+								<a href="admin.html" class="dropdown-item">Admin Dashboard</a>
 							</li>
 							<li>
-								<a href="settings.html" class="dropdown-item" type="button">Change Password</a>
+								<a href="settings.html" class="dropdown-item">Change Password</a>
 							</li>
 							<li>
-								<a href="logout.php" class="dropdown-item" type="button">Logout</a>
+								<a href="logout.php" class="dropdown-item">Logout</a>
 							</li>
 						</ul>
 					</div>
@@ -55,32 +56,49 @@
 			</div>
 		</nav>
 		<div id="section" class="container">
-			<div id="login-container" class="mx-auto">
-				<h2>Login</h2>
-				<form>
+			<div id="admin-dashboard" class="mx-auto">
+				<h2>Admin Dashboard</h2>
+				<form id="add-user" action="add_account.php" method="post" onSubmit="return validateForm();">
+					<h3>Add User Account</h3>
 					<div class="mb-3">
+						<!-- CONTAINS_USERNAMEPOLICY -->
+						<div id="username-policy"><b>Username Policy:</b>
+							<ul>
+								<li>The username must be unique.</li>
+								<li>Username can only contain English Letters <code>A-Z</code>, <code>a-z</code>, and digits (<code>0-9</code>).</li>
+							</ul>
+						</div>
 						<label for="username" class="form-label">Username</label>
-						<input class="form-control" id="username">
+						<input class="form-control" id="username" required>
 					</div>
 					<div class="mb-3">
+						<!-- CONTAINS_PASSWORDPOLICY -->
+						<div id="password-policy"><b>Password Policy:</b>
+							<ul>
+								<li id="password-rule-length">Must be between 12 and 32 characters long.</li>
+								<li id="password-rule-uppercase">Must have at least 1 uppercase letter.</li>
+								<li id="password-rule-lowercase">Must have at least 1 lowercase letter.</li>
+								<li id="password-rule-symbol">Must have at least 1 symbol from this list <code>!@#$%^&*</code>.</li>
+								<li id="password-rule-digit">Must have at least 1 digit.</li>
+								<li id="password-rule-no-weird">Only English Letters <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, and <code>!@#$%^&*</code>. Other symbols are not permited.</li>
+							</ul>
+						</div>
 						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password">
-						<p>If you forget your password, you must reach out to the admin to reset it.</p>
+						<input type="password" class="form-control" id="password" required onkeyup="PasswordPolicyFeedback();">
 					</div>
-					<button type="submit" class="btn btn-primary">Login</button>
+					<div class="mb-3">
+						<label for="confirm-password" class="form-label">Retype Password</label>
+						<input type="password" class="form-control" id="confirm-password" required onkeyup="CheckMatchingFeedback();">
+					</div>
+					<div class="mb-3">
+						<label for="account-type" class="form-label">Set User Type</label>
+						<select class="form-select" id="account-type" required>
+						  <option value="0" selected>Normal User Account</option>
+						  <option value="1">Admin Account</option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary">Create Account</button>
 				</form>
-			</div>
-			<div id="about-container" style="display:none;">
-				<h2>About</h2>
-				<p>This project is a experimental proof of concept. The goal is to detect a password database breach by hiding the users password with a bunch of decoy passwords. If an attacker gets the password database, they should have a hard time figuring out which of the many passwords assocated with a single account is the real password. If they use a decoy password while attempting to get into a user's account, it will alert the admin to a possible database leak. </p>
-				<h2>Team</h2>
-				<ul>
-					<li>Yorzaren - Project Leader/Head Developer</li>
-					<li>jalewis7</li>
-					<li>Mega-Zawesome</li>
-					<li>Mikaylabj98</li>
-					<li>Dr. M. Black, University of South Alabama - Client</li>
-				</ul>
 			</div>
 		</div>
 		<footer class="mt-auto align-middle"><p class="text-center">This is a demo website.</p></footer>
