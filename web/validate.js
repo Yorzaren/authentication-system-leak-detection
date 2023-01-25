@@ -32,21 +32,18 @@ function HasForbiddenCharCheck() {
 	return pw.replace(/[A-Za-z0-9!@#$%^&*]/g, '').length > 0;
 }
 
-
 function PasswordsMatch() {
-	// Warn it doesnt match
 	return document.getElementById("password").value == document.getElementById("confirm-password").value
 }
 
-
 function PasswordPolicyFeedback() {
 	// Short hand if statement: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
-	// Strikeout rules when condi is met.
-	(LengthCheck(12, 32)) ? document.getElementById('password-rule-length').classList.add('strike') : document.getElementById('password-rule-length').classList.remove('strike');
-	(UppercaseCheck(1)) ? document.getElementById('password-rule-uppercase').classList.add('strike') : document.getElementById('password-rule-uppercase').classList.remove('strike');
-	(LowercaseCheck(1)) ? document.getElementById('password-rule-lowercase').classList.add('strike') : document.getElementById('password-rule-lowercase').classList.remove('strike');
-	(SymbolCheck(1)) ? document.getElementById('password-rule-symbol').classList.add('strike') : document.getElementById('password-rule-symbol').classList.remove('strike');
-	(DigitCheck(1)) ? document.getElementById('password-rule-digit').classList.add('strike') : document.getElementById('password-rule-digit').classList.remove('strike');
+	// Hide using d-none (display:none from bootstrap) when condi is met.
+	(LengthCheck(12, 32)) ? document.getElementById('password-rule-length').classList.add('d-none') : document.getElementById('password-rule-length').classList.remove('d-none');
+	(UppercaseCheck(1)) ? document.getElementById('password-rule-uppercase').classList.add('d-none') : document.getElementById('password-rule-uppercase').classList.remove('d-none');
+	(LowercaseCheck(1)) ? document.getElementById('password-rule-lowercase').classList.add('d-none') : document.getElementById('password-rule-lowercase').classList.remove('d-none');
+	(SymbolCheck(1)) ? document.getElementById('password-rule-symbol').classList.add('d-none') : document.getElementById('password-rule-symbol').classList.remove('d-none');
+	(DigitCheck(1)) ? document.getElementById('password-rule-digit').classList.add('d-none') : document.getElementById('password-rule-digit').classList.remove('d-none');
 	
 	// Feedback when the users enters a bad character
 	if (HasForbiddenCharCheck()) {
@@ -55,6 +52,23 @@ function PasswordPolicyFeedback() {
 	} else {
 		document.getElementById('password').classList.remove('is-invalid');
 		document.getElementById('password-rule-no-weird').classList.add('d-none');
+	}
+	
+	// The previous code shows and hides rules if things are met. If everything is hidden, assume all is good.
+	if (document.querySelectorAll("#password-policy li:not(.d-none)").length == 0) {
+		document.getElementById('password').classList.add('is-valid');
+		document.getElementById('password-policy').classList.add('d-none');
+	} else {
+		document.getElementById('password').classList.remove('is-valid');
+		document.getElementById('password-policy').classList.remove('d-none');
+	}
+}
+
+function CheckMatchingFeedback() {
+	if (PasswordsMatch()) {
+		document.getElementById('confirm-password').classList.add('is-valid');
+	} else {
+		document.getElementById('confirm-password').classList.remove('is-valid');
 	}
 }
 
