@@ -35,6 +35,9 @@ function HasForbiddenCharCheck() {
 function PasswordsMatch() {
 	return document.getElementById("password").value == document.getElementById("confirm-password").value
 }
+function DeleteUsernameMatch() {
+	return document.getElementById("delete-username").value == document.getElementById("confirm-delete-username").value
+}
 
 function PasswordPolicyFeedback() {
 	// Short hand if statement: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
@@ -64,7 +67,7 @@ function PasswordPolicyFeedback() {
 	}
 }
 
-function CheckMatchingFeedback() {
+function CheckMatchingPasswordsFeedback() {
 	if (PasswordsMatch()) {
 		document.getElementById('confirm-password').classList.add('is-valid');
 	} else {
@@ -72,7 +75,17 @@ function CheckMatchingFeedback() {
 	}
 }
 
-function validateForm() {
+function CheckDeleteUsernameFeedback() {
+	if (DeleteUsernameMatch()) {
+		document.getElementById('delete-username').classList.add('is-valid');
+		document.getElementById('confirm-delete-username').classList.add('is-valid');
+	} else {
+		document.getElementById('delete-username').classList.remove('is-valid');
+		document.getElementById('confirm-delete-username').classList.remove('is-valid');
+	}
+}
+
+function ValidateAddUserForm() {
 	if (PasswordsMatch() == false) {
 		alert("Passwords don't match.");
 		return false;
@@ -99,6 +112,13 @@ function validateForm() {
 	}
 	if (DigitCheck(1) == false) {
 		alert("Password does not have enough digits.")
+		return false;
+	}
+}
+
+function ValidateDeleteUserForm() {
+	if (DeleteUsernameMatch() == false) {
+		alert("The given username to delete fields do not match.")
 		return false;
 	}
 }

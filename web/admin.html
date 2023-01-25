@@ -58,7 +58,7 @@
 		<div id="section" class="container">
 			<div id="admin-dashboard" class="mx-auto">
 				<h2>Admin Dashboard</h2>
-				<form id="add-user" action="add_account.php" method="post" onSubmit="return validateForm();">
+				<form id="add-user" action="add_account.php" method="post" onSubmit="return ValidateAddUserForm();">
 					<h3>Add User Account</h3>
 					<div class="mb-3">
 						<!-- CONTAINS_USERNAMEPOLICY -->
@@ -68,8 +68,8 @@
 								<li>Username can only contain English Letters <code>A-Z</code>, <code>a-z</code>, and digits (<code>0-9</code>).</li>
 							</ul>
 						</div>
-						<label for="username" class="form-label">Username</label>
-						<input class="form-control" id="username" required>
+						<label for="new-username" class="form-label">New User Account's Username:</label>
+						<input class="form-control" id="new-username" placeholder="New Username" required>
 					</div>
 					<div class="mb-3">
 						<!-- CONTAINS_PASSWORDPOLICY -->
@@ -83,21 +83,43 @@
 								<li id="password-rule-no-weird">Only English Letters <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, and <code>!@#$%^&*</code>. Other symbols are not permited.</li>
 							</ul>
 						</div>
-						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password" required onkeyup="PasswordPolicyFeedback();">
+						<label for="password" class="form-label">New User Account's Password:</label>
+						<input type="password" class="form-control" id="password" placeholder="Password" required onkeyup="PasswordPolicyFeedback();">
 					</div>
 					<div class="mb-3">
-						<label for="confirm-password" class="form-label">Retype Password</label>
-						<input type="password" class="form-control" id="confirm-password" required onkeyup="CheckMatchingFeedback();">
+						<label for="confirm-password" class="form-label">Retype Password:</label>
+						<input type="password" class="form-control" id="confirm-password" placeholder="Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
 					</div>
 					<div class="mb-3">
-						<label for="account-type" class="form-label">Set User Type</label>
+						<label for="account-type" class="form-label">Set User Type:</label>
 						<select class="form-select" id="account-type" required>
 						  <option value="0" selected>Normal User Account</option>
 						  <option value="1">Admin Account</option>
 						</select>
 					</div>
 					<button type="submit" class="btn btn-primary">Create Account</button>
+				</form>
+				<form id="delete-user" action="delete_account.php" method="post" onSubmit="return ValidateDeleteUserForm();">
+					<h3>Delete User Account</h3>
+					<div class="mb-3">
+						<div class="warning"><b>Warning:</b>
+							<ul>
+								<li>Deleting an account is <strong>irreversible</strong>.</li>
+								<li>You may not delete an account, if the account is the only admin.</li>
+							</ul>
+						</div>
+						<label for="delete-username" class="form-label">Delete User:</label>
+						<input class="form-control" id="delete-username" placeholder="Delete Username" required onkeyup="CheckDeleteUsernameFeedback();">
+					</div>
+					<div class="mb-3">
+						<label for="password" class="form-label">Retype Username</label>
+						<input class="form-control" id="confirm-delete-username" placeholder="Confirm Username" required onkeyup="CheckDeleteUsernameFeedback();">
+					</div>
+					<div class="mb-3">
+						<label for="confirm-admin-password" class="form-label">Type your admin password to confirm account deletion:</label>
+						<input class="form-control" id="confirm-admin-password" placeholder="Type Your Password to Confirm" required>
+					</div>
+					<button type="submit" class="btn btn-primary">Delete Account</button>
 				</form>
 			</div>
 		</div>
