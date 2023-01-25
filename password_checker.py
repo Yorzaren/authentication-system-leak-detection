@@ -46,13 +46,16 @@ def has_forbidden_characters(string):
     for char in range(len(arr)):
         test_char = string[char]
         # Don't use isalpha() because it will accept chars that aren't A-Z
-        if not (test_char in alphabet_string.ascii_lowercase or test_char in alphabet_string.ascii_uppercase
-                or test_char.isdigit() or test_char in ALLOWED_SPECIAL_CHAR):
+        if not (
+            test_char in alphabet_string.ascii_lowercase
+            or test_char in alphabet_string.ascii_uppercase
+            or test_char.isdigit()
+            or test_char in ALLOWED_SPECIAL_CHAR
+        ):
             # print(test_char)
             return True
     # If it makes it here it's shouldn't have forbidden characters
     return False
-
 
 
 """
@@ -74,7 +77,7 @@ boolean
 def password_valid_to_policy_rules(password):
     # Check the length is between the min and max
     # It a bit weirdly written, but we only need to return FALSE on a fail so there's no need for an else
-    # Basically, read each statement after the "not" as the requirement to understand what is being compared
+    # Basically, read each statement after the "not" as the requirement to understand what is being compared               dfdf
     # And remember we only fail on it not meeting req so the "not" is there to flip it, and we return false
     if not MIN_PASSWORD_LENGTH <= len(password) <= MAX_PASSWORD_LENGTH:
         print("Invalid length")
@@ -89,6 +92,7 @@ def password_valid_to_policy_rules(password):
         return False
     return True
 
+
 """
 test = [
     "123#%Txrte2323yrtyhrtyhrtyrtyrty3",  # 33 chars
@@ -102,4 +106,3 @@ lowercase_letters = ""
 for i in range(len(test)):
     password_valid_to_policy_rules(test[i])
 """
-
