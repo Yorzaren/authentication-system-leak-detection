@@ -2,6 +2,6 @@
   "extends": "stylelint-config-standard",
   "rules": {
     "indentation": "tab",
-	"shorthand-property-no-redundant-values": false
+	"shorthand-property-no-redundant-values": null
   }
 }
