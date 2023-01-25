@@ -64,12 +64,12 @@
 						<!-- CONTAINS_USERNAMEPOLICY -->
 						<div id="username-policy"><b>Username Policy:</b>
 							<ul>
-								<li>The username must be unique.</li>
-								<li>Username can only contain English Letters <code>A-Z</code>, <code>a-z</code>, and digits (<code>0-9</code>).</li>
+								<li id="username-rule-unique">The username must be unique.</li>
+								<li id="username-rule-no-weird">Username can only contain English Letters <code>A-Z</code>, <code>a-z</code>, and digits (<code>0-9</code>). Other symbols are <strong>NOT</strong> permited.</li>
 							</ul>
 						</div>
 						<label for="new-username" class="form-label">New User Account's Username:</label>
-						<input class="form-control" id="new-username" placeholder="New Username" required>
+						<input class="form-control" id="new-username" placeholder="New Username" required onkeyup="UsernameFeedback();">
 					</div>
 					<div class="mb-3">
 						<!-- CONTAINS_PASSWORDPOLICY -->
@@ -80,7 +80,7 @@
 								<li id="password-rule-lowercase">Must have at least 1 lowercase letter.</li>
 								<li id="password-rule-symbol">Must have at least 1 symbol from this list <code>!@#$%^&*</code>.</li>
 								<li id="password-rule-digit">Must have at least 1 digit.</li>
-								<li id="password-rule-no-weird">Only English Letters <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, and <code>!@#$%^&*</code>. Other symbols are not permited.</li>
+								<li id="password-rule-no-weird">Only English Letters <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, and <code>!@#$%^&*</code>. Other symbols are <strong>NOT</strong> permited.</li>
 							</ul>
 						</div>
 						<label for="password" class="form-label">New User Account's Password:</label>

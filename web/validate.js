@@ -31,12 +31,27 @@ function HasForbiddenCharCheck() {
 	var pw = document.getElementById("password").value;
 	return pw.replace(/[A-Za-z0-9!@#$%^&*]/g, '').length > 0;
 }
+function HasForbiddenUsernameCheck() {
+	var user = document.getElementById("new-username").value;
+	return user.replace(/[A-Za-z0-9]/g, '').length > 0 && user != "";
+}
 
 function PasswordsMatch() {
 	return document.getElementById("password").value == document.getElementById("confirm-password").value;
 }
 function DeleteUsernameMatch() {
 	return document.getElementById("delete-username").value == document.getElementById("confirm-delete-username").value;
+}
+
+function UsernameFeedback() {
+	// Feedback when the users enters a bad character
+	if (HasForbiddenUsernameCheck()) {
+		document.getElementById('new-username').classList.add('is-invalid');
+		document.getElementById('username-rule-no-weird').classList.remove('d-none');
+	} else {
+		document.getElementById('new-username').classList.remove('is-invalid');
+		document.getElementById('username-rule-no-weird').classList.add('d-none');
+	}
 }
 
 function PasswordPolicyFeedback() {
@@ -85,6 +100,9 @@ function CheckDeleteUsernameFeedback() {
 }
 
 function ValidateAddUserForm() {
+	if (HasForbiddenUsernameCheck()) {
+		alert("Username contains forbidden characters.");
+	}
 	if (PasswordsMatch() == false) {
 		alert("Passwords don't match.");
 		return false;
