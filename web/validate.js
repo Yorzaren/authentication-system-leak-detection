@@ -9,7 +9,7 @@ Must match the policy on the page and the policy checks in the other scripts
 
 function LengthCheck(min, max) {
 	var pw = document.getElementById("password").value.length;
-	return pw >= min && pw <= max
+	return pw >= min && pw <= max;
 }
 function UppercaseCheck(min_number) {
 	var pw = document.getElementById("password").value;
@@ -33,20 +33,19 @@ function HasForbiddenCharCheck() {
 }
 
 function PasswordsMatch() {
-	return document.getElementById("password").value == document.getElementById("confirm-password").value
+	return document.getElementById("password").value == document.getElementById("confirm-password").value;
 }
 function DeleteUsernameMatch() {
-	return document.getElementById("delete-username").value == document.getElementById("confirm-delete-username").value
+	return document.getElementById("delete-username").value == document.getElementById("confirm-delete-username").value;
 }
 
 function PasswordPolicyFeedback() {
-	// Short hand if statement: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
 	// Hide using d-none (display:none from bootstrap) when condi is met.
-	(LengthCheck(12, 32)) ? document.getElementById('password-rule-length').classList.add('d-none') : document.getElementById('password-rule-length').classList.remove('d-none');
-	(UppercaseCheck(1)) ? document.getElementById('password-rule-uppercase').classList.add('d-none') : document.getElementById('password-rule-uppercase').classList.remove('d-none');
-	(LowercaseCheck(1)) ? document.getElementById('password-rule-lowercase').classList.add('d-none') : document.getElementById('password-rule-lowercase').classList.remove('d-none');
-	(SymbolCheck(1)) ? document.getElementById('password-rule-symbol').classList.add('d-none') : document.getElementById('password-rule-symbol').classList.remove('d-none');
-	(DigitCheck(1)) ? document.getElementById('password-rule-digit').classList.add('d-none') : document.getElementById('password-rule-digit').classList.remove('d-none');
+	if(LengthCheck(12, 32)) { document.getElementById('password-rule-length').classList.add('d-none'); } else { document.getElementById('password-rule-length').classList.remove('d-none'); }
+	if(UppercaseCheck(1)) { document.getElementById('password-rule-uppercase').classList.add('d-none'); } else { document.getElementById('password-rule-uppercase').classList.remove('d-none'); }
+	if(LowercaseCheck(1)) { document.getElementById('password-rule-lowercase').classList.add('d-none'); } else { document.getElementById('password-rule-lowercase').classList.remove('d-none'); }
+	if(SymbolCheck(1)) { document.getElementById('password-rule-symbol').classList.add('d-none'); } else { document.getElementById('password-rule-symbol').classList.remove('d-none'); }
+	if(DigitCheck(1)) { document.getElementById('password-rule-digit').classList.add('d-none'); } else { document.getElementById('password-rule-digit').classList.remove('d-none'); }
 	
 	// Feedback when the users enters a bad character
 	if (HasForbiddenCharCheck()) {
@@ -95,7 +94,7 @@ function ValidateAddUserForm() {
 		return false;
 	}
 	if (LengthCheck(12, 32) == false) {
-		alert("Bad password length.")
+		alert("Bad password length.");
 		return false;
 	}
 	if (UppercaseCheck(1) == false) {
@@ -103,22 +102,53 @@ function ValidateAddUserForm() {
 		return false;
 	}
 	if (LowercaseCheck(1) == false) {
-		alert("Password does not have enough lowercase letters.")
+		alert("Password does not have enough lowercase letters.");
 		return false;
 	}
 	if (SymbolCheck(1) == false) {
-		alert("Password does not have enough symbols.")
+		alert("Password does not have enough symbols.");
 		return false;
 	}
 	if (DigitCheck(1) == false) {
-		alert("Password does not have enough digits.")
+		alert("Password does not have enough digits.");
 		return false;
 	}
 }
 
 function ValidateDeleteUserForm() {
 	if (DeleteUsernameMatch() == false) {
-		alert("The given username to delete fields do not match.")
+		alert("The given username to delete fields do not match.");
+		return false;
+	}
+}
+
+function ValidateChangePasswordForm() {
+	if (PasswordsMatch() == false) {
+		alert("Passwords don't match.");
+		return false;
+	}
+	if (HasForbiddenCharCheck()) {
+		alert("Forbidden characters in password.");
+		return false;
+	}
+	if (LengthCheck(12, 32) == false) {
+		alert("Bad password length.");
+		return false;
+	}
+	if (UppercaseCheck(1) == false) {
+		alert("Password does not have enough uppercase letters.");
+		return false;
+	}
+	if (LowercaseCheck(1) == false) {
+		alert("Password does not have enough lowercase letters.");
+		return false;
+	}
+	if (SymbolCheck(1) == false) {
+		alert("Password does not have enough symbols.");
+		return false;
+	}
+	if (DigitCheck(1) == false) {
+		alert("Password does not have enough digits.");
 		return false;
 	}
 }

@@ -48,7 +48,7 @@ footer p {
 	background: var(--accent);
 }
 
-#add-user, #delete-user {
+#add-user, #delete-user, #change-password {
 	border: 1px solid var(--accent);
 	border-radius: 5px;
 	padding: 35px;
