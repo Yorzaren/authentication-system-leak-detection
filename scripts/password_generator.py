@@ -1,5 +1,5 @@
-from random import *
 import re
+from random import randint, choice
 
 
 # Simple function to flip a letter's case
@@ -22,10 +22,15 @@ def random_date(month_first=True):
 
     # print(month_number)
 
-    if (month_number == "01" or month_number == "03"
-            or month_number == "05" or month_number == "07"
-            or month_number == "08" or month_number == "10"
-            or month_number == "12"): # Months with 31 days
+    if (
+        month_number == "01"
+        or month_number == "03"
+        or month_number == "05"
+        or month_number == "07"
+        or month_number == "08"
+        or month_number == "10"
+        or month_number == "12"
+    ):  # Months with 31 days
         day_number = randint(1, 31)
     elif month_number == "04" or month_number == "06" or month_number == "09" or month_number == "11":
         day_number = randint(1, 31)
@@ -75,7 +80,7 @@ def leet_letters(letter):
 
 # TODO: Redo this and break it after considering various test cases
 def password_convert(string):
-    set_of_4_digits = re.findall(r'\d{4}', string)  # If there's 4 digits near each other, group them into the array
+    set_of_4_digits = re.findall(r"\d{4}", string)  # If there's 4 digits near each other, group them into the array
 
     if len(set_of_4_digits) > 0:
         target_set_of_digits = choice(set_of_4_digits)  # Select from the array
@@ -97,7 +102,7 @@ def password_convert(string):
         else:  # Replace it with random numbers to stop it from being to predictably a date
             if randint(0, 1) == 0:
                 string = string.replace(target_set_of_digits, random_4_numbers(), 1)
-            else:   # Replace last occurrence
+            else:  # Replace last occurrence
                 string = random_4_numbers().join(string.rsplit(target_set_of_digits, 1))
 
     print(string)
@@ -106,7 +111,6 @@ def password_convert(string):
 def generate_fakes(real_password="", amount=10):
     for i in range(0, amount):
         password_convert(real_password)
-
 
 
 """
@@ -122,7 +126,6 @@ password_convert("ifh3499mlerm@0346")
 password_convert("marrywe1299")
 password_convert("123mar3rywe1299")
 password_convert("1234!Cc1234")"""
-
 
 
 password_convert("45dsifji34")
