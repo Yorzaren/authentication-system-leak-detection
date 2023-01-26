@@ -114,34 +114,7 @@ function ValidateAddUserForm() {
 	if (HasForbiddenUsernameCheck()) {
 		alert("Username contains forbidden characters.");
 	}
-	if (PasswordsMatch() == false) {
-		alert("Passwords don't match.");
-		return false;
-	}
-	if (HasForbiddenCharCheck()) {
-		alert("Forbidden characters in password.");
-		return false;
-	}
-	if (LengthCheck(12, 32) == false) {
-		alert("Bad password length.");
-		return false;
-	}
-	if (UppercaseCheck(1) == false) {
-		alert("Password does not have enough uppercase letters.");
-		return false;
-	}
-	if (LowercaseCheck(1) == false) {
-		alert("Password does not have enough lowercase letters.");
-		return false;
-	}
-	if (SymbolCheck(1) == false) {
-		alert("Password does not have enough symbols.");
-		return false;
-	}
-	if (DigitCheck(1) == false) {
-		alert("Password does not have enough digits.");
-		return false;
-	}
+	ValidateChangePasswordForm();
 }
 
 function ValidateDeleteUserForm() {
