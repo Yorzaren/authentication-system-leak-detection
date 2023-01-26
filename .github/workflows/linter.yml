@@ -17,8 +17,8 @@ name: Lint Code Base
 on:
   workflow_dispatch:
     inputs:
-      check_everything:
-        description: 'Lint the all files in the code base.'
+      manually_run:
+        description: 'Are you sure you want to manually run this?'
         required: true
         default: false
         type: choice
@@ -63,8 +63,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: main
-          VALIDATE_ALL_CODEBASE: ${{ github.event.inputs.check_everything }}
-          # DISABLE_ERRORS: false
-          # Running as true will lint it but not fail the test
+          # Default: false and only checks changed/new files
+          # Dispatch: requires true and checks everything
+          VALIDATE_ALL_CODEBASE: ${{ github.event.inputs.manually_run }}
           VALIDATE_JAVASCRIPT_STANDARD: false # This is a lot
           VALIDATE_PYTHON_BLACK: false # Just run it as black -l 120 .
