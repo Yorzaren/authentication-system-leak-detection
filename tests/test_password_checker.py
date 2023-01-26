@@ -2,7 +2,7 @@
 This is a pytest to make sure that none of the helper functions in password_checker.py are corrupted
 """
 
-from scripts import password_checker
+import password_checker
 
 # Each test string is testing for one particular thing for the functionality.
 # It is not necessary for them to match the password policy.
