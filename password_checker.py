@@ -77,7 +77,7 @@ boolean
 def password_valid_to_policy_rules(password):
     # Check the length is between the min and max
     # It a bit weirdly written, but we only need to return FALSE on a fail so there's no need for an else
-    # Basically, read each statement after the "not" as the requirement to understand what is being compared               dfdf
+    # Basically, read each statement after the "not" as the requirement to understand what is being compared
     # And remember we only fail on it not meeting req so the "not" is there to flip it, and we return false
     if not MIN_PASSWORD_LENGTH <= len(password) <= MAX_PASSWORD_LENGTH:
         print("Invalid length")
