@@ -15,7 +15,19 @@ name: Lint Code Base
 # Start the job on all push #
 #############################
 on:
+  workflow_dispatch:
+    inputs:
+      check_everything:
+        description: 'Lint the all files in the code base.'
+        required: true
+        default: false
+        type: choice
+        options:
+          - true
+          - false
   push:
+    branches-ignore: [master, main]
+    # Remove the line above to run when pushing to master
   pull_request:
     branches: [master, main]
 
@@ -51,10 +63,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: main
-          VALIDATE_ALL_CODEBASE: true
-          # DISABLE_ERRORS: false  # Running as true will lint it but not fail the test
-          CREATE_LOG_FILE: true
-          OUTPUT_FOLDER: liner_reports
-          OUTPUT_DETAILS: detailed
+          VALIDATE_ALL_CODEBASE: ${{ github.event.inputs.check_everything }}
+          # DISABLE_ERRORS: false
+          # Running as true will lint it but not fail the test
           VALIDATE_JAVASCRIPT_STANDARD: false # This is a lot
           VALIDATE_PYTHON_BLACK: false # Just run it as black -l 120 .
