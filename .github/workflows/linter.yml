@@ -52,9 +52,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: true
-          # DISABLE_ERRORS: false  # Running as true will lint it but not fail the test
-          CREATE_LOG_FILE: true
-          OUTPUT_FOLDER: liner_reports
-          OUTPUT_DETAILS: detailed
+          # DISABLE_ERRORS: false
+          # Running as true will lint it but not fail the test
           VALIDATE_JAVASCRIPT_STANDARD: false # This is a lot
           VALIDATE_PYTHON_BLACK: false # Just run it as black -l 120 .
