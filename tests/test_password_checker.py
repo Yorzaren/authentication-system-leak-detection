@@ -3,7 +3,6 @@ This is a pytest to make sure that none of the helper functions in password_chec
 """
 
 import pytest
-
 import password_checker
 
 # Each test string is testing for one particular thing for the functionality.
@@ -57,3 +56,4 @@ class TestPasswordCheckerFunctions:
         assert password_checker.has_forbidden_characters("123.4567") == True  # dot is not in the list
         assert password_checker.has_forbidden_characters("213AD!sxd你") == True  # 你
         assert password_checker.has_forbidden_characters("123#%Txrte2323yrtyhrtyhrtyrtyrty3") == False  # This is fine
+
