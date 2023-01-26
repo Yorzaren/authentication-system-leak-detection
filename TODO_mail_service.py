@@ -5,17 +5,15 @@ It uses a file called .env to hold secrets we don't want leaked out of productio
 
 """
 
-from dotenv import load_dotenv
-import os
-
 import base64
+import os
+import smtplib
 from email.mime.text import MIMEText
+
+from dotenv import load_dotenv
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from requests import HTTPError
-
-import smtplib
-from email.mime.text import MIMEText
 
 load_dotenv()  # Load the secrets from the .env file
 sender_email = os.environ.get("sender_email")

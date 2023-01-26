@@ -3,6 +3,7 @@ This is a pytest to make sure that none of the helper functions in password_chec
 """
 
 import pytest
+
 import password_checker
 
 # Each test string is testing for one particular thing for the functionality.

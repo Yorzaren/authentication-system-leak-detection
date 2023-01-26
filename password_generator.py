@@ -1,5 +1,5 @@
-from random import *
 import re
+from random import *
 
 
 # Simple function to flip a letter's case
