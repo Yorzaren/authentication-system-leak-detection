@@ -1,8 +1,5 @@
 credentials.json
 .env
-example_passwords.txt
-example_valid_passwords.txt
-example_invalid_passwords.txt
 
 /node_modules/
 

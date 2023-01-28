@@ -5,7 +5,7 @@ MIN_PASSWORD_LENGTH = 12
 MAX_PASSWORD_LENGTH = 32
 MIN_UPPERCASE_LETTERS = 1
 MIN_LOWERCASE_LETTERS = 1
-MIN_AMOUNT_NUMBERS = 1
+MIN_AMOUNT_DIGITS = 1
 MIN_AMOUNT_SPECIAL_CHAR = 1
 # Bitwarden generator and https://www.ibm.com/support/pages/password-policy-and-passwords-special-characters
 ALLOWED_SPECIAL_CHAR = "!@#$%^&*"  # Remember to manually update the pytest to match the new count
@@ -85,7 +85,7 @@ def password_valid_to_policy_rules(password):
         print("Not enough lowercase letter(s)")
         return False
     # Check if there's enough digits to match the password policy
-    if not count_digits(password) >= MIN_AMOUNT_NUMBERS:
+    if not count_digits(password) >= MIN_AMOUNT_DIGITS:
         print("Not enough digit(s)")
         return False
     # Check if there's enough special characters to match the password policy
