@@ -15,16 +15,6 @@ name: Lint Code Base
 # Start the job on all push #
 #############################
 on:
-  workflow_dispatch:
-    inputs:
-      manually_run:
-        description: 'Are you sure you want to manually run this?'
-        required: true
-        default: false
-        type: choice
-        options:
-          - true
-          - false
   push:
     branches-ignore: [master, main]
     # Remove the line above to run when pushing to master
@@ -64,7 +54,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: main
           # Default: false and only checks changed/new files
-          # Dispatch: requires true and checks everything
-          VALIDATE_ALL_CODEBASE: ${{ github.event.inputs.manually_run }}
+          VALIDATE_ALL_CODEBASE: false
           VALIDATE_JAVASCRIPT_STANDARD: false # This is a lot
           VALIDATE_PYTHON_BLACK: false # Just run it as black -l 120 .
