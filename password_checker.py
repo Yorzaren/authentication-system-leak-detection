@@ -11,9 +11,6 @@ MIN_AMOUNT_SPECIAL_CHAR = 1
 ALLOWED_SPECIAL_CHAR = "!@#$%^&*"  # Remember to manually update the pytest to match the new count
 
 
-# TODO: Finish finding which special character will be allowed by the policy
-
-
 # --------------------------------------
 # ---------- Helper functions ----------
 # --------------------------------------
