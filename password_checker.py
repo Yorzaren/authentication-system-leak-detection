@@ -111,7 +111,7 @@ def password_valid_to_policy_rules(password):
 
 
 # TODO: EVENTUALLY REMOVE THIS TEST CODE ONCE FINISHED
-
+"""
 test = [
     "123#%Txrte2323yrtyhrtyhrtyrtyrty3",  # 33 chars
     "sdfkjsdkf398njdssdifu83!@#ds",  # No cap
@@ -123,4 +123,4 @@ test = [
 
 for i in range(len(test)):
     password_valid_to_policy_rules(test[i])
-
+"""
