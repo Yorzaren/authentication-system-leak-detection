@@ -75,22 +75,38 @@ boolean
 
 
 def password_valid_to_policy_rules(password):
-    # Check the length is between the min and max
     # It a bit weirdly written, but we only need to return FALSE on a fail so there's no need for an else
     # Basically, read each statement after the "not" as the requirement to understand what is being compared
     # And remember we only fail on it not meeting req so the "not" is there to flip it, and we return false
+
+    # Check the length is between the min and max allowed by the password policy
     if not MIN_PASSWORD_LENGTH <= len(password) <= MAX_PASSWORD_LENGTH:
         print("Invalid length")
         return False
-    # Check uppercase letters
+    # Check if there's enough uppercase letters to match the password policy
     if not count_uppercase(password) >= MIN_UPPERCASE_LETTERS:
-        print("Not enough uppercase letters")
+        print("Not enough uppercase letter(s)")
         return False
-    # Check uppercase letters
+    # Check if there's enough lowercase letters to match the password policy
     if not count_lowercase(password) >= MIN_LOWERCASE_LETTERS:
-        print("Not enough lowercase letters")
+        print("Not enough lowercase letter(s)")
         return False
+    # Check if there's enough digits to match the password policy
+    if not count_digits(password) >= MIN_AMOUNT_NUMBERS:
+        print("Not enough digit(s)")
+        return False
+    # Check if there's enough special characters to match the password policy
+    if not count_digits(password) >= MIN_AMOUNT_SPECIAL_CHAR:
+        print("Not enough special character(s)")
+        return False
+    # Check for bad characters which break policy
+    if has_forbidden_characters(password) is True:
+        print("Includes forbidden character(s)")
+        return False
+    # If it makes it here it has passed the checks
     return True
+
+
 
 
 """
@@ -102,7 +118,6 @@ test = [
     "你好213AD!sxd"
 ]
 
-lowercase_letters = ""
 for i in range(len(test)):
     password_valid_to_policy_rules(test[i])
 """
