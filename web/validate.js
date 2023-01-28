@@ -25,7 +25,7 @@ function SymbolCheck(string, min_number) {
 	return string.length - string.replace(/[!@#$%^&*]/g, "").length >= min_number;
 }
 function HasForbiddenCharCheck(string) {
-	return string.replace(/[A-Za-z0-9!@#$%^&*]/g, "").length > 0;
+	return string.replace(/[A-Za-z0-9!@#$%^&*]/g, "").length > 0; // Replace will return anything not A-Z 0-9 or !@#$%^&* and then we count it
 }
 function HasForbiddenUsernameCheck(string) {
 	return string.replace(/[A-Za-z0-9]/g, "").length > 0 && string != "";
@@ -35,7 +35,7 @@ function HasMatchingStrings(string1, string2) {
 }
 
 function UsernameFeedback() {
-    var new_username_field = document.getElementById("new-username");
+	var new_username_field = document.getElementById("new-username");
 
 	// Feedback when the users enters a bad character
 	if (HasForbiddenUsernameCheck(new_username_field.value)) {
@@ -58,7 +58,7 @@ function UsernameFeedback() {
 }
 
 function PasswordPolicyFeedback() {
-    var password_field = document.getElementById("password");
+	var password_field = document.getElementById("password");
 
 	// Hide using d-none (display:none from bootstrap) when condi is met.
 	if(LengthCheck(password_field.value, 12, 32)) { document.getElementById('password-rule-length').classList.add('d-none'); } else { document.getElementById('password-rule-length').classList.remove('d-none'); }
@@ -87,8 +87,8 @@ function PasswordPolicyFeedback() {
 }
 
 function CheckMatchingPasswordsFeedback() {
-    var password_field = document.getElementById('password');
-    var password_confirm_field = document.getElementById('confirm-password');
+	var password_field = document.getElementById('password');
+	var password_confirm_field = document.getElementById('confirm-password');
 
 	if (HasMatchingStrings(password_field.value, password_confirm_field.value)) {
 		password_confirm_field.classList.add('is-valid');
@@ -98,8 +98,8 @@ function CheckMatchingPasswordsFeedback() {
 }
 
 function CheckDeleteUsernameFeedback() {
-    var delete_user_field = document.getElementById('delete-username');
-    var confirm_delete_user_field = document.getElementById('confirm-delete-username');
+	var delete_user_field = document.getElementById('delete-username');
+	var confirm_delete_user_field = document.getElementById('confirm-delete-username');
 
 	if (HasMatchingStrings(delete_user_field.value, confirm_delete_user_field.value)) {
 		delete_user_field.classList.add('is-valid');
@@ -111,7 +111,7 @@ function CheckDeleteUsernameFeedback() {
 }
 
 function ValidateAddUserForm() {
-    var new_username_field = document.getElementById("new-username");
+	var new_username_field = document.getElementById("new-username");
 
 	if (HasForbiddenUsernameCheck(new_username_field.value)) {
 		alert("Username contains forbidden characters.");
@@ -120,8 +120,8 @@ function ValidateAddUserForm() {
 }
 
 function ValidateDeleteUserForm() {
-    var delete_user_field = document.getElementById('delete-username');
-    var confirm_delete_user_field = document.getElementById('confirm-delete-username');
+	var delete_user_field = document.getElementById('delete-username');
+	var confirm_delete_user_field = document.getElementById('confirm-delete-username');
 
 	if (HasMatchingStrings(delete_user_field.value, confirm_delete_user_field.value) == false) {
 		alert("The given username to delete fields do not match.");
@@ -130,8 +130,8 @@ function ValidateDeleteUserForm() {
 }
 
 function ValidateChangePasswordForm() {
-    var password_field = document.getElementById("password");
-    var password_confirm_field = document.getElementById('confirm-password');
+	var password_field = document.getElementById("password");
+	var password_confirm_field = document.getElementById('confirm-password');
 
 	if (HasMatchingStrings(password_field.value, password_confirm_field.value) == false) {
 		alert("Passwords don't match.");
@@ -162,4 +162,3 @@ function ValidateChangePasswordForm() {
 		return false;
 	}
 }
-
