@@ -1,5 +1,6 @@
 credentials.json
 .env
+example_passwords.txt
 
 /node_modules/
 
