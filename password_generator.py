@@ -22,6 +22,7 @@ def random_date(month_first=True):
 
     # print(month_number)
 
+    # Months with 31 days
     if (
         month_number == "01"
         or month_number == "03"
@@ -30,12 +31,13 @@ def random_date(month_first=True):
         or month_number == "08"
         or month_number == "10"
         or month_number == "12"
-    ):  # Months with 31 days
+    ):
         day_number = randint(1, 31)
+    # Months with 30 days
     elif month_number == "04" or month_number == "06" or month_number == "09" or month_number == "11":
-        day_number = randint(1, 31)
-    else:
-        day_number = randint(1, 31)
+        day_number = randint(1, 30)
+    else:  # Feb
+        day_number = randint(1, 28)  # 28 days
 
     if day_number < 10:  # Add a leading zero
         day_number = str(0) + str(day_number)
