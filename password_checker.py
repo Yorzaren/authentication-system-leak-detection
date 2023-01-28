@@ -79,10 +79,6 @@ def password_valid_to_policy_rules(password):
     # Basically, read each statement after the "not" as the requirement to understand what is being compared
     # And remember we only fail on it not meeting req so the "not" is there to flip it, and we return false
 
-    # Check the length is between the min and max allowed by the password policy
-    if not MIN_PASSWORD_LENGTH <= len(password) <= MAX_PASSWORD_LENGTH:
-        print("Invalid length")
-        return False
     # Check if there's enough uppercase letters to match the password policy
     if not count_uppercase(password) >= MIN_UPPERCASE_LETTERS:
         print("Not enough uppercase letter(s)")
@@ -103,21 +99,28 @@ def password_valid_to_policy_rules(password):
     if has_forbidden_characters(password) is True:
         print("Includes forbidden character(s)")
         return False
+    # Check the length is between the min and max allowed by the password policy
+    # This is last, so we can see the major issue before the length problem
+    # There's no unit test for this.
+    if not MIN_PASSWORD_LENGTH <= len(password) <= MAX_PASSWORD_LENGTH:
+        print("Invalid length")
+        return False
     # If it makes it here it has passed the checks
     return True
 
 
 
+# TODO: EVENTUALLY REMOVE THIS TEST CODE ONCE FINISHED
 
-"""
 test = [
     "123#%Txrte2323yrtyhrtyhrtyrtyrty3",  # 33 chars
     "sdfkjsdkf398njdssdifu83!@#ds",  # No cap
     "32SDJF9JDH29N0",  # no lower
-    "1234567"  # too short
-    "你好213AD!sxd"
+    "SDJFasdaJDHN",  # no digits
+    "1234567",  # too short
+    "你好213AD!s12xd"  # forbidden characters
 ]
 
 for i in range(len(test)):
     password_valid_to_policy_rules(test[i])
-"""
+
