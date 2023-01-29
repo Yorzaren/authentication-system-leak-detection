@@ -1,3 +1,8 @@
+import password_checker
+
+
+# The starts_with and ends_with functions return booleans
+
 def starts_with_uppercase_letter(string):
 	return string[0].isupper()
 
@@ -10,15 +15,21 @@ def starts_with_digit(string):
 	return string[0].isdigit()
 
 
+def starts_with_symbol(string):
+	return string[0] in password_checker.ALLOWED_SPECIAL_CHAR
 
-"""
+
+def ends_with_uppercase_letter(string):
+	return string[-1].isupper()
 
 
-starts_with_symbol
+def ends_with_lowercase_letter(string):
+	return string[-1].islower()
 
-ends_with_uppercase_letter
-ends_with_lowercase_letter
-ends_with_digits
-ends_with_symbols
 
-"""
+def ends_with_digits(string):
+	return string[-1].isdigit()
+
+
+def ends_with_symbols(string):
+	return string[-1] in password_checker.ALLOWED_SPECIAL_CHAR

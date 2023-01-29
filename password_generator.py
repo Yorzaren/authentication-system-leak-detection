@@ -23,8 +23,10 @@ def password_analysis(real_password):
         "upper_count: " + str(upper_count) + "\n" +
         "lower_count: " + str(lower_count) + "\n" +
         "digit_count: " + str(digit_count) + "\n" +
-        "special_char_count: " + str(special_char_count) + "\n" +
-
+        "special_char_count: " + str(special_char_count)
+    )
+    print("------------")
+    print(
         "policy diff upper_count: " + str(upper_count - password_checker.MIN_UPPERCASE_LETTERS) + "\n" +
         "policy diff lower_count: " + str(lower_count - password_checker.MIN_LOWERCASE_LETTERS) + "\n" +
         "policy diff digit_count: " + str(digit_count - password_checker.MIN_AMOUNT_DIGITS) + "\n" +
