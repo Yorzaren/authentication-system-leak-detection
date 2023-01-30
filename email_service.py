@@ -26,6 +26,7 @@ import os  # Used to get the .env file
 import smtplib
 from email.mime.text import MIMEText
 from smtplib import SMTP
+
 import mailslurp_client
 from dotenv import load_dotenv  # Used to load info from the .env file
 
