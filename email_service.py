@@ -26,7 +26,6 @@ import os  # Used to get the .env file
 import smtplib
 from email.mime.text import MIMEText
 from smtplib import SMTP
-
 import mailslurp_client
 from dotenv import load_dotenv  # Used to load info from the .env file
 
@@ -110,6 +109,7 @@ def send_email(email_system, msg_type, account_name):
         message = (
             f"Dear Admin,\nA decoy password for user {account_name} has been used." f"The database might be breached."
         )
+
     if email_system == "test":
         # sender_email, recipient_email are made up because they don't really exist beyond the DebuggingServer
         localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)
