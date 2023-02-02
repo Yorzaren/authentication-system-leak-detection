@@ -15,22 +15,22 @@ ALLOWED_SPECIAL_CHAR = "!@#$%^&*"  # Remember to manually update the pytest to m
 # ---------- Helper functions ----------
 # --------------------------------------
 # Return the count of uppercase letters in a string
-def count_uppercase(string):
+def count_uppercase(string: str) -> int:
     return sum(1 for c in string if c.isupper())
 
 
 # Return the count of lower letters in a string
-def count_lowercase(string):
+def count_lowercase(string: str) -> int:
     return sum(1 for c in string if c.islower())
 
 
 # Return the count of digits in a string
-def count_digits(string):
+def count_digits(string: str) -> int:
     return sum(1 for c in string if c.isdigit())
 
 
 # Return the count of special characters which match ALLOWED_SPECIAL_CHAR in a string
-def count_special_char(string):
+def count_special_char(string: str) -> int:
     count = 0
     for char in string:
         if char in ALLOWED_SPECIAL_CHAR:
@@ -38,7 +38,7 @@ def count_special_char(string):
     return count
 
 
-def has_forbidden_characters(string):
+def has_forbidden_characters(string: str) -> bool:
     arr = list(string)
     for char in range(len(arr)):
         test_char = string[char]
@@ -71,7 +71,7 @@ boolean
 """
 
 
-def password_valid_to_policy_rules(password):
+def password_valid_to_policy_rules(password: str) -> bool:
     # It a bit weirdly written, but we only need to return FALSE on a fail so there's no need for an else
     # Basically, read each statement after the "not" as the requirement to understand what is being compared
     # And remember we only fail on it not meeting req so the "not" is there to flip it, and we return false
@@ -104,7 +104,6 @@ def password_valid_to_policy_rules(password):
         return False
     # If it makes it here it has passed the checks
     return True
-
 
 
 # TODO: EVENTUALLY REMOVE THIS TEST CODE ONCE FINISHED

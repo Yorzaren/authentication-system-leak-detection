@@ -4,7 +4,7 @@ from random import choice, randint
 
 # Simple function to flip a letter's case
 # If a number or symbol gets passed to this, it just returns it unchanged
-def change_case(letter):
+def change_case(letter: str) -> str:
     if letter.isupper():
         return letter.lower()
     else:
@@ -14,7 +14,7 @@ def change_case(letter):
 # Return a set of 4 numbers which could be a plausible date
 # Call as random_date() for MM-DD
 # Call as random_date(month_first=False) for DD-MM
-def random_date(month_first=True):
+def random_date(month_first=True) -> str:
     # Date Generator
     month_number = randint(1, 12)  # Pick from 0 or 1
     if month_number < 10:  # Add a leading zero
@@ -50,7 +50,7 @@ def random_date(month_first=True):
         return str(day_number) + str(month_number)
 
 
-def random_4_numbers():
+def random_4_numbers() -> str:
     num1 = randint(0, 9)
     num2 = randint(0, 9)
     num3 = randint(0, 9)
@@ -58,7 +58,7 @@ def random_4_numbers():
     return str(num1) + str(num2) + str(num3) + str(num4)
 
 
-def leet_letters(letter):
+def leet_letters(letter: str) -> str:
     letter = letter.upper()  # Convert to upper case for sanity
     if letter == "A":
         return str(4)  # Make sure to return as string
@@ -79,7 +79,7 @@ def leet_letters(letter):
 
 
 # Converts 4, 8, 3, 0, 5 , $ to a letter
-def anti_leet_letters(letter):
+def anti_leet_letters(letter: str) -> str:
     letter = str(letter).upper()  # Convert to upper case for sanity
     if letter == "4":
         return "A"
@@ -98,7 +98,7 @@ def anti_leet_letters(letter):
 
 
 # TODO: Redo this and break it after considering various test cases
-def convert_4_digits(string):
+def convert_4_digits(string: str):
     set_of_4_digits = re.findall(r"\d{4}", string)  # If there's 4 digits near each other, group them into the array
 
     if len(set_of_4_digits) > 0:
@@ -125,5 +125,3 @@ def convert_4_digits(string):
                 string = random_4_numbers().join(string.rsplit(target_set_of_digits, 1))
 
     print(string)
-
-
