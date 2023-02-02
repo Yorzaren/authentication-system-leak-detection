@@ -50,4 +50,3 @@ def hide_password(username: str) -> int:
     print(placement)
 
     return placement
-

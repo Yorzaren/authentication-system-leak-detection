@@ -13,6 +13,7 @@ MAX_USERNAME_LENGTH = 50
 # TODO: Might have that included in the scrip that already connects to the database.
 # TODO: And then merge those together.
 
+
 def is_valid_username(username: str) -> bool:
     # Check this to see if it has letters that aren't A-Z or a digit
     arr = list(username)
@@ -20,9 +21,9 @@ def is_valid_username(username: str) -> bool:
         test_char = username[char]
         # Don't use isalpha() because it will accept chars that aren't A-Z
         if not (
-                test_char in alphabet_string.ascii_lowercase
-                or test_char in alphabet_string.ascii_uppercase
-                or test_char.isdigit()
+            test_char in alphabet_string.ascii_lowercase
+            or test_char in alphabet_string.ascii_uppercase
+            or test_char.isdigit()
         ):
             # print(test_char)
             return False
