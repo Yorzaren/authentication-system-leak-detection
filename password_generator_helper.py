@@ -1,5 +1,6 @@
 import re
 from random import choice, randint
+import password_checker
 
 
 # Simple function to flip a letter's case
@@ -97,7 +98,29 @@ def anti_leet_letters(letter: str) -> str:
         return str(letter)
 
 
+# From what I've seen most people tend to add the digit and symbol near the end
+def most_simple_password(string: str, simple_password_type: int = 1) -> str:
+    """
+    :param string: the password string you want to convert into a most simple password
+    :param simple_password_type: the type of simple password you want
+        1 - returns a stripped password with #1 at the end
+        2 - returns a stripped password with ! at the end
+    :return: the new simple password string
+    """
+    # Remove all symbols
+    new_string = re.sub(r"[!@#$%^&*]", "", string)
+
+    if simple_password_type == 1:
+        # Add the symbol to the end
+        return new_string + "#1"
+    elif simple_password_type == 2:
+        # Add the symbol to the end
+        return new_string + "!"
+
+
 # TODO: Redo this and break it after considering various test cases
+
+
 def convert_4_digits(string: str):
     set_of_4_digits = re.findall(r"\d{4}", string)  # If there's 4 digits near each other, group them into the array
 

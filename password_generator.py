@@ -9,13 +9,21 @@ from password_generator_helper import (
 )
 from password_checker import count_uppercase, count_lowercase, count_digits, count_special_char
 
+
 """
 Type of passwords:
-- Passwords that wont be remembered
-- Passwords with social engineering weakness (dates/pet names/important life people)
-- Passwords of immaturity (69, 420)
-- Passwords on keys patterns (probably wont be addressing this)
+- Passwords that wont be remembered 
+    --> Handle with random letter, symbol, and number corruption.
+- Passwords with social engineering weakness (dates/pet names/important life people) 
+    --> Change letter case, leet it, change symbols, simplify, corrupt some numbers, 
+    but leave multiple cases with the correct numbers but wrong symbols and cases
 - Passwords of fandom/pop culture
+    --> This might be a sub type of the previous and can probably be handled the same way.
+- Passwords of immaturity (69, 420)
+    --> Leave the numbers, leet it, change symbols, simplify 
+- Passwords on keys patterns (probably wont be addressing this)
+    --> Won't be handle in this iteration
+
 
 """
 
@@ -55,12 +63,21 @@ def password_analysis(real_password):
         + "policy diff special_char_count: "
         + str(special_char_count - password_checker.MIN_AMOUNT_SPECIAL_CHAR)
         + "\n"
+        + "is_likely_random_string: " + str(is_random_string(real_password))
     )
 
 
+
+
+
 def generate_fakes(real_password="", amount=10):
+    simple_symbol_corruption = False
+    simple_letter_case = False  # THis!i5AnAlert0963 --> This!i5analert0963
+    simple_leet_corruption = False
+    simple_digit_corruption = False
+    password_analysis(real_password)
     for i in range(0, amount):
-        password_analysis(real_password)
+        print("\n")
         # convert_4_digits(real_password)
 
 
@@ -85,3 +102,4 @@ password_convert("1234!Cc1234")"""
 # generate_fakes("45dsifji34")
 generate_fakes("THis!i5AnAlert0963", 2)
 generate_fakes("1234!Cc1234", 2)
+generate_fakes("D32$jr#Q^VpD", 2)
