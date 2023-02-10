@@ -4,6 +4,7 @@ from password_generator_helper import anti_leet_letters
 import nltk  # Used to detect if something is a dictionary word
 from nltk.corpus import words
 from nostril import nonsense
+from collections import Counter
 
 # Import the real words for later
 nltk.download('words')
@@ -52,9 +53,12 @@ def split_uppercase_strings(string: str):
     return re.findall(r'[A-Z]+', string)  # Returns an array
 
 
-def split_uppercase_strings(string: str):
-
+def split_lowercase_strings(string: str):
     return re.findall(r'[a-z]+', string)  # Returns an array
+
+
+def split_capital_strings(string: str):
+    return re.findall(r'[A-Z][^A-Z]*', string)  # Returns an array
 
 
 def split_digit_strings(string: str):
@@ -63,6 +67,10 @@ def split_digit_strings(string: str):
 
 def split_symbols_strings(string: str):
     return re.findall(r'[!@#$%^&*]+', string)  # Returns an array
+
+
+def split_at_symbols(string: str):
+    return re.split(r'[!@#$%^&*]+', string) # Returns an array
 
 
 def convert_from_leet(string: str) -> str:
@@ -76,9 +84,35 @@ def convert_from_leet(string: str) -> str:
 # The goal of this function is to detect if the string is random letters, symbols, and numbers
 # You already tried https://github.com/casics/nostril
 # which will fail if the sample is too small or gives both false positives and negatives.
-def is_random_string(string: str) -> bool:
+def is_random_string(string: str, debugging=False) -> bool:
     randomness_score = 0
     unleeted_string = convert_from_leet(string)
+    capital_split_array = split_capital_strings(string)
+    pp_capital_split_array_unleeted = []
+    pp_symbols_capital_split_array = []
+
+    # This is to deal with C@pta1nC@veM4n like strings because they will be seen as  C@pta1n C@ve M4n and not words
+    for entry in capital_split_array:
+        basic_unleet = anti_leet_letters(entry)
+
+        # Be a bit more thorough
+        more_unleet = basic_unleet.replace('@', 'A').replace('1', 'I').replace('3', 'E')
+
+        # Don't double add an entry to the array
+        if basic_unleet != more_unleet:
+            pp_capital_split_array_unleeted.append(more_unleet)
+
+        pp_capital_split_array_unleeted.append(anti_leet_letters(entry))
+
+    # Process it again to remove other undesirables
+    for entry in pp_capital_split_array_unleeted:
+        pp_symbols_capital_split_array.append(entry)
+
+    print("capital_split_array" + str(capital_split_array))
+    print("pp_capital_split_array_unleeted" + str(pp_capital_split_array_unleeted))
+    print("post-processing symbol removal + unleeting capital_split_array : " + str(pp_symbols_capital_split_array))
+
+
     string_array = split_letter_strings(string)
     unleeted_array = split_letter_strings(unleeted_string)
     size_string_array = len(string_array)
@@ -87,68 +121,86 @@ def is_random_string(string: str) -> bool:
     max_len_string_array = max(string_array, key=len)
     max_len_unleeted_array = max(unleeted_array, key=len)
 
-    print('Original String: ' + string)
-    print('Unleet: ' + unleeted_string)
-    print('Strings (' + str(size_string_array) + '): ' + str(string_array))
-    print('Strings After Unleeting (' + str(size_unleeted_array) + '): ' + str(unleeted_array))
-    print('Max Length String Array: ' + str(max_len_string_array))
-    print('Max Length Unleeted Array: ' + str(max_len_unleeted_array))
+    if debugging is True:
+        print('Original String: ' + string)
+        print('Unleet: ' + unleeted_string)
+
+        print('Strings (' + str(size_string_array) + '): ' + str(string_array))
+        print('Strings After Unleeting (' + str(size_unleeted_array) + '): ' + str(unleeted_array))
+        print('Max Length String Array: ' + str(max_len_string_array))
+        print('Max Length Unleeted Array: ' + str(max_len_unleeted_array))
 
     if size_string_array == size_unleeted_array:
         # If the array sizes don't change its probably random.
-        print("-->Didn't Shrink")
+        # print("-->Didn't Shrink")
         randomness_score += 2
     if len(max_len_unleeted_array) >= len(string)/2:
         # If the unleeted_string is half or more it's not really random... ?
-        print("-->The string seems to be too long, so prob not random")
+        # print("-->The string seems to be too long, so prob not random")
         randomness_score -= 2
 
-    for x in string_array + unleeted_array:  # Check both arrays
-        if len(x) >= 2:  # Skip words
+    # Combine arrays
+    merged_array = []
+    for elem in string_array + unleeted_array + capital_split_array + pp_capital_split_array_unleeted:
+        normalize_case = elem.lower()
+        if normalize_case not in merged_array:
+            merged_array.append(normalize_case)
+
+    print(str(merged_array))
+
+    # Check the array
+    for x in merged_array:
+        if len(x) >= 2:  # Skip words less than 2-letters long
             potential_word = x.lower()
-            # print(potential_word)
 
             # Use nltk to check for the array for dictionary words
-            if potential_word in set_of_words:  # Means it likely not random
+            if potential_word in set_of_words:
                 print("-->Real word?: " + potential_word)
-                randomness_score -= 1
+                word_length = len(potential_word)
+                if word_length == 2:
+                    randomness_score -= 1
+                elif word_length == 3 or word_length == 4:
+                    randomness_score -= 2
+                else:  # more than 5-letter word that can't be random mistake
+                    randomness_score -= 5
             else:
                 randomness_score += 0.2
             # End nltk check
-            # Use nostril check randomness - it does have false pos and false negs tho.
-            try:
-                print("Nostril: " + str(nonsense(x)) )
-            except:
-                pass
 
-    print("Is LargeNostrilNonsense: " + str(nonsense(unleeted_string)))
+    # This doesnt seem to have any impact...
+    """
+    # Use nostril check randomness - it does have false pos and false negs tho.
+    try:
+        if nonsense(unleeted_string):
+            # If its close send it over the edge
+            print("Is NostrilNonsense: " + str(nonsense(unleeted_string)))
+            randomness_score += 2
+    except:
+        pass
+    """
 
-    print("Random Score: " + str(randomness_score) )
-    print("IsRandom: " + str(randomness_score >= 0) )
-    print('\n-----------------\n')
+    if debugging is True:
+        print("Random Score: " + str(randomness_score) )
+        print("IsRandom: " + str(randomness_score >= 0) )
+        print('\n-----------------\n')
 
-
-
-    """for x in split_letter_strings(anti_leet_string):
-        try:
-            print((x))
-            print(print('{}: {}'.format(s, 'nonsense' if nonsense(x) else 'real')))
-        except ValueError:
-            pass"""
-
+    return randomness_score >= 0
 
 
 
 
-pass_test = ["1Am4Gr8C0d3r",
-             "D32$jr#Q^VpD",
-             "sdfsdfsWEW34!",
-             "D0g!is!great!p3t",
-             "sundayPizz4Party!",
-             "Iamtheendandthebeginning!1"]
-with open("examples/example_random_passwords.txt") as file:
-    for line in file:
-        pass_test.append(line.strip())
-for s in pass_test:
-    is_random_string(s)
+
+
+if __name__ == '__main__':
+    pass_test = ["1Am4Gr8C0d3r",
+                 "D32$jr#Q^VpD",
+                 "sdfsdfsWEW34!",
+                 "D0g!is!great!p3t",
+                 "sundayPizz4Party!",
+                 "Iamtheendandthebeginning!1"]
+    with open("examples/example_random_passwords.txt") as file:
+        for line in file:
+            pass_test.append(line.strip())
+    for s in pass_test:
+        is_random_string(s)
 

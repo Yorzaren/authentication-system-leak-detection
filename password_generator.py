@@ -1,4 +1,5 @@
 import password_checker
+from password_analysis_helper import is_random_string
 from password_generator_helper import (
     change_case,
     random_date,
@@ -64,6 +65,7 @@ def password_analysis(real_password):
         + str(special_char_count - password_checker.MIN_AMOUNT_SPECIAL_CHAR)
         + "\n"
         + "is_likely_random_string: " + str(is_random_string(real_password))
+        + "\n-----------------\n"
     )
 
 
@@ -81,25 +83,21 @@ def generate_fakes(real_password="", amount=10):
         # convert_4_digits(real_password)
 
 
-"""
-for i in range(0, 1000):
-    #print(random_date())
-    print(randint(0, 1))
-"""
-"""
-password_convert("THis!i5AnAlert0963")
-password_convert("sdfjkhuih3240")
-password_convert("3423!6561")
-password_convert("ifh3499mlerm@0346")
-password_convert("marrywe1299")
-password_convert("123mar3rywe1299")
-password_convert("1234!Cc1234")"""
+if __name__ == '__main__':
+    """
+    pass_test = ["THis!i5AnAlert0963",
+                 "1234!Cc1234",
+                 "D32$jr#Q^VpD",
+                 "45dsIfji34",
+                 "sDfjkhuih3240",
+                 "ifG3499mlerm@0346",
+                 "Marrywe1299",
+                 "123mar3rywe1299"]
 
-
-# convert_4_digits("45dsifji34")
-
-
-# generate_fakes("45dsifji34")
-generate_fakes("THis!i5AnAlert0963", 2)
-generate_fakes("1234!Cc1234", 2)
-generate_fakes("D32$jr#Q^VpD", 2)
+    """
+    pass_test = []
+    with open("examples/example_valid_passwords.txt") as file:
+        for line in file:
+            pass_test.append(line.strip())
+        for s in pass_test:
+            password_analysis(s)
