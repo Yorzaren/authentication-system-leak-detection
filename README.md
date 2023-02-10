@@ -5,14 +5,15 @@
 
 
 ## About
-This is a work in progress. 
+This is a work in progress.
+
 
 This project is an experimental proof of concept.
+
 
 The goal is to detect a password database breach by hiding the users password with a bunch of decoy passwords. 
 If an attacker gets the password database, they should have a hard time figuring out which of the many passwords associated with a single account is the real password. 
 If they use a decoy password while attempting to get into a user's account, it will alert the admin to a possible database leak.
-
 
 <details><summary>Project Details</summary>
 <p>
@@ -49,4 +50,5 @@ flake8 --max-line-length 120
 
 QUnit tests are located in the `tests` folder.
 
-There is no style guide for the JavaScript code.</details>
+There is no style guide for the JavaScript code.
+</details>
