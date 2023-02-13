@@ -9,7 +9,11 @@ from password_generator_helper import (
     convert_4_digits,
 )
 from password_checker import count_uppercase, count_lowercase, count_digits, count_special_char
+from colorama import init as colorama_init
+from colorama import Fore, Back, Style
 
+# Initialize for to use colorful print messages later
+colorama_init()
 
 """
 Type of passwords:
@@ -30,29 +34,23 @@ Type of passwords:
 
 
 def password_analysis(real_password):
+    length_password = len(real_password)
     upper_count = count_uppercase(real_password)
     lower_count = count_lowercase(real_password)
     digit_count = count_digits(real_password)
     special_char_count = count_special_char(real_password)
-    print(
-        "password: "
-        + real_password
-        + "\n"
-        + "upper_count: "
-        + str(upper_count)
-        + "\n"
-        + "lower_count: "
-        + str(lower_count)
-        + "\n"
-        + "digit_count: "
-        + str(digit_count)
-        + "\n"
-        + "special_char_count: "
-        + str(special_char_count)
-    )
+    print(f"{Back.BLACK}password: " + f"{Fore.GREEN}" + real_password + f"{Style.RESET_ALL}\n" +
+          "password_length: " + str(length_password) + "\n" +
+          "upper_count: " + str(upper_count) + "\n" +
+          "lower_count: " + str(lower_count) + "\n" +
+          "digit_count: " + str(digit_count) + "\n" +
+          "special_char_count: " + str(special_char_count))
     print("------------")
     print(
-        "policy diff upper_count: "
+        "policy diff length_password: "
+        + str(length_password - password_checker.MIN_PASSWORD_LENGTH)
+        + "\n"
+        + "policy diff upper_count: "
         + str(upper_count - password_checker.MIN_UPPERCASE_LETTERS)
         + "\n"
         + "policy diff lower_count: "
@@ -67,8 +65,6 @@ def password_analysis(real_password):
         + "is_likely_random_string: " + str(is_random_string(real_password))
         + "\n-----------------\n"
     )
-
-
 
 
 
@@ -95,6 +91,8 @@ if __name__ == '__main__':
                  "123mar3rywe1299"]
 
     """
+    other = ["HT5p5Py!hZQWxNg"]
+
     pass_test = []
     with open("examples/example_valid_passwords.txt") as file:
         for line in file:
