@@ -202,7 +202,7 @@ def is_random_string(string: str, debugging=False) -> bool:
             randomness_score += 2
             if VIEW_SCOREING is True:
                 print("+2")
-    except:  # Have this here, so it doesn't blow up when the string is too short.
+    except ValueError:  # Have this here, so it doesn't blow up when the string is too short.
         pass
 
     if debugging is True:
