@@ -89,7 +89,7 @@ def password_valid_to_policy_rules(password: str) -> bool:
         print("Not enough digit(s)")
         return False
     # Check if there's enough special characters to match the password policy
-    if not count_digits(password) >= MIN_AMOUNT_SPECIAL_CHAR:
+    if not count_special_char(password) >= MIN_AMOUNT_SPECIAL_CHAR:
         print("Not enough special character(s)")
         return False
     # Check for bad characters which break policy
