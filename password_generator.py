@@ -1,6 +1,6 @@
 import password_checker
 from password_analysis_helper import is_random_string, split_uppercase_strings, split_lowercase_strings, \
-    split_capital_strings
+    split_capital_strings, split_digit_strings
 from password_generator_helper import (
     change_case,
     random_date,
@@ -42,21 +42,26 @@ def password_analysis(real_password):
     digit_count = count_digits(real_password)
     special_char_count = count_special_char(real_password)
     # Track info about the string composition
-    max_uppercase_string_length = len(max(split_uppercase_strings(real_password)))
-    max_lowercase_string_length = len(max(split_lowercase_strings(real_password)))
-    max_capital_string_length = len(max(split_capital_strings(real_password)))
+    max_uppercase_string_length = len(max(split_uppercase_strings(real_password), key=len))
+    max_lowercase_string_length = len(max(split_lowercase_strings(real_password), key=len))
+    max_capital_string_length = len(max(split_capital_strings(real_password), key=len))
+    max_digital_string_length = len(max(split_digit_strings(real_password), key=len))
     count_uppercase_strings = len(split_uppercase_strings(real_password))
     count_lowercase_strings = len(split_lowercase_strings(real_password))
     count_capital_strings = len(split_capital_strings(real_password))
+    count_digital_strings = len(split_digit_strings(real_password))
 
     print(f"{Back.BLACK}password: " + f"{Fore.GREEN}" + real_password + f"{Style.RESET_ALL}")
+
     print(f"{Back.CYAN}{Fore.BLACK}General Analysis:{Style.RESET_ALL}")
     print("password_length: " + str(length_password))
     print("upper_count: " + str(upper_count))
     print("lower_count: " + str(lower_count))
     print("digit_count: " + str(digit_count))
     print("special_char_count: " + str(special_char_count))
+
     print("------------")
+
     print(f"{Back.CYAN}{Fore.BLACK}Policy Analysis:{Style.RESET_ALL}")
     print("policy diff length_password: " + str(length_password - password_checker.MIN_PASSWORD_LENGTH))
     print("policy diff upper_count: " + str(upper_count - password_checker.MIN_UPPERCASE_LETTERS))
@@ -64,18 +69,31 @@ def password_analysis(real_password):
     print("policy diff digit_count: " + str(digit_count - password_checker.MIN_AMOUNT_DIGITS))
     print("policy diff special_char_count: " + str(special_char_count - password_checker.MIN_AMOUNT_SPECIAL_CHAR))
 
-    print("is_likely_random_string: " + str(is_random_string(real_password)))
     print("------------")
+
     print(f"{Back.CYAN}{Fore.BLACK}String Analysis:{Style.RESET_ALL}")
     print("array_uppercase_strings: " + str(split_uppercase_strings(real_password)))
     print("array_lowercase_strings: " + str(split_lowercase_strings(real_password)))
     print("array_capital_strings: " + str(split_capital_strings(real_password)))
+    print("array_digital_strings: " + str(split_digit_strings(real_password)))
+    print("--")
     print("count_uppercase_strings: " + str(count_uppercase_strings))
     print("count_lowercase_strings: " + str(count_lowercase_strings))
     print("count_capital_strings: " + str(count_capital_strings))
+    print("count_digital_strings: " + str(count_digital_strings))
+    print("--")
     print("max_uppercase_string_length: " + str(max_uppercase_string_length))
     print("max_lowercase_string_length: " + str(max_lowercase_string_length))
     print("max_capital_string_length: " + str(max_capital_string_length))
+    print("max_digital_string_length: " + str(max_digital_string_length))
+
+    # Change the color based off the answer
+    if is_random_string(real_password):
+        print(f"is_likely_random_string: {Fore.GREEN}" + str(is_random_string(real_password)) + f"{Style.RESET_ALL}")
+    else:
+        print(f"is_likely_random_string: {Fore.RED}" + str(is_random_string(real_password)) + f"{Style.RESET_ALL}")
+    print(f"{Back.BLACK}PASSWORD: " + f"{Fore.GREEN}" + real_password + f"{Style.RESET_ALL}")
+
     print("\n|****************************************************|\n")
 
 
@@ -100,12 +118,12 @@ if __name__ == '__main__':
                  "ifG3499mlerm@0346",
                  "Marrywe1299",
                  "123mar3rywe1299"]
-
     """
+
     other = ["HT5p5Py!hZQWxNg"]
 
     pass_test = []
-    with open("examples/example_valid_passwords.txt") as file:
+    with open("examples/example_random_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
         for s in pass_test:
