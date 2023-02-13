@@ -17,3 +17,9 @@ class TestPasswordExamples:
             for line in file:
                 # print(line.rstrip())
                 assert password_valid_to_policy_rules(line.rstrip()) is False
+
+    def test_is_valid_random_password_list(self):
+        with open("../examples/example_random_passwords.txt") as file:
+            for line in file:
+                # print(line.rstrip())
+                assert password_valid_to_policy_rules(line.rstrip()) is True
