@@ -49,8 +49,6 @@ def password_analysis(real_password, debugging=False):
     DEBUG_STRING = True
 
     # Password differences
-
-
     # --- STAT TRACKING VARS ---
     length_password = len(real_password)
     # Track the character counts
@@ -82,48 +80,47 @@ def password_analysis(real_password, debugging=False):
 
         if DEBUG_GENERAL is True:
             print(f"{Back.CYAN}{Fore.BLACK}General Analysis:{Style.RESET_ALL}")
-            print("password_length: " + str(length_password))
-            print("upper_count: " + str(upper_count))
-            print("lower_count: " + str(lower_count))
-            print("digit_count: " + str(digit_count))
-            print("special_char_count: " + str(special_char_count))
+            print(f"password_length: {length_password}")
+            print(f"upper_count: {upper_count}")
+            print(f"lower_count: {lower_count}")
+            print(f"digit_count: {digit_count}")
+            print(f"special_char_count: {special_char_count}")
 
         if DEBUG_POLICY is True:
             print("------------")
 
             print(f"{Back.CYAN}{Fore.BLACK}Policy Analysis:{Style.RESET_ALL}")
-            print("policy diff length_password: " + str(policy_diff_length))
-            print("policy diff upper_count: " + str(policy_diff_upper))
-            print("policy diff lower_count: " + str(policy_diff_lower))
-            print("policy diff digit_count: " + str(policy_diff_digit))
-            print("policy diff special_char_count: " + str(policy_diff_special))
+            print(f"policy diff length_password: {policy_diff_length}")
+            print(f"policy diff upper_count: {policy_diff_upper}")
+            print(f"policy diff lower_count: {policy_diff_lower}")
+            print(f"policy diff digit_count: {policy_diff_digit}")
+            print(f"policy diff special_char_count: {policy_diff_special}")
 
         if DEBUG_STRING is True:
             print("------------")
 
             print(f"{Back.CYAN}{Fore.BLACK}String Analysis:{Style.RESET_ALL}")
-            print("array_uppercase_strings: " + str(split_uppercase_strings(real_password)))
-            print("array_lowercase_strings: " + str(split_lowercase_strings(real_password)))
-            print("array_capital_strings: " + str(split_capital_strings(real_password)))
-            print("array_digital_strings: " + str(split_digit_strings(real_password)))
+            print(f"array_uppercase_strings: {split_uppercase_strings(real_password)}")
+            print(f"array_lowercase_strings: {split_lowercase_strings(real_password)}")
+            print(f"array_capital_strings: {split_capital_strings(real_password)}")
+            print(f"array_digital_strings: {split_digit_strings(real_password)}")
             print("--")
-            print("count_uppercase_strings: " + str(count_uppercase_strings))
-            print("count_lowercase_strings: " + str(count_lowercase_strings))
-            print("count_capital_strings: " + str(count_capital_strings))
-            print("count_digital_strings: " + str(count_digital_strings))
+            print(f"count_uppercase_strings: {count_uppercase_strings}")
+            print(f"count_lowercase_strings: {count_lowercase_strings}")
+            print(f"count_capital_strings: {count_capital_strings}")
+            print(f"count_digital_strings: {count_digital_strings}")
             print("--")
-            print("max_uppercase_string_length: " + str(max_uppercase_string_length))
-            print("max_lowercase_string_length: " + str(max_lowercase_string_length))
-            print("max_capital_string_length: " + str(max_capital_string_length))
-            print("max_digital_string_length: " + str(max_digital_string_length))
+            print(f"max_uppercase_string_length: {max_uppercase_string_length}")
+            print(f"max_lowercase_string_length: {max_lowercase_string_length}")
+            print(f"max_capital_string_length: {max_capital_string_length}")
+            print(f"max_digital_string_length: {max_digital_string_length}")
 
         # Change the color based off the answer
         if is_random_string(real_password):
-            print(
-                f"is_likely_random_string: {Fore.GREEN}" + str(is_random_string(real_password)) + f"{Style.RESET_ALL}")
+            print(f"is_likely_random_string: {Fore.GREEN}{is_random_string(real_password)}{Style.RESET_ALL}")
         else:
-            print(f"is_likely_random_string: {Fore.RED}" + str(is_random_string(real_password)) + f"{Style.RESET_ALL}")
-        print(f"{Back.BLACK}PASSWORD: " + f"{Fore.GREEN}" + real_password + f"{Style.RESET_ALL}")
+            print(f"is_likely_random_string: {Fore.RED}{is_random_string(real_password)}{Style.RESET_ALL}")
+        print(f"{Back.BLACK}PASSWORD: {Fore.GREEN}{real_password}{Style.RESET_ALL}")
 
         print("\n|****************************************************|\n")
 
@@ -243,4 +240,4 @@ if __name__ == '__main__':
         for line in file:
             pass_test.append(line.strip())
         for s in pass_test:
-            password_analysis(s, debugging=False)
+            password_analysis(s, debugging=True)
