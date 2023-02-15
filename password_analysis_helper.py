@@ -10,6 +10,10 @@ from collections import Counter
 nltk.download('words')
 set_of_words = set(words.words())
 
+# Define common strings
+COMMON_STRINGS = ["ABCD", "ABC", "1234", "123"]
+
+
 # The starts_with and ends_with functions return booleans
 
 
@@ -72,6 +76,13 @@ def split_symbols_strings(string: str):
 def split_at_symbols(string: str):
     return re.split(r'[!@#$%^&*]+', string) # Returns an array
 
+
+def contains_very_common_string(string: str) -> bool:
+    for entry in COMMON_STRINGS:  # Cycle the array
+        if entry.upper() in string.upper():  # Check if it contains a common string
+            return True
+    # If it makes it here it's fine
+    return False
 
 def convert_from_leet(string: str) -> str:
     new_string = ""
