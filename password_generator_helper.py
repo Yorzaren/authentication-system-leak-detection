@@ -1,5 +1,6 @@
 import re
 from random import choice, randint
+import string as alphabet_string
 import password_checker
 
 
@@ -118,9 +119,57 @@ def most_simple_password(string: str, simple_password_type: int = 1) -> str:
         return new_string + "!"
 
 
+def create_random_letter() -> str:
+    return choice(alphabet_string.ascii_letters)
+
+
+def create_random_digit() -> str:
+    return choice(alphabet_string.digits)
+
+
+def create_random_symbol() -> str:
+    return choice(password_checker.ALLOWED_SPECIAL_CHAR)
+
+
+def random_corruption(string: str, amount: int) -> str:
+    # Always corrupt the first character in the string
+    random_corruption_type = randint(1, 3)
+    if random_corruption_type == 1:
+        replacement = create_random_letter()
+    elif random_corruption_type == 2:
+        replacement = create_random_digit()
+    else:
+        replacement = create_random_symbol()
+    # Replace
+    string = string[:0] + replacement + string[0+1:]
+
+    # Now replace random characters X amount of times
+    for i in range(0, amount):
+        # Pick a random place and corrupt it
+        already_used = [0]
+        random_place = randint(1, len(string)-1)
+
+        # Prevent reusing an index
+        while random_place in already_used:
+            random_place = randint(1, len(string) - 1)
+
+        random_corruption_type = randint(0, 3)
+
+        if random_corruption_type == 1:
+            replacement = create_random_letter()
+        elif random_corruption_type == 2:
+            replacement = create_random_digit()
+        else:
+            replacement = create_random_symbol()
+
+        # Replace
+        string = string[:random_place] + replacement + string[random_place+1:]
+        already_used.append(random_place)
+
+    return string
+
+
 # TODO: Redo this and break it after considering various test cases
-
-
 def convert_4_digits(string: str):
     set_of_4_digits = re.findall(r"\d{4}", string)  # If there's 4 digits near each other, group them into the array
 

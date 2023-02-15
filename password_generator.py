@@ -7,7 +7,7 @@ from password_generator_helper import (
     random_4_numbers,
     leet_letters,
     anti_leet_letters,
-    convert_4_digits,
+    convert_4_digits, random_corruption,
 )
 from password_checker import count_uppercase, count_lowercase, count_digits, count_special_char
 from colorama import init as colorama_init
@@ -34,14 +34,17 @@ Type of passwords:
 """
 
 
-def password_analysis(real_password, debugging=False):
+def password_analysis(real_password, debugging=False) -> bool:
     """
     is_random_string returns a boolean based off a score, but has both false
     positives and negatives. The new analysis score will take into account the
     composition of the password  in relation to the password policy.
+
+    This will return a boolean for the variable: is_random
     """
 
     ANALYSIS_SCORE = 0  # Higher score means more likely to be random.
+    is_random = False
 
     # Allows you to reduce the amount of messages you get when debugging
     DEBUG_GENERAL = True
@@ -150,7 +153,6 @@ def password_analysis(real_password, debugging=False):
 
         #print(f"{length_ratio} {count_uppercase_strings} {Fore.BLACK}{count_uppercase_strings >= length_ratio}{Style.RESET_ALL}")
 
-
         if count_uppercase_strings >= 5 or count_uppercase_strings >= length_ratio:
             ANALYSIS_SCORE += 2
         if count_lowercase_strings >= 5 or count_lowercase_strings >= length_ratio:
@@ -160,21 +162,22 @@ def password_analysis(real_password, debugging=False):
         if count_digital_strings >= 5 or count_digital_strings >= length_ratio:
             ANALYSIS_SCORE += 2
 
-        print(f"ANALYSIS_SCORE--After adding bonuses: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}")
+        if debugging is True:
+            print(f"ANALYSIS_SCORE--After adding bonuses: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}")
 
         # If it barely meets the policy is probably not random.
         if policy_diff_upper == 0:
             ANALYSIS_SCORE -= 1
-            print("policy_diff_upper")
+            # print("policy_diff_upper")
         if policy_diff_lower == 0:
             ANALYSIS_SCORE -= 1
-            print("policy_diff_lower")
+            # print("policy_diff_lower")
         if policy_diff_digit == 0:
             ANALYSIS_SCORE -= 1
-            print("policy_diff_digit")
+            # print("policy_diff_digit")
         if policy_diff_special == 0:
             ANALYSIS_SCORE -= 1
-            print("policy_diff_digit")
+            # print("policy_diff_digit")
 
         if count_uppercase_strings == 1:
             ANALYSIS_SCORE -= 1
@@ -188,23 +191,56 @@ def password_analysis(real_password, debugging=False):
         if contains_very_common_string(real_password) is True:
             ANALYSIS_SCORE -= 5
 
+    if debugging is True:
         print(real_password)
         print(f"{Fore.RED}{Back.BLACK}[FINAL]{Style.RESET_ALL} ANALYSIS_SCORE: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}")
 
+    if ANALYSIS_SCORE > 0:
+        is_random = True
 
-    print("\n|******************************************************************|\n")
+    if debugging is True:
+        print(f"IsRandom: {is_random}")
+
+        print("\n|******************************************************************|\n")
+
+    return is_random
 
 
-def generate_fakes(real_password="", amount=10):
+def generate_fakes(real_password, amount=10):  # Returns an array
+    decoy_passwords = []
     simple_symbol_corruption = False
     simple_letter_case = False  # THis!i5AnAlert0963 --> This!i5analert0963
     simple_leet_corruption = False
     simple_digit_corruption = False
-    password_analysis(real_password, debugging=True)
-    for i in range(0, amount):
-        print("\n")
-        # convert_4_digits(real_password)
 
+    # Check that the real_password conforms to the policy
+    # We will also check this somewhere else too, but this is to warn us of issues.
+    if password_checker.password_valid_to_policy_rules(real_password) is False:
+        print(f"{Fore.RED}{Back.BLACK}[ERROR] The real_password: {real_password} "
+              f"doesn't follow policy.{Style.RESET_ALL}")
+        raise ValueError  # Catch this with try-except block when you call the generate_fakes just incase.
+
+    # If the string is random, it doesn't matter what we do to it.
+    if password_analysis(real_password, debugging=False) is True:
+        print(f"Real Password: {Back.BLACK}{real_password}{Style.RESET_ALL}")
+        # Generate X amount of decoys - The string is assumed to be very random.
+        # Therefore, we can just generate the max amount of decoys requested.
+        for i in range(0, amount):
+            # Generate the potential decoy
+            new_decoy = random_corruption(real_password, int(len(real_password) / 2))
+            # Check that the decoy follows the policy, if it doesn't keep trying until we get one.
+            while password_checker.password_valid_to_policy_rules(new_decoy) is False:
+                new_decoy = random_corruption(real_password, int(len(real_password) / 2))
+            # Shouldn't be needed, but just incase, regen if its already in the decoy password array.
+            while new_decoy in decoy_passwords:
+                new_decoy = random_corruption(real_password, int(len(real_password) / 2))
+            # If it passed the tests, then add it to the array.
+            decoy_passwords.append(new_decoy)
+
+    # Debugging
+    print(*decoy_passwords, sep=' | ')
+    # Return the array for the other functions to use
+    return decoy_passwords
 
 if __name__ == '__main__':
     """
@@ -218,7 +254,7 @@ if __name__ == '__main__':
                  "123mar3rywe1299"]
     """
 
-    other = ["HT5p5Py!hZQWxNg"]
+    other = ["HT5p5Py!hZQWxNg" , "2oxPnfis$u#NLi"]
     problematic_vailds = [
         "G@rden2!!asdf",
         "Cupc@kes@19s",
@@ -239,5 +275,11 @@ if __name__ == '__main__':
     with open("examples/example_random_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
-        for s in pass_test:
-            password_analysis(s, debugging=True)
+
+    for s in pass_test:
+        #password_analysis(s, debugging=False)
+        generate_fakes(s)
+    try:
+        generate_fakes("BAD PASSWORD")
+    except ValueError:
+        print("You can't use this password because it doesn't conform to the policy")
