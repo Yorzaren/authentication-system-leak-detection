@@ -3,6 +3,7 @@ from random import choice, randint
 import string as alphabet_string
 import password_checker
 
+LEETABLE_CHARS = ["A", "B", "E", "L", "O", "S"]
 
 # Simple function to flip a letter's case
 # If a number or symbol gets passed to this, it just returns it unchanged
@@ -169,13 +170,14 @@ def random_corruption(string: str, amount: int) -> str:
     return string
 
 
-# TODO: Redo this and break it after considering various test cases
-def convert_4_digits(string: str):
+def convert_4_digits(string: str, corruption_type=1):
+    # 1 is MM-DD numbers (default)
+    # 2 is DD-MM
+    # 3 is XXXX random numbers
     set_of_4_digits = re.findall(r"\d{4}", string)  # If there's 4 digits near each other, group them into the array
 
     if len(set_of_4_digits) > 0:
         target_set_of_digits = choice(set_of_4_digits)  # Select from the array
-        corruption_type = randint(1, 5)
         # print(target_set_of_digits)
 
         # The 1 makes it replace only once in strings that have repeating numbers EX. 1234!1234
@@ -195,5 +197,30 @@ def convert_4_digits(string: str):
                 string = string.replace(target_set_of_digits, random_4_numbers(), 1)
             else:  # Replace last occurrence
                 string = random_4_numbers().join(string.rsplit(target_set_of_digits, 1))
+    # End IF
+    return string
 
-    print(string)
+
+def random_leet(string: str) -> str:
+    leetable_positions = [pos for pos, char in enumerate(string) if char in LEETABLE_CHARS]
+    if len(leetable_positions) > 0:
+        random_place = choice(leetable_positions)
+        string = string[:random_place] + leet_letters(string[random_place]) + string[random_place+1:]
+    return string
+
+
+def random_symbol_change(string: str) -> str:
+    symbol_positions = [pos for pos, char in enumerate(string) if char in password_checker.ALLOWED_SPECIAL_CHAR]
+    random_place = choice(symbol_positions)
+    string = string[:random_place] + create_random_symbol() + string[random_place + 1:]
+    return string
+
+
+def simple_changes(string: str) -> str:
+    # Simple might be best.
+    # Change the symbol and then leet it if possible
+    new_decoy = random_symbol_change(string)
+    if randint(1, 10) % 3 == 0:  # Randomly leet stuff
+        new_decoy = random_leet(new_decoy)
+
+    return new_decoy

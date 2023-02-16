@@ -1,13 +1,14 @@
+from random import randint
 import password_checker
 from password_analysis_helper import is_random_string, split_uppercase_strings, split_lowercase_strings, \
-    split_capital_strings, split_digit_strings, contains_very_common_string
+    split_capital_strings, split_digit_strings, contains_very_common_string, has_x_digits_in_a_row
 from password_generator_helper import (
     change_case,
     random_date,
     random_4_numbers,
     leet_letters,
     anti_leet_letters,
-    convert_4_digits, random_corruption,
+    convert_4_digits, random_corruption, random_leet, random_symbol_change, simple_changes,
 )
 from password_checker import count_uppercase, count_lowercase, count_digits, count_special_char
 from colorama import init as colorama_init
@@ -34,9 +35,9 @@ Type of passwords:
 """
 
 
-def password_analysis(real_password, debugging=False) -> bool:
+def password_analysis_randomness(real_password, debugging=False) -> bool:
     """
-    is_random_string returns a boolean based off a score, but has both false
+    is_random_string() returns a boolean based off a score, but has both false
     positives and negatives. The new analysis score will take into account the
     composition of the password  in relation to the password policy.
 
@@ -149,9 +150,9 @@ def password_analysis(real_password, debugging=False) -> bool:
         if policy_diff_special >= 3:
             ANALYSIS_SCORE += 2
 
-        length_ratio = int(length_password/3) - 1
+        length_ratio = int(length_password / 3) - 1
 
-        #print(f"{length_ratio} {count_uppercase_strings} {Fore.BLACK}{count_uppercase_strings >= length_ratio}{Style.RESET_ALL}")
+        # print(f"{length_ratio} {count_uppercase_strings} {Fore.BLACK}{count_uppercase_strings >= length_ratio}{Style.RESET_ALL}")
 
         if count_uppercase_strings >= 5 or count_uppercase_strings >= length_ratio:
             ANALYSIS_SCORE += 2
@@ -193,7 +194,8 @@ def password_analysis(real_password, debugging=False) -> bool:
 
     if debugging is True:
         print(real_password)
-        print(f"{Fore.RED}{Back.BLACK}[FINAL]{Style.RESET_ALL} ANALYSIS_SCORE: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}")
+        print(
+            f"{Fore.RED}{Back.BLACK}[FINAL]{Style.RESET_ALL} ANALYSIS_SCORE: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}")
 
     if ANALYSIS_SCORE > 0:
         is_random = True
@@ -206,7 +208,20 @@ def password_analysis(real_password, debugging=False) -> bool:
     return is_random
 
 
-def generate_fakes(real_password, amount=10):  # Returns an array
+def generate_decoy_passwords(real_password: str):  # Returns an array
+    """
+    :param real_password: string
+    :return: array
+    """
+
+    AMOUNT_OF_DECOYS = 10
+
+    """
+    AMOUNT_OF_DECOYS is here if we choose to change the number later
+    However, its probably not likely because more testing would be needed 
+    to make sure nothing breaks.
+    """
+
     decoy_passwords = []
     simple_symbol_corruption = False
     simple_letter_case = False  # THis!i5AnAlert0963 --> This!i5analert0963
@@ -218,14 +233,16 @@ def generate_fakes(real_password, amount=10):  # Returns an array
     if password_checker.password_valid_to_policy_rules(real_password) is False:
         print(f"{Fore.RED}{Back.BLACK}[ERROR] The real_password: {real_password} "
               f"doesn't follow policy.{Style.RESET_ALL}")
-        raise ValueError  # Catch this with try-except block when you call the generate_fakes just incase.
+        raise ValueError  # Catch this with try-except block when you call the generate_decoy_passwords just incase.
 
     # If the string is random, it doesn't matter what we do to it.
-    if password_analysis(real_password, debugging=False) is True:
+    if password_analysis_randomness(real_password, debugging=False) is True:
+        print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} "
+              f"is assumed to be very random.{Style.RESET_ALL}")
         print(f"Real Password: {Back.BLACK}{real_password}{Style.RESET_ALL}")
         # Generate X amount of decoys - The string is assumed to be very random.
         # Therefore, we can just generate the max amount of decoys requested.
-        for i in range(0, amount):
+        for i in range(0, AMOUNT_OF_DECOYS):  # The number is 10 to generate 10 decoy passwords
             # Generate the potential decoy
             new_decoy = random_corruption(real_password, int(len(real_password) / 2))
             # Check that the decoy follows the policy, if it doesn't keep trying until we get one.
@@ -237,10 +254,82 @@ def generate_fakes(real_password, amount=10):  # Returns an array
             # If it passed the tests, then add it to the array.
             decoy_passwords.append(new_decoy)
 
+    # String is not really random, so we have to handle it carefully
+    else:
+        print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} is not random.{Style.RESET_ALL}")
+        # Check if it has a series of 4 digits in a row, because it might be a date or year
+        if has_x_digits_in_a_row(real_password, 4):
+            print("-->Method: 4 digits in a row")
+            """
+            The goal here is to figure out how to break them into groups.
+            Basically, if someone were to know which set of 4 digits are in 
+            the password, they shouldn't be able to pick it out quickly.
+            
+            If we have real password + 2 or 3 decoys with the same digits
+            pass_set_1 which is a different set of numbers
+            pass_set_2 which is a different set of numbers from the prior two
+            Ex. A^RealChallenge1203
+            
+            Real password has digits of 1203
+            pass_set_1 is 0608
+            pass_set_2 is 0723
+            
+            We can generate decoys derived from a common numerical base to hide it better:
+                A^RealChallenge1203 --> A*Re@lChal3nge1203 | A^realch@llenge1203 | A^Re4lhallenge1203
+                A^RealChallenge0608 --> @^RealCha1lenge0608 | A!RealChallenge0608 | etc.
+                A^RealChallenge0723 --> etc.
+            
+            Note: You are forcing the convert_4_digits to give out numbers which can only be MM/DD valid 
+            """
+            pass_set_with_real = randint(2, 3)  # 2 or 3
+            pass_set_1 = randint(3, 4)  # 3 or 4
+            pass_set_2 = AMOUNT_OF_DECOYS - pass_set_with_real - pass_set_1
+
+            decoy_base_1 = convert_4_digits(real_password)
+            # Make sure it's not the same digits as the real password
+            while decoy_base_1 == real_password is True:
+                decoy_base_1 = convert_4_digits(real_password)
+
+            decoy_base_2 = convert_4_digits(real_password)
+            # No overlaps
+            while decoy_base_2 == real_password or decoy_base_2 == decoy_base_1 is True:
+                decoy_base_2 = convert_4_digits(real_password)
+
+            for i in range(0, pass_set_with_real):  # Corrupt the real_password
+                # print(f"{real_password} {i + 1}")
+
+                new_decoy = simple_changes(real_password)
+                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                    new_decoy = simple_changes(real_password)
+
+                decoy_passwords.append(new_decoy)
+                # print(f"Added: {new_decoy}")
+
+            for i in range(0, pass_set_1):  # Corrupt decoy_base_1
+                # print(f"{decoy_base_1} {i + 1}")
+
+                new_decoy = simple_changes(decoy_base_1)
+                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                    new_decoy = simple_changes(decoy_base_1)
+
+                decoy_passwords.append(new_decoy)
+                # print(f"Added: {new_decoy}")
+
+            for i in range(0, pass_set_2):  # Corrupt decoy_base_2
+                # print(f"{decoy_base_2} {i + 1}")
+
+                new_decoy = simple_changes(decoy_base_2)
+                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                    new_decoy = simple_changes(decoy_base_2)
+
+                decoy_passwords.append(new_decoy)
+                # print(f"Added: {new_decoy}")
+
     # Debugging
     print(*decoy_passwords, sep=' | ')
     # Return the array for the other functions to use
     return decoy_passwords
+
 
 if __name__ == '__main__':
     """
@@ -254,7 +343,7 @@ if __name__ == '__main__':
                  "123mar3rywe1299"]
     """
 
-    other = ["HT5p5Py!hZQWxNg" , "2oxPnfis$u#NLi"]
+    other = ["HT5p5Py!hZQWxNg", "2oxPnfis$u#NLi"]
     problematic_vailds = [
         "G@rden2!!asdf",
         "Cupc@kes@19s",
@@ -272,14 +361,19 @@ if __name__ == '__main__':
                 "QydZx2qB&#Liz@",
                 "5Brom2n*J$%Fsz"]
     pass_test = []
-    with open("examples/example_random_passwords.txt") as file:
+    with open("examples/example_valid_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
 
     for s in pass_test:
-        #password_analysis(s, debugging=False)
-        generate_fakes(s)
-    try:
-        generate_fakes("BAD PASSWORD")
+        # password_analysis(s, debugging=False)
+        try:
+            generate_decoy_passwords(s)
+        except ValueError:
+            print("You can't use this password because it doesn't conform to the policy")
+
+    """try:
+        generate_decoy_passwords("BAD PASSWORD")
     except ValueError:
         print("You can't use this password because it doesn't conform to the policy")
+    """

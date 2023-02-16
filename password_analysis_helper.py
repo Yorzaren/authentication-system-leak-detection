@@ -224,7 +224,12 @@ def is_random_string(string: str, debugging=False) -> bool:
     return randomness_score >= RANDOMNESS_THRESHOLD
 
 
-
+def has_x_digits_in_a_row(string: str, amount: int) -> bool:
+    digit_array = split_digit_strings(string)
+    for el in digit_array:
+        if len(el) == amount:
+            return True
+    return False
 
 
 
