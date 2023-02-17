@@ -12,6 +12,7 @@ Note from: https://www.mysqltutorial.org/mysql-stored-procedure/mysql-delimiter/
 
 /* Allows for easy update of the stored procedure */
 DROP PROCEDURE IF EXISTS GetTable;
+DROP PROCEDURE IF EXISTS UserExists;
 DROP PROCEDURE IF EXISTS AddNormalUser;
 DROP PROCEDURE IF EXISTS AddAdminUser;
 DROP PROCEDURE IF EXISTS IsUserAdmin;
@@ -28,6 +29,11 @@ DELIMITER //
 CREATE PROCEDURE GetTable()
 BEGIN
 	SELECT *  FROM passwordTable;
+END//
+
+CREATE PROCEDURE UserExists(inputUsername varchar(50))
+BEGIN
+	SELECT COUNT(*)  FROM passwordTable WHERE Username = inputUsername;
 END//
 
 CREATE PROCEDURE AddNormalUser(Username varchar(50), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32), Password11 varchar(32))
