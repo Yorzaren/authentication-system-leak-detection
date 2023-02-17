@@ -1,4 +1,7 @@
 from random import randint
+
+from nltk import edit_distance
+
 import password_checker
 from password_analysis_helper import is_random_string, split_uppercase_strings, split_lowercase_strings, \
     split_capital_strings, split_digit_strings, contains_very_common_string, has_x_digits_in_a_row
@@ -327,6 +330,13 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
 
     # Debugging
     print(*decoy_passwords, sep=' | ')
+
+    # Debugging -- Levenshtein distance if 1 then its likely someone might hit it when mistyping
+    # TODO: Find a better way to handle 4 digits
+    """
+    for pas in decoy_passwords:
+        print(f"Decoy value: {pas}\n Distance: {edit_distance(real_password, pas)}")
+    """
     # Return the array for the other functions to use
     return decoy_passwords
 
