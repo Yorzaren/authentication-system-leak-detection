@@ -24,3 +24,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_JAVASCRIPT_STANDARD: false # This is a lot
           VALIDATE_PYTHON_BLACK: false # Just run it as black -l 120 .
+          VALIDATE_SQLFLUFF: false
