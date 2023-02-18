@@ -30,6 +30,9 @@ It will also be used to connect to the database
 
 
 """
+import random
+
+
 RANDOM_NOISE = "1CPj3KSeCpaRlu6FvfG6"  # A string
 RANDOM_NUMBER = 383369324388255133968499854491  # An int
 NUMBER_OF_PASSWORDS = 11  # An int, N total passwords (1 real + N-1 decoy passwords)
@@ -50,3 +53,24 @@ def hide_password(username: str) -> int:
     print(placement)
 
     return placement
+
+
+
+decoys = ['decoy1', "decoy2", 'decoy3', 'decoy4', 'decoy5', 'decoy6', 'decoy7', 'decoy8', 'decoy9', 'decoy10']
+
+
+def array_handler(real_password, array_decoys, real_placement):
+    random.shuffle(array_decoys)  # Randomize the array
+    array_decoys.insert(real_placement, real_password)
+    #print(array_decoys)
+    return array_decoys
+
+
+hidden = array_handler("the_real_password", decoys, hide_password("mblack"))
+
+
+def get_real_password(username: str, password_array) -> str:
+    return password_array[hide_password(username)]
+
+
+print(get_real_password("mblack", hidden))
