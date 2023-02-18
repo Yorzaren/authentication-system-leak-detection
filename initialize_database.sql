@@ -70,11 +70,14 @@ DROP PROCEDURE IF EXISTS UserExists;
 DROP PROCEDURE IF EXISTS AddAdminUser;
 DROP PROCEDURE IF EXISTS AddNormalUser;
 DROP PROCEDURE IF EXISTS DeleteUser;
+DROP PROCEDURE IF EXISTS GetPasswords;
+DROP PROCEDURE IF EXISTS UpdatePassword;
 DROP PROCEDURE IF EXISTS IsUserAdmin;
 DROP PROCEDURE IF EXISTS IsUserLockedOut;
 DROP PROCEDURE IF EXISTS LockUser;
 DROP PROCEDURE IF EXISTS UnlockUser;
 DROP PROCEDURE IF EXISTS UpdateLastQuery;
+DROP PROCEDURE IF EXISTS GetFailsCount;
 DROP PROCEDURE IF EXISTS IncrementFails;
 DROP PROCEDURE IF EXISTS ResetFails;
 
@@ -109,6 +112,44 @@ BEGIN
 	WHERE Username = inputUsername;
 END//
 
+CREATE PROCEDURE GetPasswords(inputUsername varchar(50))
+BEGIN
+	SELECT
+		Password1,
+		Password2,
+		Password3,
+		Password4,
+		Password5,
+		Password6,
+		Password7,
+		Password8,
+		Password9,
+		Password10,
+		Password11
+    FROM passwordTable
+	WHERE Username = inputUsername;
+END//
+
+
+CREATE PROCEDURE UpdatePassword(inputUsername varchar(50), updatedPassword1 varchar(32), updatedPassword2 varchar(32), updatedPassword3 varchar(32), updatedPassword4 varchar(32), updatedPassword5 varchar(32), updatedPassword6 varchar(32), updatedPassword7 varchar(32), updatedPassword8 varchar(32), updatedPassword9 varchar(32), updatedPassword10 varchar(32), updatedPassword11 varchar(32))
+BEGIN
+	UPDATE passwordTable 
+	SET 
+		Password1 = updatedPassword1,
+		Password2 = updatedPassword2,
+		Password3 = updatedPassword3,
+		Password4 = updatedPassword4,
+		Password5 = updatedPassword5,
+		Password6 = updatedPassword6,
+		Password7 = updatedPassword7,
+		Password8 = updatedPassword8,
+		Password9 = updatedPassword9,
+		Password10 = updatedPassword10,
+		Password11 = updatedPassword11
+	WHERE
+		Username = inputUsername;
+END//
+
 CREATE PROCEDURE IsUserAdmin(inputUsername varchar(50))
 BEGIN
 	SELECT COUNT(*) FROM passwordTable WHERE (Username = inputUsername AND IsAdmin = 1);
@@ -138,6 +179,13 @@ BEGIN
 	UPDATE passwordTable
 	SET LastQueried = NOW()
     WHERE Username = inputUsername;
+END//
+
+CREATE PROCEDURE GetFailsCount(inputUsername varchar(50))
+BEGIN
+	SELECT FailedLoginAttempts
+    FROM passwordTable
+	WHERE Username = inputUsername;
 END//
 
 CREATE PROCEDURE IncrementFails(inputUsername varchar(50))
