@@ -13,8 +13,9 @@ Note from: https://www.mysqltutorial.org/mysql-stored-procedure/mysql-delimiter/
 /* Allows for easy update of the stored procedure */
 DROP PROCEDURE IF EXISTS GetTable;
 DROP PROCEDURE IF EXISTS UserExists;
-DROP PROCEDURE IF EXISTS AddNormalUser;
 DROP PROCEDURE IF EXISTS AddAdminUser;
+DROP PROCEDURE IF EXISTS AddNormalUser;
+DROP PROCEDURE IF EXISTS DeleteUser;
 DROP PROCEDURE IF EXISTS IsUserAdmin;
 DROP PROCEDURE IF EXISTS IsUserLockedOut;
 DROP PROCEDURE IF EXISTS LockUser;
@@ -36,17 +37,23 @@ BEGIN
 	SELECT COUNT(*)  FROM passwordTable WHERE Username = inputUsername;
 END//
 
+CREATE PROCEDURE AddAdminUser(Username varchar(50), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32), Password11 varchar(32))
+BEGIN
+    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11)
+	VALUES (Username, 1, 0, 0, NOW(), Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11); 
+END //
+
 CREATE PROCEDURE AddNormalUser(Username varchar(50), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32), Password11 varchar(32))
 BEGIN
     INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11)
 	VALUES (Username, 0, 0, 0, NOW(), Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11); 
 END //
 
-CREATE PROCEDURE AddAdminUser(Username varchar(50), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32), Password11 varchar(32))
+CREATE PROCEDURE DeleteUser(inputUsername varchar(50))
 BEGIN
-    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11)
-	VALUES (Username, 1, 0, 0, NOW(), Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11); 
-END //
+	DELETE FROM passwordTable
+	WHERE Username = inputUsername;
+END//
 
 CREATE PROCEDURE IsUserAdmin(inputUsername varchar(50))
 BEGIN
