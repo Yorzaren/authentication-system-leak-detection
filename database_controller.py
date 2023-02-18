@@ -44,9 +44,8 @@ is_admin : sys
 is_locked_out : sys
 add_user : admin
 delete_user : admin
-get_passwords : sys
+get_passwords : sys -> array_passwords & update_last_queried in the back end
 update_password : must be the user (the admin can't change a user's password)
-update_last_queried : sys
 lock_account : sys | triggers on 10 bad password entries on the account
 unlock_account : admin   --> also call reset_failed_attempts
 get_failed_count : sys
@@ -186,6 +185,14 @@ def get_passwords(username: str):  # Return an array
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
+
+        # Update the last queried date
+        command = f'CALL UpdateLastQuery("{username}")'
+        my_cursor.execute(command)
+
+        # Commit the changes
+        cnx.commit()
+
         query = f'CALL GetPasswords("{username}")'
         my_cursor.execute(query)
 
@@ -222,30 +229,6 @@ def update_password(username: str, password_array):
             print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
         else:
             print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
-
-
-# You should only update the timestamp when: password_change, password_check
-def update_last_queried(username: str):
-    try:
-        # Create the connector
-        cnx = mysql.connector.connect(**db_config)
-        my_cursor = cnx.cursor(buffered=True)
-        command = f'CALL UpdateLastQuery("{username}")'
-        my_cursor.execute(command)
-
-        # Commit the changes
-        cnx.commit()
-
-        # Close the connector
-        cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
-
 
 def lock_account(username: str):
     try:
