@@ -162,4 +162,4 @@ DELIMITER ;
 -- Create the default admin account
 --
 
--- CALL AddAdminUser("Admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password")
+CALL AddAdminUser("Admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password")
