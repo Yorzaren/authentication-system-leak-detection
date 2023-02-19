@@ -7,13 +7,12 @@ credentials in scripts that invoke the commands created in here.
 
 """
 
-import datetime
-import mysql.connector
-from mysql.connector import errorcode
-from dotenv import load_dotenv  # Used to load info from the .env file
 import os  # Used to get the .env file
+
+import mysql.connector
+from colorama import Back, Fore, Style
 from colorama import init as colorama_init
-from colorama import Fore, Back, Style
+from dotenv import load_dotenv  # Used to load info from the .env file
 
 # Initialize for to use colorful print messages later
 colorama_init()
@@ -21,12 +20,7 @@ colorama_init()
 # Pull data from .env and set up the database connection
 load_dotenv()  # Load the secrets from the .env file
 database_password = os.environ.get("DB_PASSWORD")
-db_config = {
-    'user': 'root',
-    'password': database_password,
-    'host': '127.0.0.1',
-    'database': 'passwordKeepers'
-}
+db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
 
 """
 
@@ -230,6 +224,7 @@ def update_password(username: str, password_array):
         else:
             print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
 
+
 def lock_account(username: str):
     try:
         # Create the connector
@@ -347,7 +342,7 @@ def print_table():
     print(f"{Fore.CYAN}{Back.BLACK}--- DUMPING TABLE ---{Style.RESET_ALL}")
     cnx = mysql.connector.connect(**db_config)
     my_cursor = cnx.cursor(buffered=True)
-    my_cursor.execute('CALL GetTable()')
+    my_cursor.execute("CALL GetTable()")
     records = my_cursor.fetchall()
     for row in records:
         print(row)
@@ -356,25 +351,15 @@ def print_table():
     print(f"{Fore.CYAN}{Back.BLACK}-------- END --------{Style.RESET_ALL}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(is_admin("Admin"))
     print(user_exists("Assdmin"))
     print_table()
 
-    array = ["test1",
-             "test2",
-             "test3",
-             "test4",
-             "test5",
-             "test6",
-             "test7",
-             "test8",
-             "test9",
-             "test10",
-             "test11"]
+    array = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"]
 
-    #add_user("testuser", array)
-    #add_user("testadmin", array, True)
+    # add_user("testuser", array)
+    # add_user("testadmin", array, True)
     update_password("Admin", array)
 
     print((get_passwords("Admin")[10]))

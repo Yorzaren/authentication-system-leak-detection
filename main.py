@@ -33,10 +33,10 @@ It will also be used to connect to the database
 """
 import random
 
-import database_controller as db_controller
+from colorama import Back, Fore, Style
 from colorama import init as colorama_init
-from colorama import Fore, Back, Style
 
+import database_controller as db_controller
 from email_service import send_email
 from password_checker import password_valid_to_policy_rules
 from username_checker import is_valid_username
@@ -62,26 +62,26 @@ def hide_password(username: str) -> int:
 
     placement = (char_sum * RANDOM_NUMBER) % NUMBER_OF_PASSWORDS
 
-    #print(f"hide_password({username}) placement: {placement}")
+    # print(f"hide_password({username}) placement: {placement}")
 
     return placement
 
 
 # TODO: Decoy generator
 def decoy_generator() -> list:
-    return ['decoy1', "decoy2", 'decoy3', 'decoy4', 'decoy5', 'decoy6', 'decoy7', 'decoy8', 'decoy9', 'decoy10']
+    return ["decoy1", "decoy2", "decoy3", "decoy4", "decoy5", "decoy6", "decoy7", "decoy8", "decoy9", "decoy10"]
 
 
 def _array_handler(real_password: str, array_decoys: list, real_placement: int) -> list:
     random.shuffle(array_decoys)  # Randomize the array
     array_decoys.insert(real_placement, real_password)
-    #print(array_decoys)
+    # print(array_decoys)
     return array_decoys
 
 
 hidden = _array_handler("the_real_password", decoy_generator(), hide_password("mblack"))
 
-#print(hidden)
+# print(hidden)
 
 
 def create_password_array(username: str, password: str) -> list:
@@ -93,7 +93,7 @@ def get_real_password(username: str, password_array) -> str:
     return password_array[hide_password(username)]
 
 
-#print(get_real_password("mblack", hidden))
+# print(get_real_password("mblack", hidden))
 
 
 def is_authenticated(username: str, input_password: str) -> bool:
@@ -126,7 +126,9 @@ def is_authenticated(username: str, input_password: str) -> bool:
             else:
                 # The account will be locked at 10 wrong attempts, the equality is just to make sure.
                 if db_controller.get_failed_count(username) >= 10:
-                    print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Too many wrong attempts. Your account has been locked.")
+                    print(
+                        f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Too many wrong attempts. Your account has been locked."
+                    )
                     db_controller.lock_account(username)
                     # Send the account locked email to the admin
                     send_email("test", 1, username)
@@ -134,14 +136,20 @@ def is_authenticated(username: str, input_password: str) -> bool:
                 else:
                     # Increase fails counter
                     db_controller.increment_failed_attempts(username)
-                    print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Wrong password - Wrong Attempt Count: {db_controller.get_failed_count(username)}")
+                    print(
+                        f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Wrong password - Wrong Attempt Count: {db_controller.get_failed_count(username)}"
+                    )
                     return False
         else:
-            print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Your account was locked for your safety. Contact an admin to unlock it.")
+            print(
+                f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Your account was locked for your safety. Contact an admin to unlock it."
+            )
             return False
 
     else:
-        print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL}Error: Username {username} doesn't exist")
+        print(
+            f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL}Error: Username {username} doesn't exist"
+        )
         return False
 
 
@@ -158,27 +166,26 @@ def add_user_account(admin_name: str, auth_password: str, username: str, new_use
     """
 
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print(f"Admin is really admin")
+        print("Admin is really admin")
 
         if db_controller.user_exists(username) is False:
             if is_valid_username(username) is True:
-                print(f"Username is unique")
+                print("Username is unique")
                 if password_valid_to_policy_rules(new_user_password):
                     # Generate fake passwords
                     password_array = create_password_array(username, new_user_password)
                     db_controller.add_user(username, password_array, add_as_admin)
-                    print(f"Account created")
+                    print("Account created")
                     return True  # Success
                 else:
-                    print(f"Password didn't meet standards.")
+                    print("Password didn't meet standards.")
                     return False
         else:
-            print(f"The user already exists in the system.")
+            print("The user already exists in the system.")
             return False
     else:
-        print(f"Admin requesting is a faker")
+        print("Admin requesting is a faker")
         return False
-
 
     # Check admin requirements of: isadmin and password is correct
 
@@ -193,18 +200,18 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
     """
     # Check if the requesting account is the admin and is authenticated
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print(f"Admin is really admin")
+        print("Admin is really admin")
         if db_controller.user_exists(username):
             # TODO: Create a safety to prevent the only admin from removing themselves
             # Delete the user if they exist
             db_controller.delete_user(username)
-            print(f"Success: Deleted {username}")
+            print("Success: Deleted {username}")
             return True  # Success
         else:
-            print(f"The user you have requested to delete doesn't exist.")
+            print("The user you have requested to delete doesn't exist.")
             return False
     else:
-        print(f"Admin requesting is a faker")
+        print("Admin requesting is a faker")
         return False
 
 
@@ -218,17 +225,17 @@ def unlock_account(admin_name: str, auth_password: str, username: str) -> bool:
     """
     # Check if the requesting account is the admin and is authenticated
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print(f"Admin is really admin")
+        print("Admin is really admin")
         if db_controller.user_exists(username):
             # Unlock the account
             db_controller.unlock_account(username)
-            print(f"Success: Unlocked {username}'s account")
+            print("Success: Unlocked {username}'s account")
             return True  # Success
         else:
-            print(f"The user account you have requested to unlock doesn't exist.")
+            print("The user account you have requested to unlock doesn't exist.")
             return False
     else:
-        print(f"Admin requesting is a faker")
+        print("Admin requesting is a faker")
         return False
 
 
@@ -242,7 +249,7 @@ def update_password(username: str, current_password: str, new_password: str) -> 
     """
     # Check if the requesting account is really the account owner
     if is_authenticated(username, current_password):
-        print(f"User is really the user")
+        print("User is really the user")
         if password_valid_to_policy_rules(new_password):
             if password_valid_to_policy_rules(new_password):
                 # Generate fake passwords
@@ -251,15 +258,16 @@ def update_password(username: str, current_password: str, new_password: str) -> 
             print(f"Success: Updated the password to {username}'s account")
             return True  # Success
         else:
-            print(f"The new password doesn't meet the policy standards.")
+            print("The new password doesn't meet the policy standards.")
             return False
     else:
-        print(f"User requesting is a faker")
+        print("User requesting is a faker")
         return False
 
-#add_user_account("admin", "password", "testuser", "Q49^y1z!uxV!")
-#is_authenticated("testuser", "sdfsdfsdsdf")
-#unlock_account("admin", "password", "testuser")
+
+# add_user_account("admin", "password", "testuser", "Q49^y1z!uxV!")
+# is_authenticated("testuser", "sdfsdfsdsdf")
+# unlock_account("admin", "password", "testuser")
 
 print(update_password("admin", "gqL3031%$#qK", "password"))
 
