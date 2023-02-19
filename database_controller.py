@@ -259,6 +259,9 @@ def unlock_account(username: str):
         my_cursor = cnx.cursor(buffered=True)
         command = f'CALL UnlockUser("{username}")'
         my_cursor.execute(command)
+        # You need to reset this or the account will re-lock next time
+        command2 = f'CALL ResetFails("{username}")'
+        my_cursor.execute(command2)
 
         # Commit the changes
         cnx.commit()
