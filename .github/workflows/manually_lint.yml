@@ -26,3 +26,4 @@ jobs:
           VALIDATE_PYTHON_BLACK: false # Just run it as black -l 120 .
           VALIDATE_SQLFLUFF: false
           VALIDATE_PYTHON_MYPY: false
+          VALIDATE_PYTHON_ISORT: false
