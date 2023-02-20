@@ -342,7 +342,7 @@ def is_only_admin() -> bool:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        query = f'CALL GetAdminCount()'
+        query = 'CALL GetAdminCount()'
         my_cursor.execute(query)
 
         if int(my_cursor.fetchone()[0]) == 1:
