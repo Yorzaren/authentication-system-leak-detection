@@ -7,7 +7,7 @@ This should be enough to generate the database and table needed for the program
 - Create the table called passwordTable
 - Create the stored procedures to be used by the python scripts to cut down on SQL commands in the scripts
 - Add a default administrator account
-		username: Admin 
+        username: admin 
         password: password
 - The password needs to be changed after setup to something more secure through the web interface.
 - This is will ensure the decoy passwords are randomized based off the new password.
@@ -33,6 +33,7 @@ CREATE TABLE `passwordTable` (
   `IsLockedOut` tinyint DEFAULT 0,
   `FailedLoginAttempts` int DEFAULT 0,
   `LastQueried` DATETIME DEFAULT NULL,
+  `Password0` varchar(32) DEFAULT NULL,
   `Password1` varchar(32) DEFAULT NULL,
   `Password2` varchar(32) DEFAULT NULL,
   `Password3` varchar(32) DEFAULT NULL,
@@ -43,8 +44,8 @@ CREATE TABLE `passwordTable` (
   `Password8` varchar(32) DEFAULT NULL,
   `Password9` varchar(32) DEFAULT NULL,
   `Password10` varchar(32) DEFAULT NULL,
-  `Password11` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`UID`),
+  PRIMARY KEY (`Username`),
+  KEY (`UID`), -- If this isn't marked as a key the table will break
   UNIQUE KEY `Username_UNIQUE` (`Username`)
 );
 
@@ -80,30 +81,31 @@ DROP PROCEDURE IF EXISTS UpdateLastQuery;
 DROP PROCEDURE IF EXISTS GetFailsCount;
 DROP PROCEDURE IF EXISTS IncrementFails;
 DROP PROCEDURE IF EXISTS ResetFails;
+DROP PROCEDURE IF EXISTS GetAdminCount;
 
 /* Set the delimiter for the stored procedure */
 DELIMITER //
 
 CREATE PROCEDURE GetTable()
 BEGIN
-	SELECT *  FROM passwordTable;
+	SELECT * FROM passwordTable;
 END//
 
 CREATE PROCEDURE UserExists(inputUsername varchar(50))
 BEGIN
-	SELECT COUNT(*)  FROM passwordTable WHERE Username = inputUsername;
+	SELECT COUNT(*) FROM passwordTable WHERE Username = inputUsername;
 END//
 
-CREATE PROCEDURE AddAdminUser(Username varchar(50), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32), Password11 varchar(32))
+CREATE PROCEDURE AddAdminUser(Username varchar(50), Password0 varchar(32), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32))
 BEGIN
-    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11)
-	VALUES (Username, 1, 0, 0, NOW(), Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11); 
+    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10)
+	VALUES (Username, 1, 0, 0, NOW(), Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10); 
 END //
 
-CREATE PROCEDURE AddNormalUser(Username varchar(50), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32), Password11 varchar(32))
+CREATE PROCEDURE AddNormalUser(Username varchar(50), Password0 varchar(32), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32))
 BEGIN
-    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11)
-	VALUES (Username, 0, 0, 0, NOW(), Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10, Password11); 
+    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10)
+	VALUES (Username, 0, 0, 0, NOW(), Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10); 
 END //
 
 CREATE PROCEDURE DeleteUser(inputUsername varchar(50))
@@ -115,6 +117,7 @@ END//
 CREATE PROCEDURE GetPasswords(inputUsername varchar(50))
 BEGIN
 	SELECT
+		Password0,
 		Password1,
 		Password2,
 		Password3,
@@ -124,17 +127,17 @@ BEGIN
 		Password7,
 		Password8,
 		Password9,
-		Password10,
-		Password11
+		Password10
     FROM passwordTable
 	WHERE Username = inputUsername;
 END//
 
 
-CREATE PROCEDURE UpdatePassword(inputUsername varchar(50), updatedPassword1 varchar(32), updatedPassword2 varchar(32), updatedPassword3 varchar(32), updatedPassword4 varchar(32), updatedPassword5 varchar(32), updatedPassword6 varchar(32), updatedPassword7 varchar(32), updatedPassword8 varchar(32), updatedPassword9 varchar(32), updatedPassword10 varchar(32), updatedPassword11 varchar(32))
+CREATE PROCEDURE UpdatePassword(inputUsername varchar(50), updatedPassword0 varchar(32), updatedPassword1 varchar(32), updatedPassword2 varchar(32), updatedPassword3 varchar(32), updatedPassword4 varchar(32), updatedPassword5 varchar(32), updatedPassword6 varchar(32), updatedPassword7 varchar(32), updatedPassword8 varchar(32), updatedPassword9 varchar(32), updatedPassword10 varchar(32))
 BEGIN
 	UPDATE passwordTable 
 	SET 
+		Password0 = updatedPassword0,
 		Password1 = updatedPassword1,
 		Password2 = updatedPassword2,
 		Password3 = updatedPassword3,
@@ -144,8 +147,7 @@ BEGIN
 		Password7 = updatedPassword7,
 		Password8 = updatedPassword8,
 		Password9 = updatedPassword9,
-		Password10 = updatedPassword10,
-		Password11 = updatedPassword11
+		Password10 = updatedPassword10
 	WHERE
 		Username = inputUsername;
 END//
@@ -203,6 +205,13 @@ BEGIN
 	WHERE Username = inputUsername;
 END//
 
+CREATE PROCEDURE GetAdminCount()
+BEGIN
+	SELECT COUNT(*)
+	FROM passwordTable
+	WHERE IsAdmin = 1;
+END//
+
 /* Set the delimiter back to normal */
 DELIMITER ;
 
@@ -210,4 +219,4 @@ DELIMITER ;
 -- Create the default admin account
 --
 
-CALL AddAdminUser("Admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password")
+CALL AddAdminUser("admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password");
