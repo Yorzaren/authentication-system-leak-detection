@@ -1,8 +1,13 @@
 import re
-from random import choice, randint
 import string as alphabet_string
+from random import choice, randint
+
 import password_checker
-from password_analysis_helper import split_digit_strings, starts_with_symbol, ends_with_symbol
+from password_analysis_helper import (
+    ends_with_symbol,
+    split_digit_strings,
+    starts_with_symbol,
+)
 
 LEETABLE_CHARS = ["A", "B", "E", "L", "O", "S", "a", "b", "e", "l", "o", "s"]
 

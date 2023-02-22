@@ -1,8 +1,10 @@
-import password_checker
 import re
+
 import nltk  # Used to detect if something is a dictionary word
 from nltk.corpus import words
 from nostril import nonsense
+
+import password_checker
 
 """
 You have imports included in functions to prevent circular importing errors
@@ -88,7 +90,9 @@ def contains_very_common_string(string: str) -> bool:
 
 
 def convert_from_leet(string: str) -> str:
-    from password_generator_helper import anti_leet_letters  # Prevent circular import by having this here
+    from password_generator_helper import (
+        anti_leet_letters,  # Prevent circular import by having this here
+    )
 
     new_string = ""
     for char in string:
@@ -102,7 +106,9 @@ def convert_from_leet(string: str) -> str:
 # Nostril will fail if the sample is too small or gives both false positives and negatives.
 # This still have false positives. (It will sometimes say a string is random when it isn not)
 def is_random_string(string: str, debugging=False) -> bool:
-    from password_generator_helper import anti_leet_letters  # Prevent circular import by having this here
+    from password_generator_helper import (
+        anti_leet_letters,  # Prevent circular import by having this here
+    )
 
     RANDOMNESS_THRESHOLD = 0  # Default is 0
     VIEW_SCOREING = False  # This is for super debugging, so I can track the where the score is coming from.
@@ -245,7 +251,9 @@ def has_x_digits_in_a_row(string: str, amount: int) -> bool:
 
 # TODO:FINISH
 def return_words_maybe(string: str) -> str:
-    from password_generator_helper import anti_leet_letters  # Prevent circular import by having this here
+    from password_generator_helper import (
+        anti_leet_letters,  # Prevent circular import by having this here
+    )
 
     """
     This is based off of the work done in is_random_string

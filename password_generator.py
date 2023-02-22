@@ -1,26 +1,31 @@
 from random import randint
 
+from colorama import Back, Fore, Style
+from colorama import init as colorama_init
 from nltk import edit_distance
 
 import password_checker
 from password_analysis_helper import (
-    is_random_string,
-    split_uppercase_strings,
-    split_lowercase_strings,
-    split_capital_strings,
-    split_digit_strings,
     contains_very_common_string,
     has_x_digits_in_a_row,
+    is_random_string,
+    split_capital_strings,
+    split_digit_strings,
+    split_lowercase_strings,
+    split_uppercase_strings,
+)
+from password_checker import (
+    count_digits,
+    count_lowercase,
+    count_special_char,
+    count_uppercase,
 )
 from password_generator_helper import (
     convert_4_digits,
     random_corruption,
-    simple_changes,
     regular_handler,
+    simple_changes,
 )
-from password_checker import count_uppercase, count_lowercase, count_digits, count_special_char
-from colorama import init as colorama_init
-from colorama import Fore, Back, Style
 
 # Initialize for to use colorful print messages later
 colorama_init()
