@@ -2,10 +2,9 @@ import re
 from random import choice, randint
 import string as alphabet_string
 import password_checker
-from password_analysis_helper import return_words_maybe, split_digit_strings, starts_with_symbol, ends_with_symbol
+from password_analysis_helper import split_digit_strings, starts_with_symbol, ends_with_symbol
 
-LEETABLE_CHARS = ["A", "B", "E", "L", "O", "S",
-                  "a", "b", "e", "l", "o", "s"]
+LEETABLE_CHARS = ["A", "B", "E", "L", "O", "S", "a", "b", "e", "l", "o", "s"]
 
 
 # Simple function to flip a letter's case
@@ -145,13 +144,13 @@ def random_corruption(string: str, amount: int) -> str:
     else:
         replacement = create_random_symbol()
     # Replace
-    string = string[:0] + replacement + string[0+1:]
+    string = string[:0] + replacement + string[0 + 1 :]
 
     # Now replace random characters X amount of times
     for i in range(0, amount):
         # Pick a random place and corrupt it
         already_used = [0]
-        random_place = randint(1, len(string)-1)
+        random_place = randint(1, len(string) - 1)
 
         # Prevent reusing an index
         while random_place in already_used:
@@ -167,7 +166,7 @@ def random_corruption(string: str, amount: int) -> str:
             replacement = create_random_symbol()
 
         # Replace
-        string = string[:random_place] + replacement + string[random_place+1:]
+        string = string[:random_place] + replacement + string[random_place + 1 :]
         already_used.append(random_place)
 
     return string
@@ -208,7 +207,7 @@ def random_leet(string: str) -> str:
     leetable_positions = [pos for pos, char in enumerate(string) if char in LEETABLE_CHARS]
     if len(leetable_positions) > 0:
         random_place = choice(leetable_positions)
-        string = string[:random_place] + leet_letters(string[random_place]) + string[random_place+1:]
+        string = string[:random_place] + leet_letters(string[random_place]) + string[random_place + 1 :]
     return string
 
 
@@ -216,7 +215,7 @@ def random_symbol_change(string: str) -> str:
     symbol_positions = [pos for pos, char in enumerate(string) if char in password_checker.ALLOWED_SPECIAL_CHAR]
     if len(symbol_positions) > 0:
         random_place = choice(symbol_positions)
-        string = string[:random_place] + create_random_symbol() + string[random_place + 1:]
+        string = string[:random_place] + create_random_symbol() + string[random_place + 1 :]
     return string
 
 
@@ -224,7 +223,7 @@ def random_case_change(string: str) -> str:
     letter_positions = [pos for pos, char in enumerate(string) if char in alphabet_string.ascii_letters]
     if len(letter_positions) > 0:
         random_place = choice(letter_positions)
-        string = string[:random_place] + string[random_place].swapcase() + string[random_place + 1:]
+        string = string[:random_place] + string[random_place].swapcase() + string[random_place + 1 :]
     return string
 
 
@@ -243,10 +242,9 @@ def first_cap_lower_else(string: str) -> str:
     string = string[0].upper() + string[1:]  # Make the first part capital
     return string
 
+
 # TODO: FINISH
-#def place_symbols_between_words(string: str) -> str:
-
-
+# def place_symbols_between_words(string: str) -> str:
 
 
 # TODO: This is a nightmare
@@ -263,24 +261,14 @@ def regular_handler(string: str) -> str:
 
     # If it has only on set of digits in it of any length replace it with random digits. 50% of the time
     if len(split_digit_strings(string)) == 1 and randint(0, 1) == 0:
-        replacement = ''
+        replacement = ""
         for i in range(len(split_digit_strings(string)[0])):
             replacement = replacement + str(create_random_digit())
-        string = re.sub(r'\d+', replacement, string)
-
-    """#TODO: FINISH
-    if len(split_digit_strings(string)) > 1 and randint(0, 1) == 0:
-        arr = split_digit_strings(string)
-        x = choice(arr)
-        replacement = ''
-        for i in range(len(split_digit_strings(string)[0])):
-            replacement = replacement + str(create_random_digit())
-
-        sub_string = re.sub(r'\d+', replacement, string)"""
+        string = re.sub(r"\d+", replacement, string)
 
     # Everything after should be a combination of changes
     if randint(0, 1) == 0:  # Randomly leet parts of the string
-        max_range = int(len(string)/3)  # 1/3 of the total string length
+        max_range = int(len(string) / 3)  # 1/3 of the total string length
         r_rang = randint(1, max_range)  # Randomize so it's not too intense
         for i in range(r_rang):
             string = random_leet(string)
@@ -293,8 +281,8 @@ def regular_handler(string: str) -> str:
     return string
 
 
-if __name__ == '__main__':
-    """ print('asd'[0])
+if __name__ == "__main__":
+    """print('asd'[0])
     print('asd')
     r = return_words_maybe("BubblyRos3!23")
     print(r)
@@ -310,5 +298,3 @@ if __name__ == '__main__':
     print(regular_handler("BubblyRos23"))
     print(regular_handler("BubblyRos23"))
     print(regular_handler("BubblyRos23"))"""
-
-

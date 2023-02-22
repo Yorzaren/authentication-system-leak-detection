@@ -9,7 +9,7 @@ You have imports included in functions to prevent circular importing errors
 """
 
 # Import the real words for later
-nltk.download('words')
+nltk.download("words")
 set_of_words = set(words.words())
 
 # Define common strings
@@ -52,31 +52,31 @@ def ends_with_symbol(string: str) -> bool:
 
 
 def split_letter_strings(string: str):
-    return re.findall(r'[a-zA-Z]+', string)  # Returns an array
+    return re.findall(r"[a-zA-Z]+", string)  # Returns an array
 
 
 def split_uppercase_strings(string: str):
-    return re.findall(r'[A-Z]+', string)  # Returns an array
+    return re.findall(r"[A-Z]+", string)  # Returns an array
 
 
 def split_lowercase_strings(string: str):
-    return re.findall(r'[a-z]+', string)  # Returns an array
+    return re.findall(r"[a-z]+", string)  # Returns an array
 
 
 def split_capital_strings(string: str):
-    return re.findall(r'[A-Z][^A-Z]*', string)  # Returns an array
+    return re.findall(r"[A-Z][^A-Z]*", string)  # Returns an array
 
 
 def split_digit_strings(string: str):
-    return re.findall(r'\d+', string)  # Returns an array
+    return re.findall(r"\d+", string)  # Returns an array
 
 
 def split_symbols_strings(string: str):
-    return re.findall(r'[!@#$%^&*]+', string)  # Returns an array
+    return re.findall(r"[!@#$%^&*]+", string)  # Returns an array
 
 
 def split_at_symbols(string: str):
-    return re.split(r'[!@#$%^&*]+', string) # Returns an array
+    return re.split(r"[!@#$%^&*]+", string)  # Returns an array
 
 
 def contains_very_common_string(string: str) -> bool:
@@ -117,7 +117,7 @@ def is_random_string(string: str, debugging=False) -> bool:
         basic_unleet = anti_leet_letters(entry)
 
         # Be a bit more thorough
-        more_unleet = basic_unleet.replace('@', 'A').replace('1', 'I').replace('3', 'E')
+        more_unleet = basic_unleet.replace("@", "A").replace("1", "I").replace("3", "E")
 
         # Don't double add an entry to the array
         if basic_unleet != more_unleet:
@@ -127,17 +127,16 @@ def is_random_string(string: str, debugging=False) -> bool:
 
     # Process it again to remove other undesirables
     for entry in pp_capital_split_array_unleeted:
-        split_string = re.split(r'[!@#$%^&*]+', entry)
+        split_string = re.split(r"[!@#$%^&*]+", entry)
         for x in split_string:
             pp_symbols_capital_split_array.append(x)
 
     if debugging is True:
-        print('\n---- Start Array Info ----')
+        print("\n---- Start Array Info ----")
         print("capital_split_array : " + str(capital_split_array))
         print("pp_capital_split_array_unleeted : " + str(pp_capital_split_array_unleeted))
         print("pp_symbols_capital_split_array : " + str(pp_symbols_capital_split_array))
-        print('----  End Array Info  ----\n')
-
+        print("----  End Array Info  ----\n")
 
     string_array = split_letter_strings(string)
     unleeted_array = split_letter_strings(unleeted_string)
@@ -148,13 +147,13 @@ def is_random_string(string: str, debugging=False) -> bool:
     max_len_unleeted_array = max(unleeted_array, key=len)
 
     if debugging is True:
-        print('Original String: ' + string)
-        print('Unleet: ' + unleeted_string)
+        print("Original String: " + string)
+        print("Unleet: " + unleeted_string)
 
-        print('Strings (' + str(size_string_array) + '): ' + str(string_array))
-        print('Strings After Unleeting (' + str(size_unleeted_array) + '): ' + str(unleeted_array))
-        print('Max Length String Array: ' + str(max_len_string_array))
-        print('Max Length Unleeted Array: ' + str(max_len_unleeted_array))
+        print("Strings (" + str(size_string_array) + "): " + str(string_array))
+        print("Strings After Unleeting (" + str(size_unleeted_array) + "): " + str(unleeted_array))
+        print("Max Length String Array: " + str(max_len_string_array))
+        print("Max Length Unleeted Array: " + str(max_len_unleeted_array))
 
     if size_string_array == size_unleeted_array:
         # If the array sizes don't change its probably random.
@@ -164,7 +163,7 @@ def is_random_string(string: str, debugging=False) -> bool:
         if VIEW_SCOREING is True:
             print("+2")
 
-    if len(max_len_unleeted_array) >= len(string)/2:
+    if len(max_len_unleeted_array) >= len(string) / 2:
         # If the unleeted_string is half or more it's not really random... ?
         if debugging is True:
             print("-->The string seems to be too long, so prob not random")
@@ -174,18 +173,23 @@ def is_random_string(string: str, debugging=False) -> bool:
 
     # Combine arrays
     merged_array = []
-    for elem in string_array + unleeted_array + capital_split_array + pp_capital_split_array_unleeted + pp_symbols_capital_split_array:
+    for elem in (
+        string_array
+        + unleeted_array
+        + capital_split_array
+        + pp_capital_split_array_unleeted
+        + pp_symbols_capital_split_array
+    ):
         normalize_case = elem.lower()
         if normalize_case not in merged_array:
             merged_array.append(normalize_case)
 
-    #print(str(merged_array))
+    # print(str(merged_array))
 
     # Check the array
     for x in merged_array:
         potential_word = x.lower()
         if len(potential_word) > 2:  # Skip words less than 2-letters long
-
             # Use nltk to check for the array for dictionary words
             if potential_word in set_of_words:
                 if debugging is True:
@@ -226,7 +230,7 @@ def is_random_string(string: str, debugging=False) -> bool:
     if debugging is True:
         print("Random Score: " + str(randomness_score))
         print("IsRandom: " + str(randomness_score >= RANDOMNESS_THRESHOLD))
-        print('\n-----------------\n')
+        print("\n-----------------\n")
 
     return randomness_score >= RANDOMNESS_THRESHOLD
 
@@ -238,7 +242,8 @@ def has_x_digits_in_a_row(string: str, amount: int) -> bool:
             return True
     return False
 
-#TODO:FINISH
+
+# TODO:FINISH
 def return_words_maybe(string: str) -> str:
     from password_generator_helper import anti_leet_letters  # Prevent circular import by having this here
 
@@ -259,7 +264,7 @@ def return_words_maybe(string: str) -> str:
         basic_unleet = anti_leet_letters(entry)
 
         # Be a bit more thorough
-        more_unleet = basic_unleet.replace('@', 'A').replace('1', 'I').replace('3', 'E')
+        more_unleet = basic_unleet.replace("@", "A").replace("1", "I").replace("3", "E")
 
         # Don't double add an entry to the array
         if basic_unleet != more_unleet:
@@ -269,14 +274,20 @@ def return_words_maybe(string: str) -> str:
 
     # Process it again to remove other undesirables
     for entry in pp_capital_split_array_unleeted:
-        split_string = re.split(r'[!@#$%^&*]+', entry)
+        split_string = re.split(r"[!@#$%^&*]+", entry)
         for x in split_string:
             pp_symbols_capital_split_array.append(x)
 
     # Combine arrays
     merged_array = []
     word_array = []
-    for elem in unleeted_array + capital_split_array + pp_capital_split_array_unleeted + pp_symbols_capital_split_array:
+    for elem in (
+        string_array
+        + unleeted_array
+        + capital_split_array
+        + pp_capital_split_array_unleeted
+        + pp_symbols_capital_split_array
+    ):
         normalize_case = elem.lower()
         if normalize_case not in merged_array:
             merged_array.append(normalize_case)
@@ -287,19 +298,17 @@ def return_words_maybe(string: str) -> str:
     print(merged_array)
     return word_array
 
-if __name__ == '__main__':
-    pass_s = [
-        "9Sk5yRyY2^8D",
-        "PoLHrs#jG!a#zaU!zXPbfSCk%an4#6yx",
-        "M8wyg5sYg8P^L9",
-        "WDcrQBnAtfDtn4Tg$#W96At86tJh%t3F"
+
+if __name__ == "__main__":
+    pass_s = ["9Sk5yRyY2^8D", "PoLHrs#jG!a#zaU!zXPbfSCk%an4#6yx", "M8wyg5sYg8P^L9", "WDcrQBnAtfDtn4Tg$#W96At86tJh%t3F"]
+    pass_test = [
+        "1Am4Gr8C0d3r",
+        "D32$jr#Q^VpD",
+        "sdfsdfsWEW34!",
+        "D0g!is!great!p3t",
+        "sundayPizz4Party!",
+        "Iamtheendandthebeginning!1",
     ]
-    pass_test = ["1Am4Gr8C0d3r",
-                 "D32$jr#Q^VpD",
-                 "sdfsdfsWEW34!",
-                 "D0g!is!great!p3t",
-                 "sundayPizz4Party!",
-                 "Iamtheendandthebeginning!1"]
 
     with open("examples/example_random_passwords.txt") as file:
         for line in file:
@@ -307,5 +316,3 @@ if __name__ == '__main__':
     for s in pass_test:
         if is_random_string(s) is False:
             print(s)
-
-
