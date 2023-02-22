@@ -21,7 +21,13 @@ from colorama import init as colorama_init
 from dotenv import load_dotenv  # Used to load info from the .env file
 
 import database_controller as db_controller
-from main import is_authenticated, add_user_account, update_password, unlock_account, delete_user
+from main import (
+    add_user_account,
+    delete_user,
+    is_authenticated,
+    unlock_account,
+    update_password,
+)
 
 # Initialize for to use colorful print messages later
 colorama_init()
@@ -187,10 +193,12 @@ def menu():
                     add_predefined_users()
                     print("Added the predefined users for testing.")
                 else:
-                    print(f"{Fore.RED}[Error]: {Style.RESET_ALL}"
-                          f"Database is not in the default state, so the users can't be added automatically.\n"
-                          "You can reset the database for testing by using initialize_database.sql "
-                          "to replace the current database.")
+                    print(
+                        f"{Fore.RED}[Error]: {Style.RESET_ALL}"
+                        f"Database is not in the default state, so the users can't be added automatically.\n"
+                        "You can reset the database for testing by using initialize_database.sql "
+                        "to replace the current database."
+                    )
 
 
 menu()

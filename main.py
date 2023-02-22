@@ -14,17 +14,18 @@ Before the first run of the code.
     OR have smtpd running by using: python -m smtpd -c DebuggingServer -n localhost:1025
 
 """
-import random
 import os
+import random
+
 from colorama import Back, Fore, Style
 from colorama import init as colorama_init
+from dotenv import load_dotenv  # Used to load info from the .env file
 
 import database_controller as db_controller
 from email_service import send_email
 from password_checker import password_valid_to_policy_rules
 from password_generator import generate_decoy_passwords
 from username_checker import is_valid_username
-from dotenv import load_dotenv  # Used to load info from the .env file
 
 # Pull data from .env and set up the database connection
 load_dotenv()  # Load the secrets from the .env file
