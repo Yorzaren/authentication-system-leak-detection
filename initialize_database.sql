@@ -21,6 +21,9 @@ This should be enough to generate the database and table needed for the program
 CREATE DATABASE IF NOT EXISTS passwordKeepers;
 USE passwordKeepers;
 
+-- Set the database to be case sensitive
+ALTER DATABASE passwordKeepers DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
+
 --
 -- Table structure for table `passwordTable`
 --
