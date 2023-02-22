@@ -1,10 +1,12 @@
 import password_checker
 import re
-from password_generator_helper import anti_leet_letters
 import nltk  # Used to detect if something is a dictionary word
 from nltk.corpus import words
 from nostril import nonsense
-from collections import Counter
+
+"""
+You have imports included in functions to prevent circular importing errors
+"""
 
 # Import the real words for later
 nltk.download('words')
@@ -41,11 +43,11 @@ def ends_with_lowercase_letter(string: str) -> bool:
     return string[-1].islower()
 
 
-def ends_with_digits(string: str) -> bool:
+def ends_with_digit(string: str) -> bool:
     return string[-1].isdigit()
 
 
-def ends_with_symbols(string: str) -> bool:
+def ends_with_symbol(string: str) -> bool:
     return string[-1] in password_checker.ALLOWED_SPECIAL_CHAR
 
 
@@ -84,7 +86,10 @@ def contains_very_common_string(string: str) -> bool:
     # If it makes it here it's fine
     return False
 
+
 def convert_from_leet(string: str) -> str:
+    from password_generator_helper import anti_leet_letters  # Prevent circular import by having this here
+
     new_string = ""
     for char in string:
         new_string = new_string + anti_leet_letters(char)
@@ -97,6 +102,8 @@ def convert_from_leet(string: str) -> str:
 # Nostril will fail if the sample is too small or gives both false positives and negatives.
 # This still have false positives. (It will sometimes say a string is random when it isn not)
 def is_random_string(string: str, debugging=False) -> bool:
+    from password_generator_helper import anti_leet_letters  # Prevent circular import by having this here
+
     RANDOMNESS_THRESHOLD = 0  # Default is 0
     VIEW_SCOREING = False  # This is for super debugging, so I can track the where the score is coming from.
     randomness_score = 0
@@ -231,7 +238,54 @@ def has_x_digits_in_a_row(string: str, amount: int) -> bool:
             return True
     return False
 
+#TODO:FINISH
+def return_words_maybe(string: str) -> str:
+    from password_generator_helper import anti_leet_letters  # Prevent circular import by having this here
 
+    """
+    This is based off of the work done in is_random_string
+    :param string:
+    :return:
+    """
+    unleeted_string = convert_from_leet(string)
+    string_array = split_letter_strings(string)
+    unleeted_array = split_letter_strings(unleeted_string)
+    capital_split_array = split_capital_strings(string)
+    pp_capital_split_array_unleeted = []  # Hold strings after capital split + unleet
+    pp_symbols_capital_split_array = []  # Hold strings after capital split + unleet + symbols split
+
+    # This is to deal with C@pta1nC@veM4n like strings because they will be seen as  C@pta1n C@ve M4n and not words
+    for entry in capital_split_array:
+        basic_unleet = anti_leet_letters(entry)
+
+        # Be a bit more thorough
+        more_unleet = basic_unleet.replace('@', 'A').replace('1', 'I').replace('3', 'E')
+
+        # Don't double add an entry to the array
+        if basic_unleet != more_unleet:
+            pp_capital_split_array_unleeted.append(more_unleet)
+
+        pp_capital_split_array_unleeted.append(anti_leet_letters(entry))
+
+    # Process it again to remove other undesirables
+    for entry in pp_capital_split_array_unleeted:
+        split_string = re.split(r'[!@#$%^&*]+', entry)
+        for x in split_string:
+            pp_symbols_capital_split_array.append(x)
+
+    # Combine arrays
+    merged_array = []
+    word_array = []
+    for elem in unleeted_array + capital_split_array + pp_capital_split_array_unleeted + pp_symbols_capital_split_array:
+        normalize_case = elem.lower()
+        if normalize_case not in merged_array:
+            merged_array.append(normalize_case)
+    for el in merged_array:
+        potential_word = el.lower()
+        if len(potential_word) > 2 and potential_word in set_of_words:
+            word_array.append(potential_word)
+    print(merged_array)
+    return word_array
 
 if __name__ == '__main__':
     pass_s = [

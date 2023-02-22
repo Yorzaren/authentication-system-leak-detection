@@ -47,15 +47,15 @@ class TestPasswordAnalysisHelper:
         assert password_analysis_helper.ends_with_lowercase_letter("sdikfj32(2jJ好") is False
 
     def test_ends_with_digits(self):
-        assert password_analysis_helper.ends_with_digits("SJRHerisdf") is False
-        assert password_analysis_helper.ends_with_digits("ajsdfh(213U") is False
-        assert password_analysis_helper.ends_with_digits("dsfsdf34*") is False
-        assert password_analysis_helper.ends_with_digits("kljko@sdg1") is True
-        assert password_analysis_helper.ends_with_digits("sdikfj32(2jJ好") is False
+        assert password_analysis_helper.ends_with_digit("SJRHerisdf") is False
+        assert password_analysis_helper.ends_with_digit("ajsdfh(213U") is False
+        assert password_analysis_helper.ends_with_digit("dsfsdf34*") is False
+        assert password_analysis_helper.ends_with_digit("kljko@sdg1") is True
+        assert password_analysis_helper.ends_with_digit("sdikfj32(2jJ好") is False
 
     def test_ends_with_symbols(self):
-        assert password_analysis_helper.ends_with_symbols("SJRHerisdf") is False
-        assert password_analysis_helper.ends_with_symbols("ajsdfh(213U") is False
-        assert password_analysis_helper.ends_with_symbols("dsfsdf34*") is True
-        assert password_analysis_helper.ends_with_symbols("kljko@sdg1") is False
-        assert password_analysis_helper.ends_with_symbols("sdikfj32(2jJ好") is False
+        assert password_analysis_helper.ends_with_symbol("SJRHerisdf") is False
+        assert password_analysis_helper.ends_with_symbol("ajsdfh(213U") is False
+        assert password_analysis_helper.ends_with_symbol("dsfsdf34*") is True
+        assert password_analysis_helper.ends_with_symbol("kljko@sdg1") is False
+        assert password_analysis_helper.ends_with_symbol("sdikfj32(2jJ好") is False
