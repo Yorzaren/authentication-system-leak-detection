@@ -9,11 +9,8 @@ MIN_USERNAME_LENGTH = 5
 MAX_USERNAME_LENGTH = 50
 
 
-# TODO: MAKE A FUNCTION TO CHECK IF THE USERNAME ALREADY EXISTS ONCE THE DATABASE SCRIPT IS COMPLETE
-# TODO: Might have that included in the scrip that already connects to the database.
-# TODO: And then merge those together.
-
-
+# This checks if the user meets the username string policy.
+# The unique username requirement is checked in the same function which will call this one.
 def is_valid_username(username: str) -> bool:
     # Check this to see if it has letters that aren't A-Z or a digit
     arr = list(username)
