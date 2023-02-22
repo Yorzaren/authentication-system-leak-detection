@@ -337,6 +337,30 @@ def reset_failed_attempts(username: str):
             print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
 
 
+def is_only_admin() -> bool:
+    try:
+        # Create the connector
+        cnx = mysql.connector.connect(**db_config)
+        my_cursor = cnx.cursor(buffered=True)
+        query = 'CALL GetAdminCount()'
+        my_cursor.execute(query)
+
+        if int(my_cursor.fetchone()[0]) == 1:
+            return True
+        else:
+            return False
+
+        # Close the connector
+        cnx.close()
+    except mysql.connector.Error as err:
+        if err.errno == 1049:  # Can't find the database
+            print("Make sure you have created the database by using the script.")
+        elif err.errno == 1045:
+            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
+        else:
+            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+
+
 def print_table():
     # Debugging DUMP THE TABLE
     print(f"{Fore.CYAN}{Back.BLACK}--- DUMPING TABLE ---{Style.RESET_ALL}")
@@ -367,5 +391,5 @@ if __name__ == "__main__":
     print(get_failed_count("Admin") < 5)
 
     reset_failed_attempts("Admin")
-
+    print(is_only_admin())
     print_table()

@@ -202,10 +202,12 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
         print("Admin is really admin")
         if db_controller.user_exists(username):
-            # TODO: Create a safety to prevent the only admin from removing themselves
+            if db_controller.is_only_admin() is True:
+                print(f"FAILURE: You can't delete {username} because they are the only admin.")
+                return False
             # Delete the user if they exist
             db_controller.delete_user(username)
-            print("Success: Deleted {username}")
+            print(f"Success: Deleted {username}")
             return True  # Success
         else:
             print("The user you have requested to delete doesn't exist.")
