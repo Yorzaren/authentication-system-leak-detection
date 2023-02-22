@@ -11,7 +11,7 @@ from password_generator_helper import (
     random_4_numbers,
     leet_letters,
     anti_leet_letters,
-    convert_4_digits, random_corruption, random_leet, random_symbol_change, simple_changes,
+    convert_4_digits, random_corruption, random_leet, random_symbol_change, simple_changes, regular_handler,
 )
 from password_checker import count_uppercase, count_lowercase, count_digits, count_special_char
 from colorama import init as colorama_init
@@ -211,6 +211,30 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
     return is_random
 
 
+def _is_distanced(real: str, decoy: str, dist: int = 1) -> bool:
+    """
+    If the distance isn't far enough it's likely for people to type a decoy if they mess up.
+    :param real: real password
+    :param decoy: decoy password
+    :param dist: distance from the real password
+    :return: boolean
+    If True then it's at least a 2 character difference.
+    If False, its probably too close, and you should regenerate the decoy
+    """
+    # Levenshtein distance if 1 then its likely someone might hit it when mistyping
+    return edit_distance(real, decoy) > dist
+
+
+def _is_new_and_valid(real: str, decoy: str, array: list) -> bool:
+    # if you use this in a while. You should have a NOT in front of it.
+    if (password_checker.password_valid_to_policy_rules(decoy) is False
+            or decoy == real
+            or decoy in array
+            or not _is_distanced(real, decoy)):
+        return False
+    else:
+        return True
+
 def generate_decoy_passwords(real_password: str):  # Returns an array
     """
     :param real_password: string
@@ -260,6 +284,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
     # String is not really random, so we have to handle it carefully
     else:
         print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} is not random.{Style.RESET_ALL}")
+
         # Check if it has a series of 4 digits in a row, because it might be a date or year
         if has_x_digits_in_a_row(real_password, 4):
             print("-->Method: 4 digits in a row")
@@ -302,7 +327,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{real_password} {i + 1}")
 
                 new_decoy = simple_changes(real_password)
-                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(real_password)
 
                 decoy_passwords.append(new_decoy)
@@ -312,7 +337,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{decoy_base_1} {i + 1}")
 
                 new_decoy = simple_changes(decoy_base_1)
-                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(decoy_base_1)
 
                 decoy_passwords.append(new_decoy)
@@ -322,21 +347,32 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{decoy_base_2} {i + 1}")
 
                 new_decoy = simple_changes(decoy_base_2)
-                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(decoy_base_2)
 
                 decoy_passwords.append(new_decoy)
                 # print(f"Added: {new_decoy}")
 
+        else:
+            print("Handle Randomly by doing whatever")
+            for i in range(0, AMOUNT_OF_DECOYS):
+                new_decoy = regular_handler(real_password)
+                #print(f"Generated: {new_decoy}")
+                counter = 0
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
+                    #print("Failed to be good")
+                    new_decoy = regular_handler(real_password)
+                    #print(f"New Generated: {new_decoy} - {edit_distance(real_password, new_decoy)}")
+                    if counter == 1000:
+                        print("FAILED")
+                        break
+                    counter += 1
+
+                decoy_passwords.append(new_decoy)
+                print(f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}")
     # Debugging
     print(*decoy_passwords, sep=' | ')
 
-    # Debugging -- Levenshtein distance if 1 then its likely someone might hit it when mistyping
-    # TODO: Find a better way to handle 4 digits
-    """
-    for pas in decoy_passwords:
-        print(f"Decoy value: {pas}\n Distance: {edit_distance(real_password, pas)}")
-    """
     # Return the array for the other functions to use
     return decoy_passwords
 

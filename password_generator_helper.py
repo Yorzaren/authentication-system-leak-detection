@@ -2,8 +2,11 @@ import re
 from random import choice, randint
 import string as alphabet_string
 import password_checker
+from password_analysis_helper import return_words_maybe, split_digit_strings, starts_with_symbol, ends_with_symbol
 
-LEETABLE_CHARS = ["A", "B", "E", "L", "O", "S"]
+LEETABLE_CHARS = ["A", "B", "E", "L", "O", "S",
+                  "a", "b", "e", "l", "o", "s"]
+
 
 # Simple function to flip a letter's case
 # If a number or symbol gets passed to this, it just returns it unchanged
@@ -100,9 +103,9 @@ def anti_leet_letters(letter: str) -> str:
         return str(letter)
 
 
-# From what I've seen most people tend to add the digit and symbol near the end
 def most_simple_password(string: str, simple_password_type: int = 1) -> str:
     """
+    From what I've seen most people tend to add the digit and symbol near the end
     :param string: the password string you want to convert into a most simple password
     :param simple_password_type: the type of simple password you want
         1 - returns a stripped password with #1 at the end
@@ -211,8 +214,17 @@ def random_leet(string: str) -> str:
 
 def random_symbol_change(string: str) -> str:
     symbol_positions = [pos for pos, char in enumerate(string) if char in password_checker.ALLOWED_SPECIAL_CHAR]
-    random_place = choice(symbol_positions)
-    string = string[:random_place] + create_random_symbol() + string[random_place + 1:]
+    if len(symbol_positions) > 0:
+        random_place = choice(symbol_positions)
+        string = string[:random_place] + create_random_symbol() + string[random_place + 1:]
+    return string
+
+
+def random_case_change(string: str) -> str:
+    letter_positions = [pos for pos, char in enumerate(string) if char in alphabet_string.ascii_letters]
+    if len(letter_positions) > 0:
+        random_place = choice(letter_positions)
+        string = string[:random_place] + string[random_place].swapcase() + string[random_place + 1:]
     return string
 
 
@@ -224,3 +236,79 @@ def simple_changes(string: str) -> str:
         new_decoy = random_leet(new_decoy)
 
     return new_decoy
+
+
+def first_cap_lower_else(string: str) -> str:
+    string = string.lower()  # Lower case everything
+    string = string[0].upper() + string[1:]  # Make the first part capital
+    return string
+
+# TODO: FINISH
+#def place_symbols_between_words(string: str) -> str:
+
+
+
+
+# TODO: This is a nightmare
+def regular_handler(string: str) -> str:
+    if randint(0, 1) == 0:  # Give everything a 50% of happening
+        # Return after this because there's no more corruption needed
+        return most_simple_password(string, randint(1, 2))
+
+    # The odd are set to prevent it from always converting when it starts with a symbol
+    if starts_with_symbol(string) and randint(0, 3) == 0:
+        string = string[1:] + create_random_symbol()  # Move the symbol to the back
+    if ends_with_symbol(string) and randint(0, 3) == 0:
+        string = create_random_symbol() + string[:-1]  # Move the symbol to the front
+
+    # If it has only on set of digits in it of any length replace it with random digits. 50% of the time
+    if len(split_digit_strings(string)) == 1 and randint(0, 1) == 0:
+        replacement = ''
+        for i in range(len(split_digit_strings(string)[0])):
+            replacement = replacement + str(create_random_digit())
+        string = re.sub(r'\d+', replacement, string)
+
+    """#TODO: FINISH
+    if len(split_digit_strings(string)) > 1 and randint(0, 1) == 0:
+        arr = split_digit_strings(string)
+        x = choice(arr)
+        replacement = ''
+        for i in range(len(split_digit_strings(string)[0])):
+            replacement = replacement + str(create_random_digit())
+
+        sub_string = re.sub(r'\d+', replacement, string)"""
+
+    # Everything after should be a combination of changes
+    if randint(0, 1) == 0:  # Randomly leet parts of the string
+        max_range = int(len(string)/3)  # 1/3 of the total string length
+        r_rang = randint(1, max_range)  # Randomize so it's not too intense
+        for i in range(r_rang):
+            string = random_leet(string)
+    if randint(0, 1) == 0:  # Random symbol change
+        string = random_symbol_change(string)
+    if randint(0, 1) == 0:  # Change the string to Cap first letter lower everything else.
+        return first_cap_lower_else(string)  # Next part would change it, so return it now.
+    if randint(0, 1) == 0:  # Random case change
+        string = random_case_change(string)
+    return string
+
+
+if __name__ == '__main__':
+    """ print('asd'[0])
+    print('asd')
+    r = return_words_maybe("BubblyRos3!23")
+    print(r)
+
+    for x in r:
+        string = "BubblyRos3!23".lower()
+        #find
+
+    print(first_cap_lower_else("BubblyRos3!23"))
+    print(most_simple_password("BubblyRos3!23"))
+    print(most_simple_password("BubblyRos3!23",2))
+    print(regular_handler("BubblyRos3!23"))
+    print(regular_handler("BubblyRos23"))
+    print(regular_handler("BubblyRos23"))
+    print(regular_handler("BubblyRos23"))"""
+
+
