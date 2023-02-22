@@ -219,7 +219,7 @@ def unlock_account(admin_name: str, auth_password: str, username: str) -> bool:
         if db_controller.user_exists(username):
             # Unlock the account
             db_controller.unlock_account(username)
-            print("Success: Unlocked {username}'s account")
+            print(f"Success: Unlocked {username}'s account")
             return True  # Success
         else:
             print("The user account you have requested to unlock doesn't exist.")
