@@ -37,13 +37,15 @@ If they use a decoy password while attempting to get into a user's account, it w
 
 Pytest files are found in the `tests` folder.
 
+Run pytest from the root of the project.
+
 [![Code style: black](https://img.shields.io/badge/Code%20Style-Black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
 
 
 ```text
 isort --profile black
 black --line-length 120
-flake8 --max-line-length 120
+flake8 --append-config=.github/linters/.flake8
 ```
 
 ### JavaScript
@@ -52,4 +54,10 @@ flake8 --max-line-length 120
 QUnit tests are located in the `tests` folder.
 
 There is no style guide for the JavaScript code.
+
+### CSS
+[![Style: StyleLint](https://img.shields.io/badge/CSS%20Style-StyleLint-333.svg?style=for-the-badge)](https://stylelint.io/)
+
+
+You can quickly bring the CSS into compliance with <https://stylelint.io/demo> using the settings at [.stylelintrc.json](https://github.com/Yorzaren/authentication-system-leak-detection/blob/main/.github/linters/.stylelintrc.json)
 </details>
