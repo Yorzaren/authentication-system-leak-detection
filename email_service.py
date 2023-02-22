@@ -31,7 +31,7 @@ import mailslurp_client
 from dotenv import load_dotenv  # Used to load info from the .env file
 
 
-def mailslurpt_send_email(subject_string, message_string):
+def mailslurp_send_email(subject_string: str, message_string: str):
     try:
         load_dotenv()  # Load the secrets from the .env file
         api_key = os.environ.get("MAILSLURP_API_KEY")
@@ -74,7 +74,7 @@ def mailslurpt_send_email(subject_string, message_string):
 
 # Requires you to use commandline to open the port
 # python -m smtpd -c DebuggingServer -n localhost:1025
-def localhost_send_email(sender_email, recipient_email, email_subject, email_body):
+def localhost_send_email(sender_email: str, recipient_email: str, email_subject: str, email_body: str):
     sender = sender_email
     receivers = recipient_email
 
@@ -93,7 +93,7 @@ def localhost_send_email(sender_email, recipient_email, email_subject, email_bod
         print("Error: Cant send email\nIf using localhost run:\npython -m smtpd -c DebuggingServer -n localhost:1025")
 
 
-def send_email(email_system, msg_type, account_name):
+def send_email(email_system: str, msg_type: int, account_name: str):
     email_title = "default title"
     message = "default message"
 
@@ -116,4 +116,4 @@ def send_email(email_system, msg_type, account_name):
         localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)
     elif email_system == "live":
         # Use sparingly
-        mailslurpt_send_email(email_title, message)
+        mailslurp_send_email(email_title, message)

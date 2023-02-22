@@ -1,0 +1,7 @@
+# Linting only
+black
+flake8
+isort
+
+# Pytest
+pytest
