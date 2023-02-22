@@ -1,52 +1,41 @@
 """
-This code will eventually call all the other scripts for their various functions
-- Add user to database
----> Check if username requirements
-        On PASS:
-            --> generate the passwords
-            --> calc where to place the real password
-            --> place in database
 
+This is the main code for the program. It imports other functions to accomplish the goal of
+generating similar passwords to a user provided password (the real or correct password).
+The similar passwords are decoy or fake passwords intended on tricking an attacker.
+If the attacker uses the decoy password in their attempt to get into a user's account
+the system will alert the admin.
+The system will also lock out a user account if they fail to type their password correctly.
 
-- Delete user from database
----> Check the user is admin
----> Then check the username exists then delete
-            If it doesn't exist return the message that the username doesn't exist
-
-- Log a user in
---> Login requires to check the username exists
-----> If the username doesn't exist return that the credentials are incorrect.
-            Don't tell them the username doesn't exist
-----> Check if the account is locked
-    ----> If it is not locked, calculate where the correct password is located.
-        --> After the calc check if the username and password are correct
-                If correct log them in
-                Else check if the password is a decoy
-                If not a decoy, increase the incorrect counter
-                    When incorrect counter  == 10 lock the account
-
-
-
-It will also be used to connect to the database
-
+Before the first run of the code.
+1) Set up the MySQL database using the initialize_database.sql
+2) Set up the .env file
+3) Make sure the mailslurp credentials are up-to-date
+    OR have smtpd running by using: python -m smtpd -c DebuggingServer -n localhost:1025
 
 """
 import random
-
+import os
 from colorama import Back, Fore, Style
 from colorama import init as colorama_init
 
 import database_controller as db_controller
 from email_service import send_email
 from password_checker import password_valid_to_policy_rules
+from password_generator import generate_decoy_passwords
 from username_checker import is_valid_username
+from dotenv import load_dotenv  # Used to load info from the .env file
+
+# Pull data from .env and set up the database connection
+load_dotenv()  # Load the secrets from the .env file
 
 # Initialize for to use colorful print messages later
 colorama_init()
 
-
-RANDOM_NOISE = "1CPj3KSeCpaRlu6FvfG6"  # A string
-RANDOM_NUMBER = 383369324388255133968499854491  # An int
+# DON'T CHANGE THESE ONCE YOU HAVE REAL ACCOUNTS IN THE DATABASE
+# OR THE PROGRAM WILL NOT FIND THE CORRECT PASSWORD
+RANDOM_NOISE = os.environ.get("RANDOM_NOISE")  # A string
+RANDOM_NUMBER = int(os.environ.get("RANDOM_NUMBER"))  # An int
 NUMBER_OF_PASSWORDS = 11  # An int, N total passwords (1 real + N-1 decoy passwords)
 
 
@@ -67,26 +56,29 @@ def hide_password(username: str) -> int:
     return placement
 
 
-# TODO: Decoy generator
-def decoy_generator() -> list:
+def development_decoy_generator() -> list:
+    """
+    DO NOT USE THIS!!!! This is only for testing because it fills the array with junk and
+    allows you to see the real password in the database.
+    :return: list of filler
+    """
     return ["decoy1", "decoy2", "decoy3", "decoy4", "decoy5", "decoy6", "decoy7", "decoy8", "decoy9", "decoy10"]
 
 
-def _array_handler(real_password: str, array_decoys: list, real_placement: int) -> list:
-    random.shuffle(array_decoys)  # Randomize the array
-    array_decoys.insert(real_placement, real_password)
-    # print(array_decoys)
-    return array_decoys
-
-
-hidden = _array_handler("the_real_password", decoy_generator(), hide_password("mblack"))
-
-# print(hidden)
-
-
 def create_password_array(username: str, password: str) -> list:
-    # Generate decoys
-    return _array_handler(password, decoy_generator(), hide_password(username))
+    """
+    For debugging, you can swap out generate_decoy_passwords for development_decoy_generator
+    This will allow you to see the real password when you dump the database table
+    :param username: the name of the user
+    :param password: the real password of the user
+    :return: array list of decoys with the real password hidden in it
+    """
+
+    array_decoys = generate_decoy_passwords(password)  # Generate decoys
+    real_placement = hide_password(username)
+    random.shuffle(array_decoys)  # Randomize the array
+    array_decoys.insert(real_placement, password)  # Place the real password in the array
+    return array_decoys
 
 
 def get_real_password(username: str, password_array) -> str:
@@ -152,8 +144,7 @@ def is_authenticated(username: str, input_password: str) -> bool:
 
 def add_user_account(admin_name: str, auth_password: str, username: str, new_user_password: str, add_as_admin=False):
     """
-    When an admin requests it, they can create a new user with password of their choosing.
-
+    When an admin requests it, they can create a new user with password of their choosing
     :param admin_name: username of the admin account adding the new user
     :param auth_password: the password of the admin account adding the new user
     :param username: the name of the new user the admin wants to add to the system
