@@ -1,21 +1,31 @@
 from random import randint
 
+from colorama import Back, Fore, Style
+from colorama import init as colorama_init
 from nltk import edit_distance
 
 import password_checker
-from password_analysis_helper import is_random_string, split_uppercase_strings, split_lowercase_strings, \
-    split_capital_strings, split_digit_strings, contains_very_common_string, has_x_digits_in_a_row
-from password_generator_helper import (
-    change_case,
-    random_date,
-    random_4_numbers,
-    leet_letters,
-    anti_leet_letters,
-    convert_4_digits, random_corruption, random_leet, random_symbol_change, simple_changes,
+from password_analysis_helper import (
+    contains_very_common_string,
+    has_x_digits_in_a_row,
+    is_random_string,
+    split_capital_strings,
+    split_digit_strings,
+    split_lowercase_strings,
+    split_uppercase_strings,
 )
-from password_checker import count_uppercase, count_lowercase, count_digits, count_special_char
-from colorama import init as colorama_init
-from colorama import Fore, Back, Style
+from password_checker import (
+    count_digits,
+    count_lowercase,
+    count_special_char,
+    count_uppercase,
+)
+from password_generator_helper import (
+    convert_4_digits,
+    random_corruption,
+    regular_handler,
+    simple_changes,
+)
 
 # Initialize for to use colorful print messages later
 colorama_init()
@@ -33,8 +43,6 @@ Type of passwords:
     --> Leave the numbers, leet it, change symbols, simplify 
 - Passwords on keys patterns (probably wont be addressing this)
     --> Won't be handle in this iteration
-
-
 """
 
 
@@ -155,8 +163,6 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
 
         length_ratio = int(length_password / 3) - 1
 
-        # print(f"{length_ratio} {count_uppercase_strings} {Fore.BLACK}{count_uppercase_strings >= length_ratio}{Style.RESET_ALL}")
-
         if count_uppercase_strings >= 5 or count_uppercase_strings >= length_ratio:
             ANALYSIS_SCORE += 2
         if count_lowercase_strings >= 5 or count_lowercase_strings >= length_ratio:
@@ -198,7 +204,9 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
     if debugging is True:
         print(real_password)
         print(
-            f"{Fore.RED}{Back.BLACK}[FINAL]{Style.RESET_ALL} ANALYSIS_SCORE: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}")
+            f"{Fore.RED}{Back.BLACK}[FINAL]{Style.RESET_ALL} "
+            f"ANALYSIS_SCORE: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}"
+        )
 
     if ANALYSIS_SCORE > 0:
         is_random = True
@@ -209,6 +217,33 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
         print("\n|******************************************************************|\n")
 
     return is_random
+
+
+def _is_distanced(real: str, decoy: str, dist: int = 1) -> bool:
+    """
+    If the distance isn't far enough it's likely for people to type a decoy if they mess up.
+    :param real: real password
+    :param decoy: decoy password
+    :param dist: distance from the real password
+    :return: boolean
+    If True then it's at least a 2 character difference.
+    If False, its probably too close, and you should regenerate the decoy
+    """
+    # Levenshtein distance if 1 then its likely someone might hit it when mistyping
+    return edit_distance(real, decoy) > dist
+
+
+def _is_new_and_valid(real: str, decoy: str, array: list) -> bool:
+    # if you use this in a while. You should have a NOT in front of it.
+    if (
+        password_checker.password_valid_to_policy_rules(decoy) is False
+        or decoy == real
+        or decoy in array
+        or not _is_distanced(real, decoy)
+    ):
+        return False
+    else:
+        return True
 
 
 def generate_decoy_passwords(real_password: str):  # Returns an array
@@ -226,22 +261,22 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
     """
 
     decoy_passwords = []
-    simple_symbol_corruption = False
-    simple_letter_case = False  # THis!i5AnAlert0963 --> This!i5analert0963
-    simple_leet_corruption = False
-    simple_digit_corruption = False
 
     # Check that the real_password conforms to the policy
     # We will also check this somewhere else too, but this is to warn us of issues.
     if password_checker.password_valid_to_policy_rules(real_password) is False:
-        print(f"{Fore.RED}{Back.BLACK}[ERROR] The real_password: {real_password} "
-              f"doesn't follow policy.{Style.RESET_ALL}")
+        print(
+            f"{Fore.RED}{Back.BLACK}[ERROR] The real_password: {real_password} "
+            f"doesn't follow policy.{Style.RESET_ALL}"
+        )
         raise ValueError  # Catch this with try-except block when you call the generate_decoy_passwords just incase.
 
     # If the string is random, it doesn't matter what we do to it.
     if password_analysis_randomness(real_password, debugging=False) is True:
-        print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} "
-              f"is assumed to be very random.{Style.RESET_ALL}")
+        print(
+            f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} "
+            f"is assumed to be very random.{Style.RESET_ALL}"
+        )
         print(f"Real Password: {Back.BLACK}{real_password}{Style.RESET_ALL}")
         # Generate X amount of decoys - The string is assumed to be very random.
         # Therefore, we can just generate the max amount of decoys requested.
@@ -260,6 +295,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
     # String is not really random, so we have to handle it carefully
     else:
         print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} is not random.{Style.RESET_ALL}")
+
         # Check if it has a series of 4 digits in a row, because it might be a date or year
         if has_x_digits_in_a_row(real_password, 4):
             print("-->Method: 4 digits in a row")
@@ -302,7 +338,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{real_password} {i + 1}")
 
                 new_decoy = simple_changes(real_password)
-                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(real_password)
 
                 decoy_passwords.append(new_decoy)
@@ -312,7 +348,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{decoy_base_1} {i + 1}")
 
                 new_decoy = simple_changes(decoy_base_1)
-                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(decoy_base_1)
 
                 decoy_passwords.append(new_decoy)
@@ -322,26 +358,37 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{decoy_base_2} {i + 1}")
 
                 new_decoy = simple_changes(decoy_base_2)
-                while (password_checker.password_valid_to_policy_rules(new_decoy) is False or new_decoy == real_password or new_decoy in decoy_passwords):
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(decoy_base_2)
 
                 decoy_passwords.append(new_decoy)
                 # print(f"Added: {new_decoy}")
 
-    # Debugging
-    print(*decoy_passwords, sep=' | ')
+        else:
+            print("Handle Randomly by doing whatever")
+            for i in range(0, AMOUNT_OF_DECOYS):
+                new_decoy = regular_handler(real_password)
+                # print(f"Generated: {new_decoy}")
+                counter = 0
+                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
+                    # print("Failed to be good")
+                    new_decoy = regular_handler(real_password)
+                    # print(f"New Generated: {new_decoy} - {edit_distance(real_password, new_decoy)}")
+                    if counter == 1000:
+                        print("FAILED")
+                        break
+                    counter += 1
 
-    # Debugging -- Levenshtein distance if 1 then its likely someone might hit it when mistyping
-    # TODO: Find a better way to handle 4 digits
-    """
-    for pas in decoy_passwords:
-        print(f"Decoy value: {pas}\n Distance: {edit_distance(real_password, pas)}")
-    """
+                decoy_passwords.append(new_decoy)
+                print(f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}")
+    # Debugging
+    print(*decoy_passwords, sep=" | ")
+
     # Return the array for the other functions to use
     return decoy_passwords
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """
     pass_test = ["THis!i5AnAlert0963",
                  "1234!Cc1234",
@@ -361,15 +408,10 @@ if __name__ == '__main__':
         "ABCD1234@me!",
         "Redditor#nomaidenx3",
         "mr*beastSUX1",
-        "ratiop1us%plusL"
+        "ratiop1us%plusL",
     ]
     issues = ["ABCD1234@me!"]
-    issues_r = ["ZYx@6z&W%aDb",
-                "D32$jr#Q^VpD",
-                "9Sk5yRyY2^8D",
-                "Cq6#pBkyddv2",
-                "QydZx2qB&#Liz@",
-                "5Brom2n*J$%Fsz"]
+    issues_r = ["ZYx@6z&W%aDb", "D32$jr#Q^VpD", "9Sk5yRyY2^8D", "Cq6#pBkyddv2", "QydZx2qB&#Liz@", "5Brom2n*J$%Fsz"]
     pass_test = []
     with open("examples/example_valid_passwords.txt") as file:
         for line in file:

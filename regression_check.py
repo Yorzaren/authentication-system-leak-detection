@@ -17,7 +17,7 @@ class TestPasswordAnalysisRegressionCheck:
         for s in random_passwords:
             assert is_random_string(s) is True
 
-# This part will likely bug out
+    # This part will likely bug out
     @pytest.mark.skip(reason="This will bug out")
     def test_valid_passwords(self):
         random_passwords = []

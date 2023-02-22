@@ -96,6 +96,10 @@ def get_real_password(username: str, password_array) -> str:
 # print(get_real_password("mblack", hidden))
 
 
+def _print_system_auth_resp(msg: str) -> None:
+    print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} {msg}")
+
+
 def is_authenticated(username: str, input_password: str) -> bool:
     if db_controller.user_exists(username):
         # If the account isn't locked out get the passwords
@@ -107,7 +111,7 @@ def is_authenticated(username: str, input_password: str) -> bool:
             # The real password was used
             if input_password == real_password:
                 # The password is the real password
-                print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Correct pass and username")
+                _print_system_auth_resp("Correct pass and username")
 
                 # Reset the fail counter to zero
                 db_controller.reset_failed_attempts(username)
@@ -117,7 +121,7 @@ def is_authenticated(username: str, input_password: str) -> bool:
             # A decoy was used
             elif input_password in user_passwords:
                 # The password is a decoy
-                print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} DECOY USED")
+                _print_system_auth_resp("DECOY USED")
 
                 # Send the breach alert email to the admin
                 send_email("test", 2, username)
@@ -126,9 +130,7 @@ def is_authenticated(username: str, input_password: str) -> bool:
             else:
                 # The account will be locked at 10 wrong attempts, the equality is just to make sure.
                 if db_controller.get_failed_count(username) >= 10:
-                    print(
-                        f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Too many wrong attempts. Your account has been locked."
-                    )
+                    print("Too many wrong attempts. Your account has been locked.")
                     db_controller.lock_account(username)
                     # Send the account locked email to the admin
                     send_email("test", 1, username)
@@ -136,20 +138,15 @@ def is_authenticated(username: str, input_password: str) -> bool:
                 else:
                     # Increase fails counter
                     db_controller.increment_failed_attempts(username)
-                    print(
-                        f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Wrong password - Wrong Attempt Count: {db_controller.get_failed_count(username)}"
-                    )
+                    count = db_controller.get_failed_count(username)
+                    _print_system_auth_resp("Wrong password - Wrong Attempt Count: " + str(count))
                     return False
         else:
-            print(
-                f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} Your account was locked for your safety. Contact an admin to unlock it."
-            )
+            _print_system_auth_resp("Your account was locked for your safety. Contact an admin to unlock it.")
             return False
 
     else:
-        print(
-            f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL}Error: Username {username} doesn't exist"
-        )
+        _print_system_auth_resp("Error: Username " + username + " doesn't exist")
         return False
 
 
@@ -202,10 +199,12 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
         print("Admin is really admin")
         if db_controller.user_exists(username):
-            # TODO: Create a safety to prevent the only admin from removing themselves
+            if db_controller.is_only_admin() is True:
+                print(f"FAILURE: You can't delete {username} because they are the only admin.")
+                return False
             # Delete the user if they exist
             db_controller.delete_user(username)
-            print("Success: Deleted {username}")
+            print(f"Success: Deleted {username}")
             return True  # Success
         else:
             print("The user you have requested to delete doesn't exist.")
@@ -265,10 +264,34 @@ def update_password(username: str, current_password: str, new_password: str) -> 
         return False
 
 
-# add_user_account("admin", "password", "testuser", "Q49^y1z!uxV!")
-# is_authenticated("testuser", "sdfsdfsdsdf")
-# unlock_account("admin", "password", "testuser")
+if __name__ == "__main__":
+    # From a frest start make a test user
+    add_user_account("admin", "password", "testuser", "Q49^y1z!uxV!")
+    add_user_account("admin", "password", "admin2", "s49^yxz!*xV!", add_as_admin=True)
 
-print(update_password("admin", "gqL3031%$#qK", "password"))
+    # Check that we can login as testuser
+    assert is_authenticated("testuser", "Q49^y1z!uxV!") is True
+    assert db_controller.is_admin("testuser") is False
 
-db_controller.print_table()
+    assert is_authenticated("admin2", "s49^yxz!*xV!") is True
+    assert db_controller.is_admin("admin2") is True
+
+    # Lock out the test user
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    is_authenticated("testuser", "sdfsdfsdsdf")
+
+    is_authenticated("testuser", "sdfsdfsdsdf")
+    # unlock_account("admin", "password", "testuser")
+
+    print(update_password("admin", "password", "gqL3031%$#qK"))
+    print(update_password("admin", "gqL3031%$#qK", "P@ssword!213"))
+
+    db_controller.print_table()
