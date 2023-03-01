@@ -61,7 +61,7 @@ pip install -r requirements.txt
 
 You can get it here from <https://www.apachefriends.org/>
 
-Find where the file is downloaded in command line then `chmod +x [filename]` to make it executable.
+Find where the file is downloaded in command-line then `chmod +x [filename]` to make it executable.
 
 Then you can run it by typing: `./[filename]` to install it.
 
@@ -122,10 +122,10 @@ RANDOM_NOISE=somestring
 RANDOM_NUMBER=123
 ```
 
-#### Copy over the website files 
+#### Copy over the web files 
 In the root of the repository copy over the `web` folder to the htdocs for the patch site.
 
-* Copy the code to the website:
+* Copy the code to the htdocs:
 ```cmd
 sudo cp web -r /opt/lampp/htdocs
 ```
