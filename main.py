@@ -121,8 +121,8 @@ def is_authenticated(username: str, input_password: str) -> bool:
                 return False
             # The password is wrong but not a decoy
             else:
-                # The account will be locked at 10 wrong attempts, the equality is just to make sure.
-                if db_controller.get_failed_count(username) >= 10:
+                # The account will be locked at 3 wrong attempts, the equality is just to make sure.
+                if db_controller.get_failed_count(username) >= 3:
                     print("Too many wrong attempts. Your account has been locked.")
                     db_controller.lock_account(username)
                     # Send the account locked email to the admin

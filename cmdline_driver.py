@@ -63,6 +63,12 @@ except mysql.connector.Error as err:
     print(
         f"{Fore.RED}FAILED: Make you have the .env setup and the database running.{Style.RESET_ALL}\n" f"Error: {err}"
     )
+    if err.errno == 2003:
+        print("--> Check that the mysql service is running.")
+    if err.errno == 1045:
+        print("--> The password is wrong check the .env file.")
+    if err.errno == 1049:
+        print("--> Make sure you have created the mysql database using initialize_database.sql")
     sys.exit("Program closing. No database connection.")
 
 

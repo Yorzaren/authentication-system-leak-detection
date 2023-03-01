@@ -30,6 +30,108 @@ If they use a decoy password while attempting to get into a user's account, it w
 </p>
 </details>
 
+## Install
+The program is intended Linux based systems but might work on Windows (untested). 
+
+### Linux
+These instructions are for Ubuntu 22.04.2 LTS but might work for other versions. 
+
+#### Install Git and Pip
+If you don't already have it installed.
+```cmd
+apt install git
+```
+
+```cmd
+apt install python3-pip
+```
+
+#### Clone the repository
+```cmd
+git clone https://github.com/Yorzaren/authentication-system-leak-detection.git
+```
+
+#### Install Requirements
+
+```cmd
+pip install -r requirements.txt
+```
+
+#### Get XAMPP for Linux 8.2.0
+
+You can get it here from <https://www.apachefriends.org/>
+
+Find where the file is downloaded in command line then `chmod +x [filename]` to make it executable.
+
+Then you can run it by typing: `./[filename]` to install it.
+
+The files should be installed to `/opt/lampp`.
+
+#### Set up the Database
+
+Open MySQL / MariaDB as root to change the password. init the database.
+
+```cmd
+/opt/lampp/bin/mysql -u root -p
+```
+
+Default password is blank, so you should be able to hit enter and login.
+
+```cmd
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpassword');
+```
+
+`newpassword` can be set to whatever you want the password to be.
+
+**_Make sure you remember the password for later._**
+
+See: <https://stackoverflow.com/a/64550826>
+
+#### Initialize the Database
+
+Copy the path of `initialize_database.sql` located in the root of the repository
+
+```cmd
+readlink -f initialize_database.sql
+```
+
+Open MySQL or MariaDB
+
+```cmd
+/opt/lampp/bin/mysql -u root -p
+```
+
+You should see `MariaDB[none]>` or `mysql>`.
+
+Initialize the database with the following command:
+
+```cmd
+source [path of initialize_database.sql]
+```
+
+If you get a error message saying run **mysql_update** you do it with: `/opt/lampp/bin/mysql_update`
+
+#### Create the .env
+
+In the root of the `authentication-system-leak-detection` folder you need to make a file called `.env`
+
+It should look something like this:
+```txt
+DB_PASSWORD=password
+RANDOM_NOISE=somestring
+RANDOM_NUMBER=123
+```
+
+#### Copy over the website files 
+In the root of the repository copy over the `web` folder to the htdocs for the patch site.
+
+* Copy the code to the website:
+```cmd
+sudo cp web -r /opt/lampp/htdocs
+```
+* Site should be live at `localhost/web`
+* Navigate to it using a web browser.
+
 <details><summary><h2>Style / Linting / Unit Testing</h2></summary>
 
 ### Python
