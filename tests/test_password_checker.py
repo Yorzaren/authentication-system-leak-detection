@@ -55,3 +55,21 @@ class TestPasswordCheckerFunctions:
         assert password_checker.has_forbidden_characters("123.4567") is True  # dot is not in the list
         assert password_checker.has_forbidden_characters("213AD!sxd你") is True  # 你
         assert password_checker.has_forbidden_characters("123#%Txrte2323yrtyhrtyhrtyrtyrty3") is False  # This is fine
+
+    def test_against_password_policy(self):
+        test = [
+            "123#%Txrte2323yrtyhrtyhrtyrtyrty3",  # 33 chars
+            "sdfkjsdkf398njdssdifu83!@#ds",  # No cap
+            "32SDJF9JDH29N0",  # no lower
+            "SDJFasdaJDHN",  # no digits
+            "Us!4567",  # too short
+            "Us004567",  # no special characters
+            "你好213AD!s12xd"  # has forbidden characters
+        ]
+
+        for i in range(len(test)):
+            outcome = password_checker.password_valid_to_policy_rules(test[i], debugging=True)
+            assert outcome is False  # All the passwords in test are going to fail
+
+        # This is from valid_passwords.txt
+        assert password_checker.password_valid_to_policy_rules("KeyboardW@rr10r") is True
