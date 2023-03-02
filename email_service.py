@@ -106,9 +106,10 @@ def send_email(email_system: str, msg_type: int, account_name: str):
         )
     elif msg_type == 2:
         print("Mail system has received notice: System Breach")
-        email_title = f"[ALERT] A decoy password has been used for {account_name}"
+        email_title = f"[IMPORTANT ALERT] A decoy password has been used for {account_name}"
         message = (
-            f"Dear Admin,\nA decoy password for user {account_name} has been used." f"The database might be breached."
+            f"Dear Admin,\nA decoy password for user {account_name} has been used. The database might be breached. "
+            f"You should take action to lock the system."
         )
 
     if email_system == "test":
