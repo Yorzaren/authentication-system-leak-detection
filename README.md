@@ -27,7 +27,7 @@ If they use a decoy password while attempting to get into a user's account, it w
 7. Runs on Linux.
 
 ## Install
-The program is intended Linux based systems but might work on Windows (untested). 
+The project is intended Linux based systems but might work on Windows (untested). 
 
 ### Linux
 These instructions are for Ubuntu 22.04.2 LTS but might work for other versions. 
