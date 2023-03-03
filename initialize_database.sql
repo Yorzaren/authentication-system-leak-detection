@@ -85,6 +85,7 @@ DROP PROCEDURE IF EXISTS GetFailsCount;
 DROP PROCEDURE IF EXISTS IncrementFails;
 DROP PROCEDURE IF EXISTS ResetFails;
 DROP PROCEDURE IF EXISTS GetAdminCount;
+DROP PROCEDURE IF EXISTS ResetDatabase;
 
 /* Set the delimiter for the stored procedure */
 DELIMITER //
@@ -213,6 +214,12 @@ BEGIN
 	SELECT COUNT(*)
 	FROM passwordTable
 	WHERE IsAdmin = 1;
+END//
+
+CREATE PROCEDURE ResetDatabase()
+BEGIN
+	TRUNCATE passwordtable;
+	CALL AddAdminUser("admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password");
 END//
 
 /* Set the delimiter back to normal */
