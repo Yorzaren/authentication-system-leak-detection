@@ -36,8 +36,14 @@ colorama_init()
 # DON'T CHANGE THESE ONCE YOU HAVE REAL ACCOUNTS IN THE DATABASE
 # OR THE PROGRAM WILL NOT FIND THE CORRECT PASSWORD
 RANDOM_NOISE = os.environ.get("RANDOM_NOISE")  # A string
-RANDOM_NUMBER = int(os.environ.get("RANDOM_NUMBER"))  # An int
+RANDOM_NUMBER = os.environ.get("RANDOM_NUMBER")  # An int
 NUMBER_OF_PASSWORDS = 11  # An int, N total passwords (1 real + N-1 decoy passwords)
+
+# Fix things if it's undefined
+if RANDOM_NOISE is None:
+    RANDOM_NOISE = ""
+if RANDOM_NUMBER is None:
+    RANDOM_NUMBER = 1
 
 
 # For this it shouldn't matter what (simple) algorithm we use for the proof of concept
@@ -50,7 +56,7 @@ def __hide_password(username: str) -> int:
     for char in username:
         char_sum += ord(char)
 
-    placement = (char_sum * RANDOM_NUMBER) % NUMBER_OF_PASSWORDS
+    placement = (char_sum * int(RANDOM_NUMBER)) % NUMBER_OF_PASSWORDS
 
     # print(f"__hide_password({username}) placement: {placement}")
 

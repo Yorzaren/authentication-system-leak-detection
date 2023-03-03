@@ -9,6 +9,7 @@ from dotenv import load_dotenv  # Used to load info from the .env file
 load_dotenv()  # Load the secrets from the .env file
 
 
+@pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
 class TestMain:
     # Reset everything before the tests
     if os.environ.get("DB_PASSWORD"):
@@ -24,26 +25,15 @@ class TestMain:
         # Create a user to be breached
         db_controller.add_user("attackedUser", main.development_decoy_generator("attackedUser", "realP@ssword!"))
 
-    """
-    is_authenticated
-    add_user_account
-    delete_user
-    unlock_account
-    update_password
-    """
-
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_basic_auth(self):
         print("\n------Messages------")
         assert main.is_authenticated("admin", "password") is True  # Correct Username + Password
         assert main.is_authenticated("nonUser", "somepassword") is False  # Username doesn't exist
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_prevent_only_admin_deletion(self):
         print("\n------Messages------")
         assert main.delete_user("admin", "password", "admin") is False  # Can't delete as only admin
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_add_accounts(self):
         print("\n------Messages------")
         # Test that they don't exist yet
@@ -65,7 +55,6 @@ class TestMain:
         assert main.is_authenticated("oldUser2", "8Pc7!PX5e^CR") is True
         assert main.is_authenticated("admin2", "s49^yxz!*xV!") is True
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_fail_auth_when_deleting(self):
         print("\n------Messages------")
         # admin4 is not an admin / They don't exist at all but its fine for the system to be vague.
@@ -83,13 +72,11 @@ class TestMain:
         # Check the requested users wasn't deleted on the failed request
         assert main.is_authenticated("oldUser2", "8Pc7!PX5e^CR") is True
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_use_decoy(self):
         print("\n------Messages------")
         assert main.is_authenticated("oldUser2", "decoy5") is False  # This shouldn't send an email.
         assert main.is_authenticated("attackedUser", "decoy5") is False  # THis should trigger the breach.
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_auth_lockout(self):
         print("\n------Messages------")
         assert main.is_authenticated("admin2", "s49^yxz!*xV!") is True  # Reset the counter
@@ -102,14 +89,12 @@ class TestMain:
         # Check that the admin account can't do anything when locked
         assert main.add_user_account("admin2", "s49^yxz!*xV!", "sstestss", "8Pc79!Ph5e!CR") is False
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_fail_adding_users(self):
         print("\n------Messages------")
         assert main.add_user_account("admin", "password", "testuser", "dasd") is False  # Already exists
         assert main.add_user_account("admin5", "password", "newUser", "dasd") is False  # Bad admin
         assert main.add_user_account("admin", "password", "newUser", "dasd") is False  # New user's password isn't good.
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_delete_user_msg(self):
         print("\n------Messages------")
         # Delete out a user and succeed.
@@ -119,7 +104,6 @@ class TestMain:
         # Try to delete something that doesn't exist.
         assert main.delete_user("admin", "password", "oldUser") is False  # Doesn't exist
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_unlock_account(self):
         print("\n------Messages------")
         # admin2 should still be locked out.
@@ -132,7 +116,6 @@ class TestMain:
 
         assert main.unlock_account("admin", "password", "noUserByThisName") is False
 
-    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_change_password(self):
         print("\n------Messages------")
         assert main.update_password("jsmith", "notpassword", "Wcd@8sdf*dfdop#") is False  # Not the right password
