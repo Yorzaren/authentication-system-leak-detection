@@ -11,7 +11,7 @@ class TestPasswordAnalysisRegressionCheck:
     @pytest.mark.skip(reason="Don't run this on production")
     def test_real_random_passwords(self):
         random_passwords = []
-        with open("example_passwords/random_passwords.txt") as file:
+        with open("../example_passwords/random_passwords.txt") as file:
             for line in file:
                 random_passwords.append(line.strip())
         for s in random_passwords:
@@ -21,7 +21,7 @@ class TestPasswordAnalysisRegressionCheck:
     @pytest.mark.skip(reason="This will bug out")
     def test_valid_passwords(self):
         random_passwords = []
-        with open("example_passwords/valid_passwords.txt") as file:
+        with open("../example_passwords/valid_passwords.txt") as file:
             for line in file:
                 random_passwords.append(line.strip())
         for s in random_passwords:
