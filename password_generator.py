@@ -413,7 +413,7 @@ if __name__ == "__main__":
     issues = ["ABCD1234@me!"]
     issues_r = ["ZYx@6z&W%aDb", "D32$jr#Q^VpD", "9Sk5yRyY2^8D", "Cq6#pBkyddv2", "QydZx2qB&#Liz@", "5Brom2n*J$%Fsz"]
     pass_test = []
-    with open("examples/example_valid_passwords.txt") as file:
+    with open("example_passwords/valid_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
 

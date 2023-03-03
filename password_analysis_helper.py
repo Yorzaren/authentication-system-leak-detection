@@ -318,7 +318,7 @@ if __name__ == "__main__":
         "Iamtheendandthebeginning!1",
     ]
 
-    with open("examples/example_random_passwords.txt") as file:
+    with open("example_passwords/random_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
     for s in pass_test:
