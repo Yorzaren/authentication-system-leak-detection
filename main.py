@@ -40,9 +40,9 @@ RANDOM_NUMBER = os.environ.get("RANDOM_NUMBER")  # An int
 NUMBER_OF_PASSWORDS = 11  # An int, N total passwords (1 real + N-1 decoy passwords)
 
 # Fix things if it's undefined
-if RANDOM_NOISE is None:
+if RANDOM_NOISE is None:  # pragma: no cover
     RANDOM_NOISE = ""
-if RANDOM_NUMBER is None:
+if RANDOM_NUMBER is None:  # pragma: no cover
     RANDOM_NUMBER = 1
 
 
