@@ -24,7 +24,7 @@ db_config = {"user": "root", "password": database_password, "host": "127.0.0.1",
 
 """
 
-Theres are the intended users of the commands.
+These are the intended users of the commands.
 If it's marked as system is is meant for internal calls to verify things.
 Admins:
     - add_user
@@ -49,6 +49,20 @@ reset_failed_attempts : sys | reset on successful login | on unlock_account
 """
 
 
+def __db_connection_error(err) -> None:  # pragma: no cover
+    """
+    This is a private helper function just to shorten a repeated message if there's an issue with
+    the database connection.
+    :return: Prints a message to the terminal/console.
+    """
+    if err.errno == 1049:  # Can't find the database
+        print("Make sure you have created the database by using the script.")
+    elif err.errno == 1045:
+        print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
+    else:
+        print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+
+
 def user_exists(username: str) -> bool:
     try:
         # Create the connector
@@ -58,20 +72,15 @@ def user_exists(username: str) -> bool:
         my_cursor.execute(query)
         count = my_cursor.fetchone()[0]
 
+        # Close the connector
+        cnx.close()
+
         if count == 1:
             return True
         else:
             return False
-
-        # Close the connector
-        cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def is_admin(username: str) -> bool:
@@ -83,20 +92,15 @@ def is_admin(username: str) -> bool:
         my_cursor.execute(query)
         count = my_cursor.fetchone()[0]
 
+        # Close the connector
+        cnx.close()
+
         if count == 1:
             return True
         else:
             return False
-
-        # Close the connector
-        cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def is_locked_out(username: str) -> bool:
@@ -108,20 +112,15 @@ def is_locked_out(username: str) -> bool:
         my_cursor.execute(query)
         count = my_cursor.fetchone()[0]
 
+        # Close the connector
+        cnx.close()
+
         if count == 1:
             return True
         else:
             return False
-
-        # Close the connector
-        cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def add_user(username: str, password_array, create_admin_account=False):
@@ -152,13 +151,8 @@ def add_user(username: str, password_array, create_admin_account=False):
 
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def delete_user(username: str):
@@ -175,16 +169,11 @@ def delete_user(username: str):
 
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
-def get_passwords(username: str):  # Return an array
+def get_passwords(username: str) -> list:  # Return a list/array
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -200,17 +189,12 @@ def get_passwords(username: str):  # Return an array
         query = f'CALL GetPasswords("{username}")'
         my_cursor.execute(query)
 
-        return list(my_cursor.fetchone())
-
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+
+        return list(my_cursor.fetchone())
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def update_password(username: str, password_array):
@@ -231,13 +215,8 @@ def update_password(username: str, password_array):
 
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def lock_account(username: str):
@@ -253,13 +232,8 @@ def lock_account(username: str):
 
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def unlock_account(username: str):
@@ -278,13 +252,8 @@ def unlock_account(username: str):
 
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def get_failed_count(username: str) -> int:
@@ -295,17 +264,12 @@ def get_failed_count(username: str) -> int:
         query = f'CALL GetFailsCount("{username}")'
         my_cursor.execute(query)
 
-        return int(my_cursor.fetchone()[0])
-
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+
+        return int(my_cursor.fetchone()[0])
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def increment_failed_attempts(username: str):
@@ -321,13 +285,8 @@ def increment_failed_attempts(username: str):
 
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def reset_failed_attempts(username: str):
@@ -343,13 +302,8 @@ def reset_failed_attempts(username: str):
 
         # Close the connector
         cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def is_only_admin() -> bool:
@@ -360,20 +314,15 @@ def is_only_admin() -> bool:
         query = "CALL GetAdminCount()"
         my_cursor.execute(query)
 
+        # Close the connector
+        cnx.close()
+
         if int(my_cursor.fetchone()[0]) == 1:
             return True
         else:
             return False
-
-        # Close the connector
-        cnx.close()
-    except mysql.connector.Error as err:
-        if err.errno == 1049:  # Can't find the database
-            print("Make sure you have created the database by using the script.")
-        elif err.errno == 1045:
-            print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
-        else:
-            print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
 
 
 def print_table():
@@ -388,23 +337,3 @@ def print_table():
     my_cursor.close()
     cnx.close()
     print(f"{Fore.CYAN}{Back.BLACK}-------- END --------{Style.RESET_ALL}")
-
-
-if __name__ == "__main__":
-    print(is_admin("Admin"))
-    print(user_exists("Assdmin"))
-    print_table()
-
-    array = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"]
-
-    # add_user("testuser", array)
-    # add_user("testadmin", array, True)
-    update_password("Admin", array)
-
-    print((get_passwords("Admin")[10]))
-    increment_failed_attempts("Admin")
-    print(get_failed_count("Admin") < 5)
-
-    reset_failed_attempts("Admin")
-    print(is_only_admin())
-    print_table()

@@ -1,7 +1,7 @@
 """
 This just makes sure you haven't added something to the wrong file
 
-The file used are located in examples folder
+The file used are located in example_passwords folder
 
 For some reason this test never wants to read the files in correctly.
 
@@ -16,19 +16,19 @@ from password_checker import password_valid_to_policy_rules
 
 class TestPasswordExamples:
     def test_is_valid(self):
-        with open("examples/example_valid_passwords.txt") as file:
+        with open("example_passwords/valid_passwords.txt") as file:
             for line in file:
                 # print(line.rstrip())
                 assert password_valid_to_policy_rules(line.rstrip()) is True
 
     def test_is_invalid(self):
-        with open("examples/example_invalid_passwords.txt") as file:
+        with open("example_passwords/invalid_passwords.txt") as file:
             for line in file:
                 # print(line.rstrip())
                 assert password_valid_to_policy_rules(line.rstrip()) is False
 
     def test_is_valid_random_password_list(self):
-        with open("examples/example_random_passwords.txt") as file:
+        with open("example_passwords/random_passwords.txt") as file:
             for line in file:
                 # print(line.rstrip())
                 assert password_valid_to_policy_rules(line.rstrip()) is True

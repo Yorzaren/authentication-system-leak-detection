@@ -53,31 +53,31 @@ def ends_with_symbol(string: str) -> bool:
     return string[-1] in password_checker.ALLOWED_SPECIAL_CHAR
 
 
-def split_letter_strings(string: str):
+def split_letter_strings(string: str) -> list:
     return re.findall(r"[a-zA-Z]+", string)  # Returns an array
 
 
-def split_uppercase_strings(string: str):
+def split_uppercase_strings(string: str) -> list:
     return re.findall(r"[A-Z]+", string)  # Returns an array
 
 
-def split_lowercase_strings(string: str):
+def split_lowercase_strings(string: str) -> list:
     return re.findall(r"[a-z]+", string)  # Returns an array
 
 
-def split_capital_strings(string: str):
+def split_capital_strings(string: str) -> list:
     return re.findall(r"[A-Z][^A-Z]*", string)  # Returns an array
 
 
-def split_digit_strings(string: str):
+def split_digit_strings(string: str) -> list:
     return re.findall(r"\d+", string)  # Returns an array
 
 
-def split_symbols_strings(string: str):
+def split_symbols_strings(string: str) -> list:
     return re.findall(r"[!@#$%^&*]+", string)  # Returns an array
 
 
-def split_at_symbols(string: str):
+def split_at_symbols(string: str) -> list:
     return re.split(r"[!@#$%^&*]+", string)  # Returns an array
 
 
@@ -318,7 +318,7 @@ if __name__ == "__main__":
         "Iamtheendandthebeginning!1",
     ]
 
-    with open("examples/example_random_passwords.txt") as file:
+    with open("example_passwords/random_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
     for s in pass_test:

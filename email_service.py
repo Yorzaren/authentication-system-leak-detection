@@ -31,7 +31,7 @@ import mailslurp_client
 from dotenv import load_dotenv  # Used to load info from the .env file
 
 
-def mailslurp_send_email(subject_string: str, message_string: str):
+def __mailslurp_send_email(subject_string: str, message_string: str):
     try:
         load_dotenv()  # Load the secrets from the .env file
         api_key = os.environ.get("MAILSLURP_API_KEY")
@@ -74,7 +74,7 @@ def mailslurp_send_email(subject_string: str, message_string: str):
 
 # Requires you to use commandline to open the port
 # python -m smtpd -c DebuggingServer -n localhost:1025
-def localhost_send_email(sender_email: str, recipient_email: str, email_subject: str, email_body: str):
+def __localhost_send_email(sender_email: str, recipient_email: str, email_subject: str, email_body: str):
     sender = sender_email
     receivers = recipient_email
 
@@ -98,22 +98,23 @@ def send_email(email_system: str, msg_type: int, account_name: str):
     message = "default message"
 
     if msg_type == 1:
-        print("user account locked")
+        print(f"Mail system has received notice: User Account Locked for {account_name}")
         email_title = f"[System] Account named {account_name} as been locked for suspicious activity"
         message = (
-            f"Dear Admin,\nThe account named {account_name} has made 10 bad attempts to get into their account. "
+            f"Dear Admin,\nThe account named {account_name} has made 3 bad attempts to get into their account. "
             f"The system has locked {account_name}."
         )
     elif msg_type == 2:
-        print("system breach")
-        email_title = f"[ALERT] A decoy password has been used for {account_name}"
+        print("Mail system has received notice: System Breach")
+        email_title = f"[IMPORTANT ALERT] A decoy password has been used for {account_name}"
         message = (
-            f"Dear Admin,\nA decoy password for user {account_name} has been used." f"The database might be breached."
+            f"Dear Admin,\nA decoy password for user {account_name} has been used. The database might be breached. "
+            f"You should take action to lock the system."
         )
 
     if email_system == "test":
         # sender_email, recipient_email are made up because they don't really exist beyond the DebuggingServer
-        localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)
+        __localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)
     elif email_system == "live":
         # Use sparingly
-        mailslurp_send_email(email_title, message)
+        __mailslurp_send_email(email_title, message)

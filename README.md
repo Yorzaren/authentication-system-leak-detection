@@ -16,9 +16,6 @@ If an attacker gets the password database, they should have a hard time figuring
 If they use a decoy password while attempting to get into a user's account, it will alert the admin to a possible database leak.
 
 
-<details><summary>Project Details</summary>
-<p>
-
 **Requirements:**
 
 1. Must use at least 10 false passwords per account.
@@ -27,8 +24,7 @@ If they use a decoy password while attempting to get into a user's account, it w
 4. Allow for deletion of accounts.
 5. Must develop algorithm to uniquely assign valid password in user's account password list.
 6. Provide a mechanism of notification if false password is used compared to incorrect entry or simple guess.
-</p>
-</details>
+7. Runs on Linux.
 
 ## Install
 The program is intended Linux based systems but might work on Windows (untested). 
@@ -109,7 +105,7 @@ Initialize the database with the following command:
 source [path of initialize_database.sql]
 ```
 
-If you get a error message saying run **mysql_update** you do it with: `/opt/lampp/bin/mysql_update`
+If you get an error message saying run **mysql_update** you do it with: `/opt/lampp/bin/mysql_update`
 
 #### Create the .env
 
@@ -132,7 +128,7 @@ sudo cp web -r /opt/lampp/htdocs
 * Site should be live at `localhost/web`
 * Navigate to it using a web browser.
 
-<details><summary><h2>Style / Linting / Unit Testing</h2></summary>
+## Style / Linting / Unit Testing
 
 ### Python
 [![Tested with Pytest](https://img.shields.io/badge/Tested%20with-Pytest-red?style=for-the-badge)](https://docs.pytest.org/)
@@ -141,12 +137,17 @@ Pytest files are found in the `tests` folder.
 
 Run pytest from the root of the project.
 
+You can test for coverage using:
+```text
+pytest --cov --cov-report=html
+```
+
 [![Code style: black](https://img.shields.io/badge/Code%20Style-Black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
 
 
 ```text
-isort --profile black
-black --line-length 120
+isort --profile black .
+black --line-length 120 .
 flake8 --append-config=.github/linters/.flake8
 ```
 
@@ -162,4 +163,3 @@ There is no style guide for the JavaScript code.
 
 
 You can quickly bring the CSS into compliance with <https://stylelint.io/demo> using the settings at [.stylelintrc.json](https://github.com/Yorzaren/authentication-system-leak-detection/blob/main/.github/linters/.stylelintrc.json)
-</details>

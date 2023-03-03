@@ -1,3 +1,7 @@
+"""
+This contains the password policy rules and functions to determine if the given string meets
+the password policy.
+"""
 import string as alphabet_string
 
 # CONFIG VARS
@@ -110,18 +114,3 @@ def password_valid_to_policy_rules(password: str, debugging=False) -> bool:
         return False
     # If it makes it here it has passed the checks
     return True
-
-
-# TODO: EVENTUALLY REMOVE THIS TEST CODE ONCE FINISHED
-if __name__ == "__main__":
-    test = [
-        "123#%Txrte2323yrtyhrtyhrtyrtyrty3",  # 33 chars
-        "sdfkjsdkf398njdssdifu83!@#ds",  # No cap
-        "32SDJF9JDH29N0",  # no lower
-        "SDJFasdaJDHN",  # no digits
-        "1234567",  # too short
-        "你好213AD!s12xd",  # forbidden characters
-    ]
-
-    for i in range(len(test)):
-        print(f"Input was:{test[i]}\nIsValidToPolicy: {password_valid_to_policy_rules(test[i], debugging=True)}\n")
