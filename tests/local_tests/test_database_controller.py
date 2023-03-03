@@ -18,6 +18,7 @@ load_dotenv()  # Load the secrets from the .env file
 
 class TestDatabaseController:
     # Skip if not able to make a database connection because password missing in .env
+    # @pytest.mark.skip(reason="DISABLED")
     @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_db_functions(self):
         print("\n-->Resetting the system back to the default state\n")

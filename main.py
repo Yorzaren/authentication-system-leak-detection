@@ -44,7 +44,7 @@ NUMBER_OF_PASSWORDS = 11  # An int, N total passwords (1 real + N-1 decoy passwo
 # because any method of hiding it is constrained to the database having N passwords (1 real + N-1 decoy passwords)
 # For this to be secure it require that no one gets the code behind the password hiding.
 # This will take a string and return an int to be used as the array index
-def hide_password(username: str) -> int:
+def __hide_password(username: str) -> int:
     char_sum = 0
     username = username + RANDOM_NOISE
     for char in username:
@@ -52,21 +52,26 @@ def hide_password(username: str) -> int:
 
     placement = (char_sum * RANDOM_NUMBER) % NUMBER_OF_PASSWORDS
 
-    # print(f"hide_password({username}) placement: {placement}")
+    # print(f"__hide_password({username}) placement: {placement}")
 
     return placement
 
 
-def development_decoy_generator() -> list:
+# Don't mark as private as you use it in test_main.py
+def development_decoy_generator(username: str, password: str) -> list:
     """
     DO NOT USE THIS!!!! This is only for testing because it fills the array with junk and
     allows you to see the real password in the database.
     :return: list of filler
     """
-    return ["decoy1", "decoy2", "decoy3", "decoy4", "decoy5", "decoy6", "decoy7", "decoy8", "decoy9", "decoy10"]
+    array_decoys = ["decoy1", "decoy2", "decoy3", "decoy4", "decoy5", "decoy6", "decoy7", "decoy8", "decoy9", "decoy10"]
+    real_placement = __hide_password(username)
+    random.shuffle(array_decoys)  # Randomize the array
+    array_decoys.insert(real_placement, password)  # Place the real password in the array
+    return array_decoys
 
 
-def create_password_array(username: str, password: str) -> list:
+def __create_password_array(username: str, password: str) -> list:
     """
     For debugging, you can swap out generate_decoy_passwords for development_decoy_generator
     This will allow you to see the real password when you dump the database table
@@ -76,20 +81,17 @@ def create_password_array(username: str, password: str) -> list:
     """
 
     array_decoys = generate_decoy_passwords(password)  # Generate decoys
-    real_placement = hide_password(username)
+    real_placement = __hide_password(username)
     random.shuffle(array_decoys)  # Randomize the array
     array_decoys.insert(real_placement, password)  # Place the real password in the array
     return array_decoys
 
 
-def get_real_password(username: str, password_array) -> str:
-    return password_array[hide_password(username)]
+def __get_real_password(username: str, password_array) -> str:
+    return password_array[__hide_password(username)]
 
 
-# print(get_real_password("mblack", hidden))
-
-
-def _print_system_auth_resp(msg: str) -> None:
+def __print_system_auth_resp(msg: str) -> None:
     print(f"{Back.BLACK}{Fore.YELLOW}[Authentication Response]{Style.RESET_ALL} {msg}")
 
 
@@ -99,12 +101,12 @@ def is_authenticated(username: str, input_password: str) -> bool:
         if db_controller.is_locked_out(username) is False:
             # Find the real password
             user_passwords = db_controller.get_passwords(username)
-            real_password = get_real_password(username, user_passwords)
+            real_password = __get_real_password(username, user_passwords)
 
             # The real password was used
             if input_password == real_password:
                 # The password is the real password
-                _print_system_auth_resp("Correct pass and username")
+                __print_system_auth_resp(f"Signed in as {Fore.CYAN}{username}{Fore.RESET}")
 
                 # Reset the fail counter to zero
                 db_controller.reset_failed_attempts(username)
@@ -114,14 +116,17 @@ def is_authenticated(username: str, input_password: str) -> bool:
             # A decoy was used
             elif input_password in user_passwords:
                 # The password is a decoy
-                _print_system_auth_resp("DECOY USED")
+                __print_system_auth_resp(f"DECOY USED for {Fore.CYAN}{username}{Fore.RESET}")
 
                 # Send the breach alert email to the admin
                 send_email("test", 2, username)
                 return False
             # The password is wrong but not a decoy
             else:
-                # The account will be locked at 3 wrong attempts, the equality is just to make sure.
+                # Increase fails counter
+                db_controller.increment_failed_attempts(username)
+
+                # The account will be locked at 3 wrong attempts
                 if db_controller.get_failed_count(username) >= 3:
                     print("Too many wrong attempts. Your account has been locked.")
                     db_controller.lock_account(username)
@@ -129,17 +134,15 @@ def is_authenticated(username: str, input_password: str) -> bool:
                     send_email("test", 1, username)
                     return False
                 else:
-                    # Increase fails counter
-                    db_controller.increment_failed_attempts(username)
                     count = db_controller.get_failed_count(username)
-                    _print_system_auth_resp("Wrong password - Wrong Attempt Count: " + str(count))
+                    __print_system_auth_resp("Wrong password - Wrong Attempt Count: " + str(count))
                     return False
         else:
-            _print_system_auth_resp("Your account was locked for your safety. Contact an admin to unlock it.")
+            __print_system_auth_resp("Your account was locked for your safety. Contact an admin to unlock it.")
             return False
-
+    # Username doesn't exist
     else:
-        _print_system_auth_resp("Error: Username " + username + " doesn't exist")
+        __print_system_auth_resp(f"Error: Username {Fore.CYAN}{username}{Fore.RESET} doesn't exist")
         return False
 
 
@@ -155,25 +158,26 @@ def add_user_account(admin_name: str, auth_password: str, username: str, new_use
     """
 
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print("Admin is really admin")
+        print(f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
+              f"\nAttempting to add account...")
 
         if db_controller.user_exists(username) is False:
             if is_valid_username(username) is True:
-                print("Username is unique")
+                print(f"Username: {Fore.CYAN}{username}{Fore.RESET} is unique")
                 if password_valid_to_policy_rules(new_user_password):
                     # Generate fake passwords
-                    password_array = create_password_array(username, new_user_password)
+                    password_array = __create_password_array(username, new_user_password)
                     db_controller.add_user(username, password_array, add_as_admin)
-                    print("Account created")
+                    print(f"Success: Account named {username} had been created.")
                     return True  # Success
                 else:
-                    print("Password didn't meet standards.")
+                    print(f"Error: Password {Fore.CYAN}{new_user_password}{Fore.RESET} didn't meet standards.")
                     return False
         else:
-            print("The user already exists in the system.")
+            print(f"Error: Username {Fore.CYAN}{username}{Fore.RESET} already exists in the system.")
             return False
     else:
-        print("Admin requesting is a faker")
+        print(f"FAILURE: The requesting account, {admin_name} is NOT an admin OR Wrong Password.")
         return False
 
     # Check admin requirements of: isadmin and password is correct
@@ -181,7 +185,7 @@ def add_user_account(admin_name: str, auth_password: str, username: str, new_use
 
 def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
     """
-    Function will delete a requested user if the caller is an admin and the password is correct.
+    Function will delete a requested user if the caller is an admin and the password is correct
     :param admin_name: the username of the admin account requesting account deletion
     :param auth_password: the password of the admin account requesting account deletion
     :param username: the username of the account to be deleted
@@ -189,7 +193,8 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
     """
     # Check if the requesting account is the admin and is authenticated
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print("Admin is really admin")
+        print(f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
+              f"\nAttempting to delete account...")
         if db_controller.user_exists(username):
             if db_controller.is_only_admin() is True:
                 print(f"FAILURE: You can't delete {username} because they are the only admin.")
@@ -199,16 +204,16 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
             print(f"Success: Deleted {username}")
             return True  # Success
         else:
-            print("The user you have requested to delete doesn't exist.")
+            print("Error: The user you have requested to delete doesn't exist.")
             return False
     else:
-        print("Admin requesting is a faker")
+        print(f"FAILURE: The requesting account, {admin_name} is NOT an admin OR Wrong Password.")
         return False
 
 
 def unlock_account(admin_name: str, auth_password: str, username: str) -> bool:
     """
-    Function will unlock a requested user's account if the caller is an admin and the password is correct.
+    Function will unlock a requested user's account if the caller is an admin and the password is correct
     :param admin_name: the username of the admin account requesting account deletion
     :param auth_password: the password of the admin account requesting account deletion
     :param username: the username of the account to be unlocked
@@ -226,13 +231,13 @@ def unlock_account(admin_name: str, auth_password: str, username: str) -> bool:
             print("The user account you have requested to unlock doesn't exist.")
             return False
     else:
-        print("Admin requesting is a faker")
+        print(f"FAILURE: The requesting account, {admin_name} is NOT an admin OR Wrong Password.")
         return False
 
 
 def update_password(username: str, current_password: str, new_password: str) -> bool:
     """
-    Any account can change their own password, provided they give the correct current password.
+    Any account can change their own password, provided they give the correct current password
     :param username: the username of the account wanting the password change
     :param current_password: the current_password of the account wanting the password change
     :param new_password: the new_password of the account wanting the password change
@@ -244,7 +249,7 @@ def update_password(username: str, current_password: str, new_password: str) -> 
         if password_valid_to_policy_rules(new_password):
             if password_valid_to_policy_rules(new_password):
                 # Generate fake passwords
-                password_array = create_password_array(username, new_password)
+                password_array = __create_password_array(username, new_password)
                 db_controller.update_password(username, password_array)
             print(f"Success: Updated the password to {username}'s account")
             return True  # Success
@@ -252,38 +257,5 @@ def update_password(username: str, current_password: str, new_password: str) -> 
             print("The new password doesn't meet the policy standards.")
             return False
     else:
-        print("User requesting is a faker")
+        print(f"FAILURE: Wrong Username and/or Wrong Password.")
         return False
-
-
-if __name__ == "__main__":
-    # From a frest start make a test user
-    add_user_account("admin", "password", "testuser", "Q49^y1z!uxV!")
-    add_user_account("admin", "password", "admin2", "s49^yxz!*xV!", add_as_admin=True)
-
-    # Check that we can login as testuser
-    assert is_authenticated("testuser", "Q49^y1z!uxV!") is True
-    assert db_controller.is_admin("testuser") is False
-
-    assert is_authenticated("admin2", "s49^yxz!*xV!") is True
-    assert db_controller.is_admin("admin2") is True
-
-    # Lock out the test user
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    is_authenticated("testuser", "sdfsdfsdsdf")
-
-    is_authenticated("testuser", "sdfsdfsdsdf")
-    # unlock_account("admin", "password", "testuser")
-
-    print(update_password("admin", "password", "gqL3031%$#qK"))
-    print(update_password("admin", "gqL3031%$#qK", "P@ssword!213"))
-
-    db_controller.print_table()
