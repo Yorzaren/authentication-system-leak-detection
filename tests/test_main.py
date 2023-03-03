@@ -102,12 +102,14 @@ class TestMain:
         # Check that the admin account can't do anything when locked
         assert main.add_user_account("admin2", "s49^yxz!*xV!", "sstestss", "8Pc79!Ph5e!CR") is False
 
+    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_fail_adding_users(self):
         print("\n------Messages------")
         assert main.add_user_account("admin", "password", "testuser", "dasd") is False  # Already exists
         assert main.add_user_account("admin5", "password", "newUser", "dasd") is False  # Bad admin
         assert main.add_user_account("admin", "password", "newUser", "dasd") is False  # New user's password isn't good.
 
+    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_delete_user_msg(self):
         print("\n------Messages------")
         # Delete out a user and succeed.
@@ -117,6 +119,7 @@ class TestMain:
         # Try to delete something that doesn't exist.
         assert main.delete_user("admin", "password", "oldUser") is False  # Doesn't exist
 
+    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_unlock_account(self):
         print("\n------Messages------")
         # admin2 should still be locked out.
@@ -129,6 +132,7 @@ class TestMain:
 
         assert main.unlock_account("admin", "password", "noUserByThisName") is False
 
+    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_change_password(self):
         print("\n------Messages------")
         assert main.update_password("jsmith", "notpassword", "Wcd@8sdf*dfdop#") is False  # Not the right password
