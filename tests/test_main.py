@@ -1,10 +1,11 @@
-import database_controller as db_controller
-import main
+import os  # Used to get the .env file
+
 import mysql.connector
 import pytest
-
-import os  # Used to get the .env file
 from dotenv import load_dotenv  # Used to load info from the .env file
+
+import database_controller as db_controller
+import main
 
 load_dotenv()  # Load the secrets from the .env file
 
@@ -18,7 +19,7 @@ class TestMain:
         db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        my_cursor.execute(f"CALL ResetDatabase()")
+        my_cursor.execute("CALL ResetDatabase()")
         # Commit the changes and close
         cnx.commit()
         cnx.close()

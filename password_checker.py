@@ -48,10 +48,10 @@ def has_forbidden_characters(string: str) -> bool:
         test_char = string[char]
         # Don't use isalpha() because it will accept chars that aren't A-Z
         if not (
-                test_char in alphabet_string.ascii_lowercase
-                or test_char in alphabet_string.ascii_uppercase
-                or test_char.isdigit()
-                or test_char in ALLOWED_SPECIAL_CHAR
+            test_char in alphabet_string.ascii_lowercase
+            or test_char in alphabet_string.ascii_uppercase
+            or test_char.isdigit()
+            or test_char in ALLOWED_SPECIAL_CHAR
         ):
             # print(test_char)
             return True

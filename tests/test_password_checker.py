@@ -64,7 +64,7 @@ class TestPasswordCheckerFunctions:
             "SDJFasdaJDHN",  # no digits
             "Us!4567",  # too short
             "Us004567",  # no special characters
-            "你好213AD!s12xd"  # has forbidden characters
+            "你好213AD!s12xd",  # has forbidden characters
         ]
 
         for i in range(len(test)):

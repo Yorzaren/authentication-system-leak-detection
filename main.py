@@ -164,8 +164,10 @@ def add_user_account(admin_name: str, auth_password: str, username: str, new_use
     """
 
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print(f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
-              f"\nAttempting to add account...")
+        print(
+            f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
+            f"\nAttempting to add account..."
+        )
 
         if db_controller.user_exists(username) is False:
             if is_valid_username(username) is True:
@@ -199,8 +201,10 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
     """
     # Check if the requesting account is the admin and is authenticated
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print(f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
-              f"\nAttempting to delete account...")
+        print(
+            f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
+            f"\nAttempting to delete account..."
+        )
         if db_controller.user_exists(username):
             if db_controller.is_only_admin() is True:
                 print(f"FAILURE: You can't delete {username} because they are the only admin.")
@@ -263,5 +267,5 @@ def update_password(username: str, current_password: str, new_password: str) -> 
             print("The new password doesn't meet the policy standards.")
             return False
     else:
-        print(f"FAILURE: Wrong Username and/or Wrong Password.")
+        print("FAILURE: Wrong Username and/or Wrong Password.")
         return False

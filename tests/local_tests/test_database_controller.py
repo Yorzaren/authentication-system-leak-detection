@@ -7,12 +7,14 @@ Make sure the database is running and is database entries are fresh from initial
 
 If the database isn't in default config, then the test will throw errors.
 """
-import mysql.connector
-import database_controller as db
-import pytest
-
 import os  # Used to get the .env file
+
+import mysql.connector
+import pytest
 from dotenv import load_dotenv  # Used to load info from the .env file
+
+import database_controller as db
+
 load_dotenv()  # Load the secrets from the .env file
 
 
@@ -26,7 +28,7 @@ class TestDatabaseController:
         db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        my_cursor.execute(f"CALL ResetDatabase()")
+        my_cursor.execute("CALL ResetDatabase()")
         # Commit the changes and close
         cnx.commit()
         cnx.close()
@@ -47,9 +49,19 @@ class TestDatabaseController:
         db.print_table()
 
         array = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"]
-        array2 = ["random1", "random2", "random3", "random4",
-                  "random5", "random6", "random7", "random8",
-                  "random9", "random10", "random11"]
+        array2 = [
+            "random1",
+            "random2",
+            "random3",
+            "random4",
+            "random5",
+            "random6",
+            "random7",
+            "random8",
+            "random9",
+            "random10",
+            "random11",
+        ]
 
         db.add_user("testuser", array)  # add normal user
         db.add_user("testadmin", array, True)  # add admin user
