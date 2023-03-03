@@ -128,7 +128,7 @@ sudo cp web -r /opt/lampp/htdocs
 * Site should be live at `localhost/web`
 * Navigate to it using a web browser.
 
-##Style / Linting / Unit Testing
+## Style / Linting / Unit Testing
 
 ### Python
 [![Tested with Pytest](https://img.shields.io/badge/Tested%20with-Pytest-red?style=for-the-badge)](https://docs.pytest.org/)
