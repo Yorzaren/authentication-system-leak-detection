@@ -7,18 +7,30 @@ Make sure the database is running and is database entries are fresh from initial
 
 If the database isn't in default config, then the test will throw errors.
 """
+import mysql.connector
 import database_controller as db
+import pytest
+
 import os  # Used to get the .env file
 from dotenv import load_dotenv  # Used to load info from the .env file
 load_dotenv()  # Load the secrets from the .env file
-import pytest
 
 
 class TestDatabaseController:
     # Skip if not able to make a database connection because password missing in .env
     @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_db_functions(self):
-        print("----- database_controller test -----\n->Make sure you have the system in the default state\n")
+        print("\n-->Resetting the system back to the default state\n")
+        database_password = os.environ.get("DB_PASSWORD")
+        db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
+        cnx = mysql.connector.connect(**db_config)
+        my_cursor = cnx.cursor(buffered=True)
+        my_cursor.execute(f"CALL ResetDatabase()")
+        # Commit the changes and close
+        cnx.commit()
+        cnx.close()
+
+        print("\n----- database_controller test -----\n->Make sure you have the system in the default state\n")
         print("Check case-sensitivity...")
         assert db.is_admin("Admin") is False
         assert db.is_admin("admin") is True
