@@ -219,7 +219,7 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
     return is_random
 
 
-def _is_distanced(real: str, decoy: str, dist: int = 1) -> bool:
+def __is_distanced(real: str, decoy: str, dist: int = 2) -> bool:
     """
     If the distance isn't far enough it's likely for people to type a decoy if they mess up.
     :param real: real password
@@ -230,23 +230,23 @@ def _is_distanced(real: str, decoy: str, dist: int = 1) -> bool:
     If False, its probably too close, and you should regenerate the decoy
     """
     # Levenshtein distance if 1 then its likely someone might hit it when mistyping
-    return edit_distance(real, decoy) > dist
+    return edit_distance(real, decoy) >= dist
 
 
-def _is_new_and_valid(real: str, decoy: str, array: list) -> bool:
+def __is_new_and_valid(real: str, decoy: str, array: list) -> bool:
     # if you use this in a while. You should have a NOT in front of it.
     if (
         password_checker.password_valid_to_policy_rules(decoy) is False
         or decoy == real
         or decoy in array
-        or not _is_distanced(real, decoy)
+        or not __is_distanced(real, decoy)
     ):
         return False
     else:
         return True
 
 
-def generate_decoy_passwords(real_password: str):  # Returns an array
+def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
     """
     :param real_password: string
     :return: array
@@ -338,7 +338,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{real_password} {i + 1}")
 
                 new_decoy = simple_changes(real_password)
-                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
+                while not __is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(real_password)
 
                 decoy_passwords.append(new_decoy)
@@ -348,7 +348,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{decoy_base_1} {i + 1}")
 
                 new_decoy = simple_changes(decoy_base_1)
-                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
+                while not __is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(decoy_base_1)
 
                 decoy_passwords.append(new_decoy)
@@ -358,7 +358,7 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 # print(f"{decoy_base_2} {i + 1}")
 
                 new_decoy = simple_changes(decoy_base_2)
-                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
+                while not __is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     new_decoy = simple_changes(decoy_base_2)
 
                 decoy_passwords.append(new_decoy)
@@ -370,12 +370,12 @@ def generate_decoy_passwords(real_password: str):  # Returns an array
                 new_decoy = regular_handler(real_password)
                 # print(f"Generated: {new_decoy}")
                 counter = 0
-                while not _is_new_and_valid(real_password, new_decoy, decoy_passwords):
+                while not __is_new_and_valid(real_password, new_decoy, decoy_passwords):
                     # print("Failed to be good")
                     new_decoy = regular_handler(real_password)
                     # print(f"New Generated: {new_decoy} - {edit_distance(real_password, new_decoy)}")
                     if counter == 1000:
-                        print("FAILED")
+                        print("FAILED to generate decoy")
                         break
                     counter += 1
 
