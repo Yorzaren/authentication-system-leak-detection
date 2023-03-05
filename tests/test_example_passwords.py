@@ -11,7 +11,7 @@ Running pytest in the root of the project is fine tho.
 
 """
 
-from password_checker import password_valid_to_policy_rules
+from python_scripts.password_checker import password_valid_to_policy_rules
 
 
 class TestPasswordExamples:

@@ -4,8 +4,8 @@ from colorama import Back, Fore, Style
 from colorama import init as colorama_init
 from nltk import edit_distance
 
-import password_checker
-from password_analysis_helper import (
+import python_scripts.password_checker as password_checker
+from python_scripts.password_analysis_helper import (
     contains_very_common_string,
     has_x_digits_in_a_row,
     is_random_string,
@@ -14,13 +14,13 @@ from password_analysis_helper import (
     split_lowercase_strings,
     split_uppercase_strings,
 )
-from password_checker import (
+from python_scripts.password_checker import (
     count_digits,
     count_lowercase,
     count_special_char,
     count_uppercase,
 )
-from password_generator_helper import (
+from python_scripts.password_generator_helper import (
     convert_4_digits,
     random_corruption,
     regular_handler,
@@ -413,7 +413,7 @@ if __name__ == "__main__":
     issues = ["ABCD1234@me!"]
     issues_r = ["ZYx@6z&W%aDb", "D32$jr#Q^VpD", "9Sk5yRyY2^8D", "Cq6#pBkyddv2", "QydZx2qB&#Liz@", "5Brom2n*J$%Fsz"]
     pass_test = []
-    with open("example_passwords/valid_passwords.txt") as file:
+    with open("../example_passwords/valid_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
 

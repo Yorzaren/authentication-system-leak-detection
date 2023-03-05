@@ -2,8 +2,8 @@ import re
 import string as alphabet_string
 from random import choice, randint
 
-import password_checker
-from password_analysis_helper import (
+import python_scripts.password_checker as password_checker
+from python_scripts.password_analysis_helper import (
     ends_with_symbol,
     split_digit_strings,
     starts_with_symbol,

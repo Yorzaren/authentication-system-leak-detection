@@ -21,11 +21,11 @@ from colorama import Back, Fore, Style
 from colorama import init as colorama_init
 from dotenv import load_dotenv  # Used to load info from the .env file
 
-import database_controller as db_controller
-from email_service import send_email
-from password_checker import password_valid_to_policy_rules
-from password_generator import generate_decoy_passwords
-from username_checker import is_valid_username
+import python_scripts.database_controller as db_controller
+from python_scripts.email_service import send_email
+from python_scripts.password_checker import password_valid_to_policy_rules
+from python_scripts.password_generator import generate_decoy_passwords
+from python_scripts.username_checker import is_valid_username
 
 # Pull data from .env and set up the database connection
 load_dotenv()  # Load the secrets from the .env file
