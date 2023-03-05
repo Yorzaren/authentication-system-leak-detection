@@ -6,7 +6,7 @@ python -m smtpd -c DebuggingServer -n localhost:1025
 Also, if you want to test with mailslurp, you have to reset the accounts for fresh credentials.
 
 """
-from email_service import send_email
+from python_scripts.email_service import send_email
 
 print("--- Starting LocalTest of email_service.py ---")
 print("Using DebuggingServer: ")

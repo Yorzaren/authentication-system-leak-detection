@@ -13,7 +13,7 @@ import mysql.connector
 import pytest
 from dotenv import load_dotenv  # Used to load info from the .env file
 
-import database_controller as db
+from python_scripts import database_controller as db
 
 load_dotenv()  # Load the secrets from the .env file
 

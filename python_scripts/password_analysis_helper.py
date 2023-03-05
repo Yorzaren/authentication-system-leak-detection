@@ -4,7 +4,7 @@ import nltk  # Used to detect if something is a dictionary word
 from nltk.corpus import words
 from nostril import nonsense
 
-import password_checker
+import python_scripts.password_checker as password_checker
 
 """
 You have imports included in functions to prevent circular importing errors
@@ -90,7 +90,7 @@ def contains_very_common_string(string: str) -> bool:
 
 
 def convert_from_leet(string: str) -> str:
-    from password_generator_helper import (
+    from python_scripts.password_generator_helper import (
         anti_leet_letters,  # Prevent circular import by having this here
     )
 
@@ -106,7 +106,7 @@ def convert_from_leet(string: str) -> str:
 # Nostril will fail if the sample is too small or gives both false positives and negatives.
 # This still have false positives. (It will sometimes say a string is random when it isn not)
 def is_random_string(string: str, debugging=False) -> bool:
-    from password_generator_helper import (
+    from python_scripts.password_generator_helper import (
         anti_leet_letters,  # Prevent circular import by having this here
     )
 
@@ -318,7 +318,7 @@ if __name__ == "__main__":
         "Iamtheendandthebeginning!1",
     ]
 
-    with open("example_passwords/random_passwords.txt") as file:
+    with open("../example_passwords/random_passwords.txt") as file:
         for line in file:
             pass_test.append(line.strip())
     for s in pass_test:

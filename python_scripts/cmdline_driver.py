@@ -20,8 +20,8 @@ from colorama import Back, Fore, Style
 from colorama import init as colorama_init
 from dotenv import load_dotenv  # Used to load info from the .env file
 
-import database_controller as db_controller
-from main import (
+import python_scripts.database_controller as db_controller
+from python_scripts.main import (
     add_user_account,
     delete_user,
     is_authenticated,

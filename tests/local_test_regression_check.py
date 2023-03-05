@@ -4,7 +4,7 @@ This is just to test if things work more or less.
 """
 import pytest
 
-from password_analysis_helper import is_random_string
+from python_scripts.password_analysis_helper import is_random_string
 
 
 class TestPasswordAnalysisRegressionCheck:

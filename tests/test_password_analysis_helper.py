@@ -1,4 +1,4 @@
-import password_analysis_helper
+from python_scripts import password_analysis_helper
 
 
 class TestPasswordAnalysisHelper:
