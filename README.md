@@ -195,7 +195,7 @@ Get the absolute path of `initialize_database.sql` located in the root of the re
 Open MySQL or MariaDB
 
 ```cmd
-/opt/lampp/bin/mysql -u root -p
+C:\xampp\mysql\bin\mysql.exe -u root -p
 ```
 
 You should see `MariaDB[none]>` or `mysql>`.
