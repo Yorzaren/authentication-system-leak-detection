@@ -2,6 +2,12 @@
 
 [![GitHub Super-Linter](https://github.com/Yorzaren/authentication-system-leak-detection/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
+## Table of Contents
+1. [About](#about)
+2. [Requirements](#requirements)
+3. [Linux Installation](#linux)
+4. [Windows Installation](#windows)
+5. [Development Testing/Style Notes](#style--linting--unit-testing)
 
 
 ## About
@@ -16,7 +22,7 @@ If an attacker gets the password database, they should have a hard time figuring
 If they use a decoy password while attempting to get into a user's account, it will alert the admin to a possible database leak.
 
 
-**Requirements:**
+**Project Requirements:**
 
 1. Must use at least 10 false passwords per account.
 2. Creation of user account must randomly create associated false passwords in similar format to avoid detection.  
@@ -26,8 +32,14 @@ If they use a decoy password while attempting to get into a user's account, it w
 6. Provide a mechanism of notification if false password is used compared to incorrect entry or simple guess.
 7. Runs on Linux.
 
-## Install
+## Installation
 The project is intended Linux based systems but might work on Windows (untested). 
+
+### Requirements
+- Git
+- Python
+- Pip
+- XAMPP
 
 ### Linux
 These instructions are for Ubuntu 22.04.2 LTS but might work for other versions. 
@@ -125,6 +137,90 @@ In the root of the repository copy over the `web` folder to the htdocs for the p
 ```cmd
 sudo cp web -r /opt/lampp/htdocs
 ```
+* Site should be live at `localhost/web`
+* Navigate to it using a web browser.
+
+### Windows
+These instructions are for Windows 11 but might work for other versions.
+
+#### Install Git, Python, and Pip
+You need to have git and python on your system if you don't already have them installed.
+
+You can download Git from <https://git-scm.com/download/win>.
+
+You can download Python from <https://www.python.org/>.
+
+**Note:** When you install Python add it to the PATH and install pip.
+
+#### Clone the repository
+```cmd
+git clone https://github.com/Yorzaren/authentication-system-leak-detection.git
+```
+
+#### Install Requirements
+
+```cmd
+pip install -r requirements.txt
+```
+
+#### Install XAMPP for Windows 8.20.0
+You can get it here from <https://www.apachefriends.org/>.
+
+Remember where you install XAMPP.
+
+#### Set up the Database
+Command will change depending on where you installed XAMPP.
+
+Start MySQL / MariaDB using the following command in Command Prompt.
+```cmd
+C:\xampp\mysql\bin\mysql.exe -u root -p
+```
+
+Default password is blank, so you should be able to hit enter and login.
+
+```cmd
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpassword');
+```
+
+`newpassword` can be set to whatever you want the password to be.
+
+**_Make sure you remember the password for later._**
+
+See: <https://stackoverflow.com/a/64550826>
+
+#### Initialize the Database
+
+Get the absolute path of `initialize_database.sql` located in the root of the repository
+
+Open MySQL or MariaDB
+
+```cmd
+/opt/lampp/bin/mysql -u root -p
+```
+
+You should see `MariaDB[none]>` or `mysql>`.
+
+Initialize the database with the following command:
+
+```cmd
+source [path of initialize_database.sql]
+```
+
+#### Create the .env
+
+In the root of the `authentication-system-leak-detection` folder you need to make a file called `.env`
+
+It should look something like this:
+```txt
+DB_PASSWORD=password
+RANDOM_NOISE=somestring
+RANDOM_NUMBER=123
+```
+
+#### Copy over the web files 
+In the root of the repository copy over the `web` folder to the htdocs for the patch site.
+
+* Copy the code to the htdocs its located at `C:\xampp\htdocs`
 * Site should be live at `localhost/web`
 * Navigate to it using a web browser.
 
