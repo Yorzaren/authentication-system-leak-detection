@@ -4,8 +4,8 @@ import mysql.connector
 import pytest
 from dotenv import load_dotenv  # Used to load info from the .env file
 
-from python_scripts import main
 from python_scripts import database_controller as db_controller
+from python_scripts import main
 
 load_dotenv()  # Load the secrets from the .env file
 
