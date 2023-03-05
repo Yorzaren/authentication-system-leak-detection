@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- Start the session -->
+<?php session_start(); ?>
 <html lang="en">
 	<head>
 		<title>Password F.M. Demo Page</title>
@@ -37,7 +39,12 @@
 					<!-- Keep this outside so its align on the right of the screen -->
 					
 					<div class="nav-item dropdown text-bg-dark">
-						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> USERNAME </a>
+						<!-- The php will check if the user is logged in and display the menu accordingly. -->
+						<?php
+						// Check if they are logged in.
+						if(isset($_SESSION['logged_in'])) {
+							echo '
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Welcome, ' . $_SESSION["username"] . '</a>
 						<ul class="dropdown-menu dropdown-menu-lg-end">
 							<li>
 								<a href="admin.html" class="dropdown-item" type="button">Admin Dashboard</a>
@@ -48,28 +55,48 @@
 							<li>
 								<a href="logout.php" class="dropdown-item" type="button">Logout</a>
 							</li>
-						</ul>
+						</ul>';
+						} else { // Not logged in so point them to the login page.
+							echo '<a class="nav-link" href="index.html"><span>Login</span></a></li>';
+						}
+						?>
+						
 					</div>
 					
 				</div>
 			</div>
 		</nav>
 		<div id="section" class="container">
-			<div id="login-container" class="mx-auto">
-				<h2>Login</h2>
-				<form>
-					<div class="mb-3">
-						<label for="username" class="form-label">Username</label>
-						<input class="form-control" id="username">
-					</div>
-					<div class="mb-3">
-						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password">
-						<p>If you forget your password, you must reach out to the admin to reset it.</p>
-					</div>
-					<button type="submit" class="btn btn-primary">Login</button>
-				</form>
-			</div>
+			<?php
+			// Check if they are logged in.
+			if(isset($_SESSION['logged_in'])) {
+				echo '
+				<div id="welcome-container" class="mx-auto">
+					<h2>Welcome, ' . $_SESSION["username"] . '</h2>
+					<p>You have signed in sucessfully!</p>
+					<p></p>
+				</div>
+				';
+			} else {
+				// The user isn't logged in so display the login container.
+				echo '
+				<div id="login-container" class="mx-auto">
+					<h2>Login</h2>
+					<form action="login.php" method="post">
+						<div class="mb-3">
+							<label for="username" class="form-label">Username</label>
+							<input class="form-control" name="username" id="username">
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label">Password</label>
+							<input type="password" class="form-control" name="password" id="password">
+							<p>If you forget your password, you must reach out to the admin to reset it.</p>
+						</div>
+						<button type="submit" class="btn btn-primary" value="submit">Login</button>
+					</form>
+				</div>';
+			}
+			?>
 			<div id="about-container" style="display:none;">
 				<h2>About</h2>
 				<p>This project is an experimental proof of concept. The goal is to detect a password database breach by hiding the users password with a bunch of decoy passwords. If an attacker gets the password database, they should have a hard time figuring out which of the many passwords associated with a single account is the real password. If they use a decoy password while attempting to get into a user's account, it will alert the admin to a possible database leak.</p>
