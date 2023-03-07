@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div id="user-settings" class="mx-auto">
+		<h2>User Account Settings</h2>
+		<form id="change-password" action="change_password.php" method="post" onsubmit="return ValidateChangePasswordForm();">
+			<h3>Change User Password</h3>
+			<div class="mb-3">
+				<!-- CONTAINS_PASSWORDPOLICY -->
+				<div id="password-policy">
+					<b>Password Policy:</b>
+					<ul>
+						<li id="password-rule-length">Must be between 12 and 32 characters long.</li>
+						<li id="password-rule-uppercase">Must have at least 1 uppercase letter.</li>
+						<li id="password-rule-lowercase">Must have at least 1 lowercase letter.</li>
+						<li id="password-rule-symbol">Must have at least 1 symbol from this list <code>!@#$%^&*</code>. </li>
+						<li id="password-rule-digit">Must have at least 1 digit.</li>
+						<li id="password-rule-no-weird">Only English Letters <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, and <code>!@#$%^&*</code>. Other symbols are <strong>NOT</strong> permited. </li>
+					</ul>
+				</div>
+				<label for="password" class="form-label">New Password:</label>
+				<input type="password" class="form-control" id="password" placeholder="Password" required onkeyup="PasswordPolicyFeedback();">
+			</div>
+			<div class="mb-3">
+				<label for="confirm-password" class="form-label">Retype Password:</label>
+				<input type="password" class="form-control" id="confirm-password" placeholder="Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
+			</div>
+			<div class="mb-3">
+				<label for="confirm-old-password" class="form-label">Type your current password to confirm password change:</label>
+				<input type="password" class="form-control" id="confirm-old-password" placeholder="Type Your Current Password to Confirm" required>
+			</div>
+			<button type="submit" class="btn btn-primary">Change Password</button>
+		</form>
+	</div>
+{% endblock %}

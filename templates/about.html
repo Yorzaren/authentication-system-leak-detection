@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div id="about-container">
+		<h2>About</h2>
+		<p>This project is an experimental proof of concept. The goal is to detect a password database breach by hiding the users password with a bunch of decoy passwords. If an attacker gets the password database, they should have a hard time figuring out which of the many passwords associated with a single account is the real password. If they use a decoy password while attempting to get into a user's account, it will alert the admin to a possible database leak.</p>
+		<h2>Team</h2>
+		<ul>
+			<li>Yorzaren - Project Leader/Head Developer</li>
+			<li>jalewis7</li>
+			<li>Mega-Zawesome</li>
+			<li>Mikaylabj98</li>
+			<li>Dr. M. Black, University of South Alabama - Client</li>
+		</ul>
+	</div>
+{% endblock %}  
