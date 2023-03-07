@@ -65,7 +65,7 @@
 			<input class="form-control" id="delete-username" name="delete-username" placeholder="Delete Username" required onkeyup="CheckDeleteUsernameFeedback();">
 		</div>
 		<div class="mb-3">
-			<label for="password" class="form-label">Retype Username</label>
+			<label for="confirm-delete-username" class="form-label">Retype Username</label>
 			<input class="form-control" id="confirm-delete-username" name="confirm-delete-username" placeholder="Confirm Username" required onkeyup="CheckDeleteUsernameFeedback();">
 		</div>
 		<div class="mb-3">
@@ -73,6 +73,29 @@
 			<input type="password" class="form-control" id="confirm-admin-password-delete" name="confirm-admin-password-delete" placeholder="Type Your Password to Confirm" required>
 		</div>
 		<button type="submit" class="btn btn-primary">Delete Account</button>
+	</form>
+	<form id="unlock-user" action="unlock_account" method="post" onsubmit="return ValidateUnlockUserForm();">
+		<h3>Unlock User Account</h3>
+		<div class="mb-3">
+			<div id="unlock-info">
+				<ul>
+					<li>User accounts will lock if the authentication fails 3 times.</li>
+					<li>Locked accounts can not login to the system unless an admin unlocks them.</li>
+					<li>Enter the user account of you wish to re-enable.</li>
+				</ul>
+			</div>
+			<label for="unlock-username" class="form-label">Unlock User:</label>
+			<input class="form-control" id="unlock-username" name="unlock-username" placeholder="Unlock Username" required onkeyup="CheckUnlockUsernameFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="confirm-unlock-username" class="form-label">Retype Username</label>
+			<input class="form-control" id="confirm-unlock-username" name="confirm-unlock-username" placeholder="Confirm Username" required onkeyup="CheckUnlockUsernameFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="confirm-admin-password-unlock" class="form-label">Type your admin password to confirm account deletion:</label>
+			<input type="password" class="form-control" id="confirm-admin-password-unlock" name="confirm-admin-password-unlock" placeholder="Type Your Password to Confirm" required>
+		</div>
+		<button type="submit" class="btn btn-primary">Unlock Account</button>
 	</form>
 </div>
 {% endblock %}

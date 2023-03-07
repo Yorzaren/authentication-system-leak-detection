@@ -268,5 +268,51 @@ def do_delete_account():
         return redirect(url_for('index'))
 
 
+@app.route('/unlock_account', methods=["POST"])
+def do_unlock_account():
+    if request.method == 'POST':
+        # Check if admin
+        if flask_login.current_user.admin is True:
+            username_unlock = request.form['unlock-username']
+            confirm_unlock_username = request.form['confirm-unlock-username']
+            requesting_admin_username = flask_login.current_user.id
+            requesting_admin_password = request.form['confirm-admin-password-unlock']
+
+            # Check the admin password confirmation first
+            if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
+                # Check if they match
+                if username_unlock != confirm_unlock_username:
+                    flash(f'Error: Given username does not match confirmation username')
+                    return redirect(url_for('admin'))
+
+                if user_exists(username_unlock) is False:
+                    flash(f'Error: {username_unlock} not exist in the system.')
+                    return redirect(url_for('admin'))
+
+                if unlock_account(requesting_admin_username, requesting_admin_password, username_unlock) is True:
+                    flash(f'Success: {username_unlock} has been unlocked on the system.')
+                    return redirect(url_for('admin'))
+                else:
+                    # This shouldn't be reached.
+                    flash(f'Error: {username_unlock} could not be unlocked on the system.')
+                    return redirect(url_for('admin'))
+
+            elif is_locked_out(requesting_admin_username) is True:
+                flash('Your admin password was wrong too many times. Your account has been locked.')
+                return redirect(url_for('admin'))
+            else:
+                flash('The admin password is incorrect.')
+                return redirect(url_for('admin'))
+
+        # Reject if not admin
+        else:
+            flash("You don't have the correct permissions.")
+            return redirect(url_for('index'))
+
+    # People shouldn't be on this page.
+    else:
+        return redirect(url_for('index'))
+
+
 if __name__ == "__main__":
     app.run(ssl_context='adhoc')

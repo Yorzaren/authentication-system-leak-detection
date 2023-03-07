@@ -131,6 +131,30 @@ function ValidateDeleteUserForm() {
 	return true;
 }
 
+function CheckUnlockUsernameFeedback() {
+	var unlock_user_field = document.getElementById('unlock-username');
+	var confirm_unlock_user_field = document.getElementById('confirm-unlock-username');
+
+	if (HasMatchingStrings(unlock_user_field.value, confirm_unlock_user_field.value)) {
+		unlock_user_field.classList.add('is-valid');
+		confirm_unlock_user_field.classList.add('is-valid');
+	} else {
+		unlock_user_field.classList.remove('is-valid');
+		confirm_unlock_user_field.classList.remove('is-valid');
+	}
+}
+
+function ValidateUnlockUserForm() {
+	var unlock_user_field = document.getElementById('unlock-username');
+	var confirm_unlock_user_field = document.getElementById('confirm-unlock-username');
+
+	if (HasMatchingStrings(unlock_user_field.value, confirm_unlock_user_field.value) == false) {
+		alert("The given username to unlock fields do not match.");
+		return false;
+	}
+	return true;
+}
+
 function ValidateChangePasswordForm() {
 	var password_field = document.getElementById("password");
 	var password_confirm_field = document.getElementById('confirm-password');
