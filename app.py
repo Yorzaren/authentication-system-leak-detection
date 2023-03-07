@@ -235,7 +235,7 @@ def do_delete_account():
             if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if they match
                 if username_delete != confirm_delete_username:
-                    flash(f'Error: Given username does not match confirmation username')
+                    flash('Error: Given username does not match confirmation username')
                     return redirect(url_for('admin'))
                 if user_exists(username_delete) is False:
                     flash(f'Error: {username_delete} not exist in the system.')
@@ -282,7 +282,7 @@ def do_unlock_account():
             if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if they match
                 if username_unlock != confirm_unlock_username:
-                    flash(f'Error: Given username does not match confirmation username')
+                    flash('Error: Given username does not match confirmation username')
                     return redirect(url_for('admin'))
 
                 if user_exists(username_unlock) is False:
@@ -312,6 +312,45 @@ def do_unlock_account():
     # People shouldn't be on this page.
     else:
         return redirect(url_for('index'))
+
+
+@app.route('/change_password', methods=["POST"])
+def do_update_password():
+    if request.method == 'POST':
+        username = flask_login.current_user.id
+        new_password = request.form['password']
+        confirm_new_password = request.form['confirm-password']
+        confirm_old_password = request.form['confirm-old-password']
+        # Check that they know their old password
+        if is_authenticated(username, confirm_old_password) is True:
+            # Check if they match
+            if new_password != confirm_new_password:
+                flash('Error: Updated password does not match confirmation password')
+                return redirect(url_for('settings'))
+
+            if password_valid_to_policy_rules(new_password) is True:
+                if update_password(username, confirm_old_password, new_password) is True:
+                    flash(f'Success: {username}, you have changed your password system.')
+                    return redirect(url_for('settings'))
+                else:
+                    # This shouldn't be reached.
+                    flash(f'Error: {username}, you can not change your password on the system.')
+                    return redirect(url_for('settings'))
+            else:
+                flash(f'Error: {username}, your new password does not follow the password policy.')
+                return redirect(url_for('settings'))
+
+        elif is_locked_out(username) is True:
+            flash('Your password was wrong too many times. Your account has been locked.')
+            return redirect(url_for('settings'))
+        else:
+            flash('Your current password is incorrect.')
+            return redirect(url_for('settings'))
+
+    # People shouldn't be on this page.
+    else:
+        return redirect(url_for('index'))
+
 
 
 if __name__ == "__main__":
