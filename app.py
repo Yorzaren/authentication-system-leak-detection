@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import flask_login
 
 from python_scripts.username_checker import is_valid_username
-from python_scripts.database_controller import is_admin, user_exists, is_locked_out
+from python_scripts.database_controller import is_admin, user_exists, is_locked_out, is_only_admin
 from python_scripts.password_checker import password_valid_to_policy_rules
 from python_scripts.main import (
     add_user_account,
@@ -171,8 +171,6 @@ def do_add_account():
             requesting_admin_username = flask_login.current_user.id
             requesting_admin_password = request.form['confirm-admin-password-add']
 
-            admin_page = render_template("admin.html", title="Admin", username=flask_login.current_user.id, admin=flask_login.current_user.admin)
-
             # Check the admin password confirmation first
             if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if the username is already taken
@@ -205,6 +203,53 @@ def do_add_account():
                 else:  # This shouldn't be reached, normally.
                     flash('An error: Occurred')
                 return redirect(url_for('admin'))
+
+            elif is_locked_out(requesting_admin_username) is True:
+                flash('Your admin password was wrong too many times. Your account has been locked.')
+                return redirect(url_for('admin'))
+            else:
+                flash('The admin password is incorrect.')
+                return redirect(url_for('admin'))
+
+        # Reject if not admin
+        else:
+            flash("You don't have the correct permissions.")
+            return redirect(url_for('index'))
+
+    # People shouldn't be on this page.
+    else:
+        return redirect(url_for('index'))
+
+
+@app.route('/delete_account', methods=["POST"])
+def do_delete_account():
+    if request.method == 'POST':
+        # Check if admin
+        if flask_login.current_user.admin is True:
+            username_delete = request.form['delete-username']
+            confirm_delete_username = request.form['confirm-delete-username']
+            requesting_admin_username = flask_login.current_user.id
+            requesting_admin_password = request.form['confirm-admin-password-delete']
+
+            # Check the admin password confirmation first
+            if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
+                # Check if they match
+                if username_delete != confirm_delete_username:
+                    flash(f'Error: Given username does not match confirmation username')
+                    return redirect(url_for('admin'))
+                if user_exists(username_delete) is False:
+                    flash(f'Error: {username_delete} not exist in the system.')
+                    return redirect(url_for('admin'))
+
+                if delete_user(requesting_admin_username, requesting_admin_password, username_delete) is True:
+                    flash(f'Success: {username_delete} has been deleted from the system.')
+                    return redirect(url_for('admin'))
+                else:
+                    flash(f'Error: {username_delete} could not be deleted from the system.')
+                    if is_admin(username_delete) and is_only_admin():
+                        flash(f'Error: You requesting the only admin account to be deleted.'
+                              f'is_only_admin: {is_only_admin()}')
+                    return redirect(url_for('admin'))
 
             elif is_locked_out(requesting_admin_username) is True:
                 flash('Your admin password was wrong too many times. Your account has been locked.')
