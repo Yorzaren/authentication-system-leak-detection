@@ -9,7 +9,7 @@ Components are stored in `static` and `templates`
 from flask import Flask, render_template, request, redirect, url_for, flash
 import flask_login
 
-from python_scripts.database_controller import is_admin, user_exists
+from python_scripts.database_controller import is_admin, user_exists, is_locked_out
 from python_scripts.main import (
     add_user_account,
     delete_user,
@@ -106,13 +106,21 @@ def login():
         flash('Login successful')
         return redirect(url_for('index'))
 
-    return 'Bad login'
+    # Tell the user if their account is locked
+    if is_locked_out(username):
+        flash('Your account has had too many failed login attempts. Your account has been locked contact an '
+              'administrator to unlock it.')
+        return redirect(url_for('login'))
+
+    # Login Failed
+    flash('Incorrect username or password combination')
+    return redirect(url_for('login'))
 
 
 @app.route("/about")
 def about():
     if flask_login.current_user.is_active:
-        return render_template("about.html", title="About", username=flask_login.current_user.id)
+        return render_template("about.html", title="About", username=flask_login.current_user.id, admin=flask_login.current_user.admin)
     else:
         return render_template("about.html", title="About")
 
@@ -127,7 +135,7 @@ def protected():
 @flask_login.login_required
 def admin():
     if flask_login.current_user.admin is True:
-        return render_template("admin.html", title="Admin", username=flask_login.current_user.id)
+        return render_template("admin.html", title="Admin", username=flask_login.current_user.id, admin=flask_login.current_user.admin)
     else:
         return 'You can not be here'
 
@@ -135,7 +143,7 @@ def admin():
 @app.route("/settings")
 @flask_login.login_required
 def settings():
-    return render_template("settings.html", title="Settings", username=flask_login.current_user.id)
+    return render_template("settings.html", title="Settings", username=flask_login.current_user.id, admin=flask_login.current_user.admin)
 
 
 @app.route('/logout')
