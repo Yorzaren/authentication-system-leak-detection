@@ -3,7 +3,7 @@
 {% block content %}
 <div id="admin-dashboard" class="mx-auto">
 	<h2>Admin Dashboard</h2>
-	<form id="add-user" action="add_account" method="post" onsubmit="event.preventDefault();ValidateAddUserForm();">
+	<form id="add-user" action="add_account" method="post" onsubmit="return ValidateAddUserForm();">
 		<h3>Add User Account</h3>
 		<div class="mb-3">
 			<!-- CONTAINS_USERNAMEPOLICY -->

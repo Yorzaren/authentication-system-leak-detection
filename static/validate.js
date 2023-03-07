@@ -115,8 +115,9 @@ function ValidateAddUserForm() {
 
 	if (HasForbiddenUsernameCheck(new_username_field.value)) {
 		alert("Username contains forbidden characters.");
+		return false;
 	}
-	ValidateChangePasswordForm();
+	return ValidateChangePasswordForm();
 }
 
 function ValidateDeleteUserForm() {
@@ -127,6 +128,7 @@ function ValidateDeleteUserForm() {
 		alert("The given username to delete fields do not match.");
 		return false;
 	}
+	return true;
 }
 
 function ValidateChangePasswordForm() {
@@ -161,4 +163,5 @@ function ValidateChangePasswordForm() {
 		alert("Password does not have enough digits.");
 		return false;
 	}
+	return true;
 }
