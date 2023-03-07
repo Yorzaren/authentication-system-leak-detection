@@ -72,6 +72,20 @@ except mysql.connector.Error as err:
     sys.exit("Program closing. No database connection.")
 
 
+def reset_db():
+    # Create the connector
+    cnx = mysql.connector.connect(**db_config)
+    my_cursor = cnx.cursor(buffered=True)
+    command = f'CALL ResetDatabase()'
+    my_cursor.execute(command)
+
+    # Commit the changes
+    cnx.commit()
+
+    # Close the connector
+    cnx.close()
+
+
 def add_predefined_users():
     add_user_account("admin", "password", "testuser", "this!is!n0t!Good")
     add_user_account("admin", "password", "admin2", "s49^yxz!*xV!", add_as_admin=True)
@@ -95,6 +109,7 @@ def menu():
                 f"Enter 3 {Fore.RED}[DEV]{Fore.LIGHTMAGENTA_EX} - Add Predefined Test Users.* \n"
                 f"    * (Only works if you have not changed the default admin account / password)"
             )
+        print(f"Enter 4 {Fore.RED}[DEV]{Fore.LIGHTMAGENTA_EX} - Reset Database to Default.")
         print("Enter 0 to quit.\n")
         print(f"|~~~~~~~~~~~~ END MENU ~~~~~~~~~~~~|\n{Style.RESET_ALL}")
 
@@ -205,6 +220,9 @@ def menu():
                         "You can reset the database for testing by using initialize_database.sql "
                         "to replace the current database."
                     )
+            elif main_input == 4:
+                reset_db()
+                has_added_predefined_users = False
 
 
 menu()
