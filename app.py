@@ -33,19 +33,12 @@ class User():
         self.admin = admin
 
     def is_active(self):
-        # Here you should write whatever the code is
-        # that checks the database if your user is active
-        # return self.active
-        # for demo i just return True
         return True
 
     def is_authenticated(self):
-        # for demo i just return True
         return True
 
     def get_id(self):
-        # if you do not use Usermixin, this is important
-        # user_loader load_user(id) uses this get_id attribute to load the id
         return self.id
 
 
@@ -118,7 +111,10 @@ def login():
 
 @app.route("/about")
 def about():
-    return render_template("about.html", title="About", username=flask_login.current_user.id)
+    if flask_login.current_user.is_active:
+        return render_template("about.html", title="About", username=flask_login.current_user.id)
+    else:
+        return render_template("about.html", title="About")
 
 
 @app.route('/protected')
