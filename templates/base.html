@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>{{title}}</title>
+		<title>{{title}} - Password F.M.</title>
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -35,11 +35,12 @@
 						</li>
 					</ul>
 					<!-- Keep this outside so its align on the right of the screen -->
-					{% if is_signed_in == True %}
+					{% if current_user.is_authenticated %}
 					<div class="nav-item dropdown text-bg-dark">
-						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> USERNAME </a>
+						<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							{{username}} </a>
 						<ul class="dropdown-menu dropdown-menu-lg-end">
-							{% if is_admin == True %}
+							{% if admin == True %}
 							<li>
 								<a href="{{ url_for('admin')}}" class="dropdown-item" type="button">Admin Dashboard</a>
 							</li>
@@ -48,10 +49,16 @@
 								<a href="{{ url_for('settings')}}" class="dropdown-item" type="button">Change Password</a>
 							</li>
 							<li>
-								<a href="logout.php" class="dropdown-item" type="button">Logout</a>
+								<a href="{{ url_for('logout')}}" class="dropdown-item" type="button">Logout</a>
 							</li>
 						</ul>
 					</div>
+					{% else %}
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="{{ url_for('login')}}">Login</a>
+						</li>
+					</ul>
 					{% endif %}
 				</div>
 			</div>

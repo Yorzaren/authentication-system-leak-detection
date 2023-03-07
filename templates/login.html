@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div id="login-container" class="mx-auto">
+		<h2>Login</h2>
+		<form action="login" method="POST">
+			<div class="mb-3">
+				<label for="username" class="form-label">Username</label>
+				<input class="form-control" id="username" name="username">
+			</div>
+			<div class="mb-3">
+				<label for="password" class="form-label">Password</label>
+				<input type="password" class="form-control" id="password" name="password">
+				<p>If you forget your password, you must reach out to the admin to reset it.</p>
+			</div>
+			<button type="submit" class="btn btn-primary">Login</button>
+		</form>
+	</div>
+{% endblock %}

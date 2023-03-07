@@ -19,15 +19,15 @@
 					</ul>
 				</div>
 				<label for="password" class="form-label">New Password:</label>
-				<input type="password" class="form-control" id="password" placeholder="Password" required onkeyup="PasswordPolicyFeedback();">
+				<input type="password" class="form-control" id="password" name="password" placeholder="Password" required onkeyup="PasswordPolicyFeedback();">
 			</div>
 			<div class="mb-3">
 				<label for="confirm-password" class="form-label">Retype Password:</label>
-				<input type="password" class="form-control" id="confirm-password" placeholder="Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
+				<input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
 			</div>
 			<div class="mb-3">
 				<label for="confirm-old-password" class="form-label">Type your current password to confirm password change:</label>
-				<input type="password" class="form-control" id="confirm-old-password" placeholder="Type Your Current Password to Confirm" required>
+				<input type="password" class="form-control" id="confirm-old-password" name="confirm-old-password" placeholder="Type Your Current Password to Confirm" required>
 			</div>
 			<button type="submit" class="btn btn-primary">Change Password</button>
 		</form>

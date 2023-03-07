@@ -16,7 +16,7 @@
 				</ul>
 			</div>
 			<label for="new-username" class="form-label">New User Account's Username:</label>
-			<input class="form-control" id="new-username" placeholder="New Username" required onkeyup="UsernameFeedback();">
+			<input class="form-control" id="new-username" name="new-username" placeholder="New Username" required onkeyup="UsernameFeedback();">
 		</div>
 		<div class="mb-3">
 			<!-- CONTAINS_PASSWORDPOLICY -->
@@ -32,18 +32,22 @@
 				</ul>
 			</div>
 			<label for="password" class="form-label">New User Account's Password:</label>
-			<input type="password" class="form-control" id="password" placeholder="Password" required onkeyup="PasswordPolicyFeedback();">
+			<input type="password" class="form-control" id="password" name="password" placeholder="Password" required onkeyup="PasswordPolicyFeedback();">
 		</div>
 		<div class="mb-3">
 			<label for="confirm-password" class="form-label">Retype Password:</label>
-			<input type="password" class="form-control" id="confirm-password" placeholder="Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
+			<input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
 		</div>
 		<div class="mb-3">
 			<label for="account-type" class="form-label">Set User Type:</label>
-			<select class="form-select" id="account-type" required>
+			<select class="form-select" id="account-type" name="account-type" required>
 				<option value="0" selected>Normal User Account</option>
 				<option value="1">Admin Account</option>
 			</select>
+		</div>
+		<div class="mb-3">
+			<label for="confirm-password" class="form-label">Type your admin password to confirm account creation:</label>
+			<input type="password" class="form-control" id="confirm-admin-password-add" name="confirm-admin-password-add" placeholder="Type Your Password to Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
 		</div>
 		<button type="submit" class="btn btn-primary">Create Account</button>
 	</form>
@@ -58,15 +62,15 @@
 				</ul>
 			</div>
 			<label for="delete-username" class="form-label">Delete User:</label>
-			<input class="form-control" id="delete-username" placeholder="Delete Username" required onkeyup="CheckDeleteUsernameFeedback();">
+			<input class="form-control" id="delete-username" name="delete-username" placeholder="Delete Username" required onkeyup="CheckDeleteUsernameFeedback();">
 		</div>
 		<div class="mb-3">
 			<label for="password" class="form-label">Retype Username</label>
-			<input class="form-control" id="confirm-delete-username" placeholder="Confirm Username" required onkeyup="CheckDeleteUsernameFeedback();">
+			<input class="form-control" id="confirm-delete-username" name="confirm-delete-username" placeholder="Confirm Username" required onkeyup="CheckDeleteUsernameFeedback();">
 		</div>
 		<div class="mb-3">
-			<label for="confirm-admin-password" class="form-label">Type your admin password to confirm account deletion:</label>
-			<input type="password" class="form-control" id="confirm-admin-password" placeholder="Type Your Password to Confirm" required>
+			<label for="confirm-admin-password-delete" class="form-label">Type your admin password to confirm account deletion:</label>
+			<input type="password" class="form-control" id="confirm-admin-password-delete" name="confirm-admin-password-delete" placeholder="Type Your Password to Confirm" required>
 		</div>
 		<button type="submit" class="btn btn-primary">Delete Account</button>
 	</form>
