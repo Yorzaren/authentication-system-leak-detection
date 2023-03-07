@@ -9,7 +9,9 @@ Components are stored in `static` and `templates`
 from flask import Flask, render_template, request, redirect, url_for, flash
 import flask_login
 
+from python_scripts.username_checker import is_valid_username
 from python_scripts.database_controller import is_admin, user_exists, is_locked_out
+from python_scripts.password_checker import password_valid_to_policy_rules
 from python_scripts.main import (
     add_user_account,
     delete_user,
@@ -155,6 +157,70 @@ def logout():
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+
+@app.route('/add_account', methods=["POST"])
+def do_add_account():
+    if request.method == 'POST':
+        # Check if admin
+        if flask_login.current_user.admin is True:
+            new_account_username = request.form['new-username']
+            new_account_password = request.form['password']
+            new_account_confirm_password = request.form['confirm-password']
+            new_account_type = request.form['account-type']
+            requesting_admin_username = flask_login.current_user.id
+            requesting_admin_password = request.form['confirm-admin-password-add']
+
+            admin_page = render_template("admin.html", title="Admin", username=flask_login.current_user.id, admin=flask_login.current_user.admin)
+
+            # Check the admin password confirmation first
+            if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
+                # Check if the username is already taken
+                if user_exists(new_account_username) is True:
+                    flash("The username is already taken.")
+                    return redirect(url_for('admin'))
+
+                # Check if username follows the policy
+                if is_valid_username(new_account_username) is False:
+                    flash("Username doesn't meet the username policy")
+                    return redirect(url_for('admin'))
+
+                # Check if the password don't match
+                if new_account_password != new_account_confirm_password:
+                    flash("Confirmation password does not match the given password.")
+                    return redirect(url_for('admin'))
+
+                # Check if password follows the policy
+                if password_valid_to_policy_rules(new_account_password) is False:
+                    flash("Password doesn't meet the password policy")
+                    return redirect(url_for('admin'))
+
+                # Passed the checks
+                if new_account_type == "0":
+                    add_user_account(requesting_admin_username, requesting_admin_password, new_account_username, new_account_password, add_as_admin=False)
+                    flash(f'Normal user account named: {new_account_username} has been created.')
+                elif new_account_type == "1":
+                    add_user_account(requesting_admin_username, requesting_admin_password, new_account_username, new_account_password, add_as_admin=True)
+                    flash(f'Admin user account named: {new_account_username} has been created.')
+                else:  # This shouldn't be reached, normally.
+                    flash('An error: Occurred')
+                return redirect(url_for('admin'))
+
+            elif is_locked_out(requesting_admin_username) is True:
+                flash('Your admin password was wrong too many times. Your account has been locked.')
+                return redirect(url_for('admin'))
+            else:
+                flash('The admin password is incorrect.')
+                return redirect(url_for('admin'))
+
+        # Reject if not admin
+        else:
+            flash("You don't have the correct permissions.")
+            return redirect(url_for('index'))
+
+    # People shouldn't be on this page.
+    else:
+        return redirect(url_for('index'))
 
 
 if __name__ == "__main__":

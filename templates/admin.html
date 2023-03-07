@@ -3,7 +3,7 @@
 {% block content %}
 <div id="admin-dashboard" class="mx-auto">
 	<h2>Admin Dashboard</h2>
-	<form id="add-user" action="add_account.php" method="post" onsubmit="return ValidateAddUserForm();">
+	<form id="add-user" action="add_account" method="post" onsubmit="event.preventDefault();ValidateAddUserForm();">
 		<h3>Add User Account</h3>
 		<div class="mb-3">
 			<!-- CONTAINS_USERNAMEPOLICY -->
@@ -51,7 +51,7 @@
 		</div>
 		<button type="submit" class="btn btn-primary">Create Account</button>
 	</form>
-	<form id="delete-user" action="delete_account.php" method="post" onsubmit="return ValidateDeleteUserForm();">
+	<form id="delete-user" action="delete_account" method="post" onsubmit="return ValidateDeleteUserForm();">
 		<h3>Delete User Account</h3>
 		<div class="mb-3">
 			<div class="warning">
