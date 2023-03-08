@@ -193,7 +193,7 @@ python3 -m smtpd -c DebuggingServer -n localhost:1025
 
 **Windows:**
 ```cmd
-python3 -m smtpd -c DebuggingServer -n localhost:1025
+python -m smtpd -c DebuggingServer -n localhost:1025
 ```
 
 **Note:** Don't close out of the window. You will see the emails being sent here.
