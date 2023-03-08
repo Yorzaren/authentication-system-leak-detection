@@ -5,9 +5,8 @@
 ## Table of Contents
 1. [About](#about)
 2. [Requirements](#requirements)
-3. [Linux Installation](#linux)
-4. [Windows Installation](#windows)
-5. [Development Testing/Style Notes](#style--linting--unit-testing)
+3. [Installation](#installation)
+4. [Development Testing/Style Notes](#style--linting--unit-testing)
 
 
 ## About
@@ -33,19 +32,21 @@ If they use a decoy password while attempting to get into a user's account, it w
 7. Runs on Linux.
 
 ## Installation
-The project is intended Linux based systems but might work on Windows (untested). 
+The project is intended Linux based systems. 
 
 ### Requirements
 - Git
 - Python
 - Pip
-- XAMPP
+- MySQL (or MariaDB)
 
-### Linux
+### Install Git, Pip, MySQL
 These instructions are for Ubuntu 22.04.2 LTS but might work for other versions. 
 
-#### Install Git and Pip
-If you don't already have it installed.
+#### Linux - Install Git, Pip, MySQL
+You should already have Python3. 
+
+If you don't already have these, install them now:
 ```cmd
 apt install git
 ```
@@ -54,33 +55,47 @@ apt install git
 apt install python3-pip
 ```
 
-#### Clone the repository
+```cmd
+sudo apt install mysql-server
+```
+
+#### Windows - Install Git, Pip, MySQL
+You need to have Git, Python3, and MySQL on your system if you don't already have them installed.
+
+You can download Git from <https://git-scm.com/download/win>.
+
+You can download Python from <https://www.python.org/>.
+
+**Note:** When you install Python add it to the PATH and install pip.
+
+You can download MySQL from <https://dev.mysql.com/downloads/>. 
+
+The easiest way is to get MySQL Installer. You only need to install the database. When using the installer, you are given a prompt to configure the database with a password. 
+
+
+**_Make sure you remember the password for later._**
+
+
+### Clone the repository
 ```cmd
 git clone https://github.com/Yorzaren/authentication-system-leak-detection.git
 ```
 
-#### Install Requirements
-
+### Install Requirements
 ```cmd
 pip install -r requirements.txt
 ```
 
-#### Get XAMPP for Linux 8.2.0
+### Set up the Database
+Open MySQL / MariaDB as root to change the password.
 
-You can get it here from <https://www.apachefriends.org/>
+#### Linux - Set up the Database
+MySQL's installation is a bit bugged on Linux.
 
-Find where the file is downloaded in command-line then `chmod +x [filename]` to make it executable.
-
-Then you can run it by typing: `./[filename]` to install it.
-
-The files should be installed to `/opt/lampp`.
-
-#### Set up the Database
-
-Open MySQL / MariaDB as root to change the password. init the database.
+If you have issues, go [here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
 
 ```cmd
-/opt/lampp/bin/mysql -u root -p
+mysql -u root -p
 ```
 
 Default password is blank, so you should be able to hit enter and login.
@@ -95,8 +110,12 @@ SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpassword');
 
 See: <https://stackoverflow.com/a/64550826>
 
-#### Initialize the Database
+#### Windows - Set up the Database
+You should have already set up the password for the database when you installed it.
 
+### Initialize the Database
+
+#### Linux - Initialize the Database
 Copy the path of `initialize_database.sql` located in the root of the repository
 
 ```cmd
@@ -106,7 +125,7 @@ readlink -f initialize_database.sql
 Open MySQL or MariaDB
 
 ```cmd
-/opt/lampp/bin/mysql -u root -p
+mysql -u root -p
 ```
 
 You should see `MariaDB[none]>` or `mysql>`.
@@ -117,96 +136,22 @@ Initialize the database with the following command:
 source [path of initialize_database.sql]
 ```
 
-If you get an error message saying run **mysql_update** you do it with: `/opt/lampp/bin/mysql_update`
+#### Windows - Initialize the Database
+<!-- textlint-disable -->
+Find and run the MySQL Command Line Client. 
+<!-- textlint-enable -->
 
-#### Create the .env
-
-In the root of the `authentication-system-leak-detection` folder you need to make a file called `.env`
-
-It should look something like this:
-```txt
-DB_PASSWORD=password
-RANDOM_NOISE=somestring
-RANDOM_NUMBER=123
-```
-
-#### Copy over the web files 
-In the root of the repository copy over the `web` folder to the htdocs for the patch site.
-
-* Copy the code to the htdocs:
-```cmd
-sudo cp web -r /opt/lampp/htdocs
-```
-* Site should be live at `localhost/web`
-* Navigate to it using a web browser.
-
-### Windows
-These instructions are for Windows 11 but might work for other versions.
-
-#### Install Git, Python, and Pip
-You need to have git and python on your system if you don't already have them installed.
-
-You can download Git from <https://git-scm.com/download/win>.
-
-You can download Python from <https://www.python.org/>.
-
-**Note:** When you install Python add it to the PATH and install pip.
-
-#### Clone the repository
-```cmd
-git clone https://github.com/Yorzaren/authentication-system-leak-detection.git
-```
-
-#### Install Requirements
-
-```cmd
-pip install -r requirements.txt
-```
-
-#### Install XAMPP for Windows 8.20.0
-You can get it here from <https://www.apachefriends.org/>.
-
-Remember where you install XAMPP.
-
-#### Set up the Database
-Command will change depending on where you installed XAMPP.
-
-Start MySQL / MariaDB using the following command in Command Prompt.
-```cmd
-C:\xampp\mysql\bin\mysql.exe -u root -p
-```
-
-Default password is blank, so you should be able to hit enter and login.
-
-```cmd
-SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpassword');
-```
-
-`newpassword` can be set to whatever you want the password to be.
-
-**_Make sure you remember the password for later._**
-
-See: <https://stackoverflow.com/a/64550826>
-
-#### Initialize the Database
-
-Get the absolute path of `initialize_database.sql` located in the root of the repository
-
-Open MySQL or MariaDB
-
-```cmd
-C:\xampp\mysql\bin\mysql.exe -u root -p
-```
+Enter the password.
 
 You should see `MariaDB[none]>` or `mysql>`.
 
-Initialize the database with the following command:
+Then enter:
 
-```cmd
+```txt
 source [path of initialize_database.sql]
 ```
 
-#### Create the .env
+### Create the .env
 
 In the root of the `authentication-system-leak-detection` folder you need to make a file called `.env`
 
@@ -215,14 +160,60 @@ It should look something like this:
 DB_PASSWORD=password
 RANDOM_NOISE=somestring
 RANDOM_NUMBER=123
+FLASK_SECRET=secret
+MAILSLURP_API_KEY=
+MAILSLURP_SENDER_EMAIL_ID=
+MAILSLURP_RECIEVER_EMAIL_ID=
 ```
 
-#### Copy over the web files 
-In the root of the repository copy over the `web` folder to the htdocs for the patch site.
+The [MailSlurp](https://www.mailslurp.com/) variables are optional. The system automatically sends test emails to the local DebuggingServer.
 
-* Copy the code to the htdocs its located at `C:\xampp\htdocs`
-* Site should be live at `localhost/web`
-* Navigate to it using a web browser.
+If you wish to use MailSlurp, set the variables and modify `main.py`. 
+
+All instances of `test` in `send_email()` should be swapped to `live`.
+
+MailSlurp can be used to send the test emails.
+
+`MAILSLURP_API_KEY` refers to the 64 character long string. Its marked as `API KEY` on the dashboard.
+`MAILSLURP_SENDER_EMAIL_ID` refers to the Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
+`MAILSLURP_RECIEVER_EMAIL_ID` refers to an Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
+
+Because free MailSlurp accounts have 1 permanent Inbox ID, it's easier to set the sender as that ID.
+However, it doesn't really matter.
+
+**Note:** Free MailSlurp users can only keep their Inbox IDs for a short duration, so you'll have to update the ID a lot.
+
+### Run smtpd DebuggingServer
+In a separate terminal or command-line prompt, run:
+
+**Linux:**
+```cmd
+python3 -m smtpd -c DebuggingServer -n localhost:1025
+```
+
+**Windows:**
+```cmd
+python3 -m smtpd -c DebuggingServer -n localhost:1025
+```
+
+**Note:** Don't close out of the window. You will see the emails being sent here.
+
+### Run cmdline_driver.py to Test
+If you have everything setup, you should be able to run `cmdline_driver.py` to test if the scripts and database are communicating properly.
+
+**Linux:**
+```cmd
+python3 cmdline_driver.py
+```
+**Windows:**
+```cmd
+python cmdline_driver.py
+```
+
+### Start Site Using Flask
+```cmd
+flask run
+```
 
 ## Style / Linting / Unit Testing
 

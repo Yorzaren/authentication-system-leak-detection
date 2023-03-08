@@ -115,8 +115,9 @@ function ValidateAddUserForm() {
 
 	if (HasForbiddenUsernameCheck(new_username_field.value)) {
 		alert("Username contains forbidden characters.");
+		return false;
 	}
-	ValidateChangePasswordForm();
+	return ValidateChangePasswordForm();
 }
 
 function ValidateDeleteUserForm() {
@@ -127,6 +128,31 @@ function ValidateDeleteUserForm() {
 		alert("The given username to delete fields do not match.");
 		return false;
 	}
+	return true;
+}
+
+function CheckUnlockUsernameFeedback() {
+	var unlock_user_field = document.getElementById('unlock-username');
+	var confirm_unlock_user_field = document.getElementById('confirm-unlock-username');
+
+	if (HasMatchingStrings(unlock_user_field.value, confirm_unlock_user_field.value)) {
+		unlock_user_field.classList.add('is-valid');
+		confirm_unlock_user_field.classList.add('is-valid');
+	} else {
+		unlock_user_field.classList.remove('is-valid');
+		confirm_unlock_user_field.classList.remove('is-valid');
+	}
+}
+
+function ValidateUnlockUserForm() {
+	var unlock_user_field = document.getElementById('unlock-username');
+	var confirm_unlock_user_field = document.getElementById('confirm-unlock-username');
+
+	if (HasMatchingStrings(unlock_user_field.value, confirm_unlock_user_field.value) == false) {
+		alert("The given username to unlock fields do not match.");
+		return false;
+	}
+	return true;
 }
 
 function ValidateChangePasswordForm() {
@@ -161,4 +187,5 @@ function ValidateChangePasswordForm() {
 		alert("Password does not have enough digits.");
 		return false;
 	}
+	return true;
 }

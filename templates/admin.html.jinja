@@ -1,0 +1,101 @@
+{% extends 'base.html.jinja' %}
+
+{% block content %}
+<div id="admin-dashboard" class="mx-auto">
+	<h2>Admin Dashboard</h2>
+	<form id="add-user" action="add_account" method="post" onsubmit="return ValidateAddUserForm();">
+		<h3>Add User Account</h3>
+		<div class="mb-3">
+			<!-- CONTAINS_USERNAMEPOLICY -->
+			<div id="username-policy">
+				<b>Username Policy:</b>
+				<ul>
+					<li id="username-rule-unique">Remember: The username must be unique. (This requirement is checked by submitting)</li>
+					<li id="username-rule-length">Must be between 5 and 50 characters long.</li>
+					<li id="username-rule-no-weird">Username can only contain English Letters <code>A-Z</code>, <code>a-z</code>, and digits ( <code>0-9</code>). Other symbols are <strong>NOT</strong> permited. </li>
+				</ul>
+			</div>
+			<label for="new-username" class="form-label">New User Account's Username:</label>
+			<input class="form-control" id="new-username" name="new-username" placeholder="New Username" required onkeyup="UsernameFeedback();">
+		</div>
+		<div class="mb-3">
+			<!-- CONTAINS_PASSWORDPOLICY -->
+			<div id="password-policy">
+				<b>Password Policy:</b>
+				<ul>
+					<li id="password-rule-length">Must be between 12 and 32 characters long.</li>
+					<li id="password-rule-uppercase">Must have at least 1 uppercase letter.</li>
+					<li id="password-rule-lowercase">Must have at least 1 lowercase letter.</li>
+					<li id="password-rule-symbol">Must have at least 1 symbol from this list <code>!@#$%^&*</code>. </li>
+					<li id="password-rule-digit">Must have at least 1 digit.</li>
+					<li id="password-rule-no-weird">Only English Letters <code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, and <code>!@#$%^&*</code>. Other symbols are <strong>NOT</strong> permited. </li>
+				</ul>
+			</div>
+			<label for="password" class="form-label">New User Account's Password:</label>
+			<input type="password" class="form-control" id="password" name="password" placeholder="Password" required onkeyup="PasswordPolicyFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="confirm-password" class="form-label">Retype Password:</label>
+			<input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="account-type" class="form-label">Set User Type:</label>
+			<select class="form-select" id="account-type" name="account-type" required>
+				<option value="0" selected>Normal User Account</option>
+				<option value="1">Admin Account</option>
+			</select>
+		</div>
+		<div class="mb-3">
+			<label for="confirm-password" class="form-label">Type your admin password to confirm account creation:</label>
+			<input type="password" class="form-control" id="confirm-admin-password-add" name="confirm-admin-password-add" placeholder="Type Your Password to Confirm" required onkeyup="CheckMatchingPasswordsFeedback();">
+		</div>
+		<button type="submit" class="btn btn-primary">Create Account</button>
+	</form>
+	<form id="delete-user" action="delete_account" method="post" onsubmit="return ValidateDeleteUserForm();">
+		<h3>Delete User Account</h3>
+		<div class="mb-3">
+			<div class="warning">
+				<b>Warning:</b>
+				<ul>
+					<li>Deleting an account is <strong>irreversible</strong>. </li>
+					<li>You may not delete an account, if the account is the only admin.</li>
+				</ul>
+			</div>
+			<label for="delete-username" class="form-label">Delete User:</label>
+			<input class="form-control" id="delete-username" name="delete-username" placeholder="Delete Username" required onkeyup="CheckDeleteUsernameFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="confirm-delete-username" class="form-label">Retype Username</label>
+			<input class="form-control" id="confirm-delete-username" name="confirm-delete-username" placeholder="Confirm Username" required onkeyup="CheckDeleteUsernameFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="confirm-admin-password-delete" class="form-label">Type your admin password to confirm account deletion:</label>
+			<input type="password" class="form-control" id="confirm-admin-password-delete" name="confirm-admin-password-delete" placeholder="Type Your Password to Confirm" required>
+		</div>
+		<button type="submit" class="btn btn-primary">Delete Account</button>
+	</form>
+	<form id="unlock-user" action="unlock_account" method="post" onsubmit="return ValidateUnlockUserForm();">
+		<h3>Unlock User Account</h3>
+		<div class="mb-3">
+			<div id="unlock-info">
+				<ul>
+					<li>User accounts will lock if the authentication fails 3 times.</li>
+					<li>Locked accounts can not login to the system unless an admin unlocks them.</li>
+					<li>Enter the user account of you wish to re-enable.</li>
+				</ul>
+			</div>
+			<label for="unlock-username" class="form-label">Unlock User:</label>
+			<input class="form-control" id="unlock-username" name="unlock-username" placeholder="Unlock Username" required onkeyup="CheckUnlockUsernameFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="confirm-unlock-username" class="form-label">Retype Username</label>
+			<input class="form-control" id="confirm-unlock-username" name="confirm-unlock-username" placeholder="Confirm Username" required onkeyup="CheckUnlockUsernameFeedback();">
+		</div>
+		<div class="mb-3">
+			<label for="confirm-admin-password-unlock" class="form-label">Type your admin password to confirm account deletion:</label>
+			<input type="password" class="form-control" id="confirm-admin-password-unlock" name="confirm-admin-password-unlock" placeholder="Type Your Password to Confirm" required>
+		</div>
+		<button type="submit" class="btn btn-primary">Unlock Account</button>
+	</form>
+</div>
+{% endblock %}
