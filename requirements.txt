@@ -9,3 +9,4 @@ nltk==3.8.1 # This is for language processing in password_analysis
 git+https://github.com/casics/nostril.git # This is for language processing in password_analysis - ver @fbc0c91249283a9fbc9036206391ce1138826fd3
 
 Flask==2.2.3
+Flask-Login==0.6.2
