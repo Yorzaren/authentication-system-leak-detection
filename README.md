@@ -1,3 +1,5 @@
+# authentication-system-leak-detection
+
 [![GitHub Super-Linter](https://github.com/Yorzaren/authentication-system-leak-detection/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 # Table of Contents
@@ -41,7 +43,7 @@ The project is intended Linux based systems.
 ## Install Git, Pip, MySQL
 These instructions are for Ubuntu 22.04.2 LTS but might work for other versions. 
 
-### Linux
+### Linux - Install Git, Pip, MySQL
 You should already have Python3. 
 
 If you don't already have these, install them now:
@@ -57,7 +59,7 @@ apt install python3-pip
 sudo apt install mysql-server
 ```
 
-### Windows
+### Windows - Install Git, Pip, MySQL
 You need to have Git, Python3, and MySQL on your system if you don't already have them installed.
 
 You can download Git from <https://git-scm.com/download/win>.
@@ -87,7 +89,7 @@ pip install -r requirements.txt
 ## Set up the Database
 Open MySQL / MariaDB as root to change the password.
 
-### Linux
+### Linux - Set up the Database
 MySQL's installation is a bit bugged on Linux.
 
 If you have issues, go [here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
@@ -108,12 +110,12 @@ SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpassword');
 
 See: <https://stackoverflow.com/a/64550826>
 
-### Windows
-You should have already setup the password for the database when you installed it.
+### Windows - Set up the Database
+You should have already set up the password for the database when you installed it.
 
 ## Initialize the Database
 
-### Linux
+### Linux - Initialize the Database
 Copy the path of `initialize_database.sql` located in the root of the repository
 
 ```cmd
@@ -134,8 +136,10 @@ Initialize the database with the following command:
 source [path of initialize_database.sql]
 ```
 
-### Windows
+### Windows - Initialize the Database
+<!-- textlint-disable -->
 Find and run the MySQL Command Line Client. 
+<!-- textlint-enable -->
 
 Enter the password.
 
@@ -176,9 +180,9 @@ python cmdline_driver.py
 flask run
 ```
 
-## Style / Linting / Unit Testing
+# Style / Linting / Unit Testing
 
-### Python
+## Python
 [![Tested with Pytest](https://img.shields.io/badge/Tested%20with-Pytest-red?style=for-the-badge)](https://docs.pytest.org/)
 
 Pytest files are found in the `tests` folder.
@@ -199,14 +203,14 @@ black --line-length 120 .
 flake8 --append-config=.github/linters/.flake8
 ```
 
-### JavaScript
+## JavaScript
 [![Tested with QUnit](https://img.shields.io/badge/Tested%20with-QUnit-green?style=for-the-badge)](https://qunitjs.com/)
 
 QUnit tests are located in the `tests` folder.
 
 There is no style guide for the JavaScript code.
 
-### CSS
+## CSS
 [![Style: StyleLint](https://img.shields.io/badge/CSS%20Style-StyleLint-333.svg?style=for-the-badge)](https://stylelint.io/)
 
 
