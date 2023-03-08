@@ -91,7 +91,10 @@ def index():
         return redirect(url_for("login"))
     else:
         return render_template(
-            "index.html.jinja", title="Index", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+            "index.html.jinja",
+            title="Index",
+            username=flask_login.current_user.id,
+            admin=flask_login.current_user.admin,
         )
 
 
@@ -132,7 +135,10 @@ def login():
 def about():
     if flask_login.current_user.is_active:
         return render_template(
-            "about.html.jinja", title="About", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+            "about.html.jinja",
+            title="About",
+            username=flask_login.current_user.id,
+            admin=flask_login.current_user.admin,
         )
     else:
         return render_template("about.html.jinja", title="About")
@@ -149,7 +155,10 @@ def protected():
 def admin():
     if flask_login.current_user.admin is True:
         return render_template(
-            "admin.html.jinja", title="Admin", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+            "admin.html.jinja",
+            title="Admin",
+            username=flask_login.current_user.id,
+            admin=flask_login.current_user.admin,
         )
     else:
         return "You can not be here"
@@ -159,7 +168,10 @@ def admin():
 @flask_login.login_required
 def settings():
     return render_template(
-        "settings.html.jinja", title="Settings", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+        "settings.html.jinja",
+        title="Settings",
+        username=flask_login.current_user.id,
+        admin=flask_login.current_user.admin,
     )
 
 
