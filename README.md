@@ -166,7 +166,7 @@ MAILSLURP_SENDER_EMAIL_ID=
 MAILSLURP_RECIEVER_EMAIL_ID=
 ```
 
-The MailSlurp variables are optional. The system automatically sends test emails to the local DebuggingServer.
+The [MailSlurp](https://www.mailslurp.com/) variables are optional. The system automatically sends test emails to the local DebuggingServer.
 
 If you wish to use MailSlurp, set the variables and modify `main.py`. 
 
