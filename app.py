@@ -91,14 +91,14 @@ def index():
         return redirect(url_for("login"))
     else:
         return render_template(
-            "index.html", title="Index", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+            "index.html.jinja", title="Index", username=flask_login.current_user.id, admin=flask_login.current_user.admin
         )
 
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "GET":
-        return render_template("login.html", title="Login")
+        return render_template("login.html.jinja", title="Login")
 
     # Get the info from the form
     username = request.form["username"]
@@ -132,10 +132,10 @@ def login():
 def about():
     if flask_login.current_user.is_active:
         return render_template(
-            "about.html", title="About", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+            "about.html.jinja", title="About", username=flask_login.current_user.id, admin=flask_login.current_user.admin
         )
     else:
-        return render_template("about.html", title="About")
+        return render_template("about.html.jinja", title="About")
 
 
 @app.route("/protected")
@@ -149,7 +149,7 @@ def protected():
 def admin():
     if flask_login.current_user.admin is True:
         return render_template(
-            "admin.html", title="Admin", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+            "admin.html.jinja", title="Admin", username=flask_login.current_user.id, admin=flask_login.current_user.admin
         )
     else:
         return "You can not be here"
@@ -159,19 +159,19 @@ def admin():
 @flask_login.login_required
 def settings():
     return render_template(
-        "settings.html", title="Settings", username=flask_login.current_user.id, admin=flask_login.current_user.admin
+        "settings.html.jinja", title="Settings", username=flask_login.current_user.id, admin=flask_login.current_user.admin
     )
 
 
 @app.route("/logout")
 def logout():
     flask_login.logout_user()
-    return render_template("logout.html", title="Logged Out")
+    return render_template("logout.html.jinja", title="Logged Out")
 
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template("404.html"), 404
+    return render_template("404.html.jinja"), 404
 
 
 @app.route("/add_account", methods=["POST"])
