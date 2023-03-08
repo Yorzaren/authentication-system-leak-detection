@@ -2,14 +2,14 @@
 
 [![GitHub Super-Linter](https://github.com/Yorzaren/authentication-system-leak-detection/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
-# Table of Contents
+## Table of Contents
 1. [About](#about)
 2. [Requirements](#requirements)
 3. [Installation](#installation)
 4. [Development Testing/Style Notes](#style--linting--unit-testing)
 
 
-# About
+## About
 This is a work in progress.
 
 
@@ -31,19 +31,19 @@ If they use a decoy password while attempting to get into a user's account, it w
 6. Provide a mechanism of notification if false password is used compared to incorrect entry or simple guess.
 7. Runs on Linux.
 
-# Installation
+## Installation
 The project is intended Linux based systems. 
 
-## Requirements
+### Requirements
 - Git
 - Python
 - Pip
 - MySQL (or MariaDB)
 
-## Install Git, Pip, MySQL
+### Install Git, Pip, MySQL
 These instructions are for Ubuntu 22.04.2 LTS but might work for other versions. 
 
-### Linux - Install Git, Pip, MySQL
+#### Linux - Install Git, Pip, MySQL
 You should already have Python3. 
 
 If you don't already have these, install them now:
@@ -59,7 +59,7 @@ apt install python3-pip
 sudo apt install mysql-server
 ```
 
-### Windows - Install Git, Pip, MySQL
+#### Windows - Install Git, Pip, MySQL
 You need to have Git, Python3, and MySQL on your system if you don't already have them installed.
 
 You can download Git from <https://git-scm.com/download/win>.
@@ -76,20 +76,20 @@ The easiest way is to get MySQL Installer. You only need to install the database
 **_Make sure you remember the password for later._**
 
 
-## Clone the repository
+### Clone the repository
 ```cmd
 git clone https://github.com/Yorzaren/authentication-system-leak-detection.git
 ```
 
-## Install Requirements
+### Install Requirements
 ```cmd
 pip install -r requirements.txt
 ```
 
-## Set up the Database
+### Set up the Database
 Open MySQL / MariaDB as root to change the password.
 
-### Linux - Set up the Database
+#### Linux - Set up the Database
 MySQL's installation is a bit bugged on Linux.
 
 If you have issues, go [here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
@@ -110,12 +110,12 @@ SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpassword');
 
 See: <https://stackoverflow.com/a/64550826>
 
-### Windows - Set up the Database
+#### Windows - Set up the Database
 You should have already set up the password for the database when you installed it.
 
-## Initialize the Database
+### Initialize the Database
 
-### Linux - Initialize the Database
+#### Linux - Initialize the Database
 Copy the path of `initialize_database.sql` located in the root of the repository
 
 ```cmd
@@ -136,7 +136,7 @@ Initialize the database with the following command:
 source [path of initialize_database.sql]
 ```
 
-### Windows - Initialize the Database
+#### Windows - Initialize the Database
 <!-- textlint-disable -->
 Find and run the MySQL Command Line Client. 
 <!-- textlint-enable -->
@@ -151,7 +151,7 @@ Then enter:
 source [path of initialize_database.sql]
 ```
 
-## Create the .env
+### Create the .env
 
 In the root of the `authentication-system-leak-detection` folder you need to make a file called `.env`
 
@@ -161,9 +161,44 @@ DB_PASSWORD=password
 RANDOM_NOISE=somestring
 RANDOM_NUMBER=123
 FLASK_SECRET=secret
+MAILSLURP_API_KEY=
+MAILSLURP_SENDER_EMAIL_ID=
+MAILSLURP_RECIEVER_EMAIL_ID=
 ```
 
-## Run cmdline_driver.py to Test
+The MailSlurp variables are optional. The system automatically sends test emails to the local DebuggingServer.
+
+If you wish to use MailSlurp, set the variables and modify `main.py`. 
+
+All instances of `test` in `send_email()` should be swapped to `live`.
+
+MailSlurp can be used to send the test emails.
+
+`MAILSLURP_API_KEY` refers to the 64 character long string. Its marked as `API KEY` on the dashboard.
+`MAILSLURP_SENDER_EMAIL_ID` refers to the Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
+`MAILSLURP_RECIEVER_EMAIL_ID` refers to an Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
+
+Because free MailSlurp accounts have 1 permanent Inbox ID, it's easier to set the sender as that ID.
+However, it doesn't really matter.
+
+**Note:** Free MailSlurp users can only keep their Inbox ID's for a short duration, so you'll have to update the ID a lot.
+
+### Run smtpd DebuggingServer
+In a separate terminal or command-line prompt, run:
+
+**Linux:**
+```cmd
+python3 -m smtpd -c DebuggingServer -n localhost:1025
+```
+
+**Windows:**
+```cmd
+python3 -m smtpd -c DebuggingServer -n localhost:1025
+```
+
+**Note:** Don't close out of the window. You will see the emails being sent here.
+
+### Run cmdline_driver.py to Test
 If you have everything setup, you should be able to run `cmdline_driver.py` to test if the scripts and database are communicating properly.
 
 **Linux:**
@@ -175,14 +210,14 @@ python3 cmdline_driver.py
 python cmdline_driver.py
 ```
 
-## Start Site Using Flask
+### Start Site Using Flask
 ```cmd
 flask run
 ```
 
-# Style / Linting / Unit Testing
+## Style / Linting / Unit Testing
 
-## Python
+### Python
 [![Tested with Pytest](https://img.shields.io/badge/Tested%20with-Pytest-red?style=for-the-badge)](https://docs.pytest.org/)
 
 Pytest files are found in the `tests` folder.
@@ -203,14 +238,14 @@ black --line-length 120 .
 flake8 --append-config=.github/linters/.flake8
 ```
 
-## JavaScript
+### JavaScript
 [![Tested with QUnit](https://img.shields.io/badge/Tested%20with-QUnit-green?style=for-the-badge)](https://qunitjs.com/)
 
 QUnit tests are located in the `tests` folder.
 
 There is no style guide for the JavaScript code.
 
-## CSS
+### CSS
 [![Style: StyleLint](https://img.shields.io/badge/CSS%20Style-StyleLint-333.svg?style=for-the-badge)](https://stylelint.io/)
 
 
