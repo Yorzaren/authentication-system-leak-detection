@@ -6,7 +6,10 @@ Components are stored in `static` and `templates`
 
 
 """
+import os  # Used to get the .env file
+
 import flask_login
+from dotenv import load_dotenv  # Used to load info from the .env file
 from flask import Flask, flash, redirect, render_template, request, url_for
 
 from python_scripts.database_controller import (
@@ -26,7 +29,10 @@ from python_scripts.password_checker import password_valid_to_policy_rules
 from python_scripts.username_checker import is_valid_username
 
 app = Flask(__name__)
-app.secret_key = "secret"  # Change this!
+
+load_dotenv()  # Load the secrets from the .env file
+FLASK_SECRET = os.environ.get("FLASK_SECRET")
+app.secret_key = "FLASK_SECRET"
 
 # Login Related
 login_manager = flask_login.LoginManager()
