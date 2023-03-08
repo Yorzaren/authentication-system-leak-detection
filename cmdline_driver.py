@@ -76,7 +76,7 @@ def reset_db():
     # Create the connector
     cnx = mysql.connector.connect(**db_config)
     my_cursor = cnx.cursor(buffered=True)
-    command = f'CALL ResetDatabase()'
+    command = "CALL ResetDatabase()"
     my_cursor.execute(command)
 
     # Commit the changes
