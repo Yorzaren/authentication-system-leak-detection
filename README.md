@@ -181,7 +181,7 @@ MailSlurp can be used to send the test emails.
 Because free MailSlurp accounts have 1 permanent Inbox ID, it's easier to set the sender as that ID.
 However, it doesn't really matter.
 
-**Note:** Free MailSlurp users can only keep their Inbox ID's for a short duration, so you'll have to update the ID a lot.
+**Note:** Free MailSlurp users can only keep their Inbox IDs for a short duration, so you'll have to update the ID a lot.
 
 ### Run smtpd DebuggingServer
 In a separate terminal or command-line prompt, run:
