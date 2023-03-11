@@ -6,7 +6,7 @@ CONTAINS_PASSWORDPOLICY
 Must match the policy on the page and the policy checks in the other scripts
 
 */
-
+var banned_words = ["password"];
 
 function LengthCheck(string, min, max) {
 	var str_length = string.length;
@@ -26,6 +26,14 @@ function SymbolCheck(string, min_number) {
 }
 function HasForbiddenCharCheck(string) {
 	return string.replace(/[A-Za-z0-9!@#$%^&*]/g, "").length > 0; // Replace will return anything not A-Z 0-9 or !@#$%^&* and then we count it
+}
+function HasBannedWords(string) {
+	for(var i = 0; i<banned_words.length; i++) {
+		string = string.toLowerCase();
+		var banned = banned_words[i].toLowerCase();
+		return string.indexOf(banned) >= 0;
+	}
+	return false;
 }
 function HasForbiddenUsernameCheck(string) {
 	return string.replace(/[A-Za-z0-9]/g, "").length > 0 && string != "";
@@ -74,6 +82,14 @@ function PasswordPolicyFeedback() {
 	} else {
 		password_field.classList.remove('is-invalid');
 		document.getElementById('password-rule-no-weird').classList.add('d-none');
+	}
+	
+	if (HasBannedWords(password_field.value)) {
+		password_field.classList.add('is-invalid');
+		document.getElementById('password-rule-banned').classList.remove('d-none');
+	} else {
+		password_field.classList.remove('is-invalid');
+		document.getElementById('password-rule-banned').classList.add('d-none');
 	}
 	
 	// The previous code shows and hides rules if things are met. If everything is hidden, assume all is good.
@@ -165,6 +181,10 @@ function ValidateChangePasswordForm() {
 	}
 	if (HasForbiddenCharCheck(password_field.value)) {
 		alert("Forbidden characters in password.");
+		return false;
+	}
+	if (HasBannedWords(password_field.value)) {
+		alert("Banned word(s) in password.");
 		return false;
 	}
 	if (LengthCheck(password_field.value, 12, 32) == false) {

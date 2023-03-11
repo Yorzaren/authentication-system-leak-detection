@@ -56,7 +56,7 @@ apt install python3-pip
 ```
 
 ```cmd
-sudo apt install mysql-server
+apt install mysql-server
 ```
 
 #### Windows - Install Git, Pip, MySQL
@@ -93,18 +93,6 @@ Open MySQL / MariaDB as root to change the password.
 MySQL's installation is a bit bugged on Linux.
 
 If you have issues, go [here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
-
-```cmd
-mysql -u root -p
-```
-
-Default password is blank, so you should be able to hit enter and login.
-
-```cmd
-SET PASSWORD FOR 'root'@'localhost' = PASSWORD('newpassword');
-```
-
-`newpassword` can be set to whatever you want the password to be.
 
 **_Make sure you remember the password for later._**
 
