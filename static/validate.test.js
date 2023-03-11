@@ -108,6 +108,22 @@ QUnit.module('HasForbiddenCharCheck(string)', function() {
 	});	
 });
 
+QUnit.module('HasBannedWords(string)', function() {
+	QUnit.test('A string that is fine', function(assert) {
+		assert.equal(HasBannedWords("12##$dsc*&HJN"), false);
+		assert.equal(HasBannedWords("asddsf23$%"), false);
+		assert.equal(HasBannedWords("pass!word%"), false);
+		assert.equal(HasBannedWords("passwor%"), false);
+	});
+	QUnit.test('A string with banned words', function(assert) {
+		assert.equal(HasBannedWords("ThisIsAPassword"), true);
+		assert.equal(HasBannedWords("@cool!passworD"), true);
+	});
+	QUnit.test('A banned string with some of the characters changed', function(assert) {
+		assert.equal(HasBannedWords("p@ssword"), false);
+	});
+});
+
 QUnit.module('HasForbiddenUsernameCheck(string)', function() {
 	QUnit.test('A string that is fine', function(assert) {
 		assert.equal(HasForbiddenUsernameCheck("AUserName1"), false);

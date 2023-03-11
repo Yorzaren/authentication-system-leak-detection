@@ -13,6 +13,7 @@ MIN_AMOUNT_DIGITS = 1
 MIN_AMOUNT_SPECIAL_CHAR = 1
 # Bitwarden generator and https://www.ibm.com/support/pages/password-policy-and-passwords-special-characters
 ALLOWED_SPECIAL_CHAR = "!@#$%^&*"  # Remember to manually update the pytest to match the new count
+BANNED_WORDS = ["password"]
 
 
 # --------------------------------------
@@ -56,6 +57,22 @@ def has_forbidden_characters(string: str) -> bool:
             # print(test_char)
             return True
     # If it makes it here it's shouldn't have forbidden characters
+    return False
+
+
+def has_banned_words(string: str) -> bool:
+    for word in BANNED_WORDS:
+        # Convert the case
+        string = string.lower()
+        word = word.lower()
+
+        # Search for the index
+        index = string.find(word)
+
+        if index >= 0:  # Found word in the string
+            return True
+
+    # After checking everything, return false.
     return False
 
 
@@ -104,6 +121,11 @@ def password_valid_to_policy_rules(password: str, debugging=False) -> bool:
     if has_forbidden_characters(password) is True:
         if debugging is True:
             print("Includes forbidden character(s)")
+        return False
+    # Check for banned words
+    if has_banned_words(password) is True:
+        if debugging is True:
+            print("Includes banned word(s)")
         return False
     # Check the length is between the min and max allowed by the password policy
     # This is last, so we can see the major issue before the length problem

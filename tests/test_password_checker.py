@@ -56,6 +56,12 @@ class TestPasswordCheckerFunctions:
         assert password_checker.has_forbidden_characters("213AD!sxd你") is True  # 你
         assert password_checker.has_forbidden_characters("123#%Txrte2323yrtyhrtyhrtyrtyrty3") is False  # This is fine
 
+    def test_has_banned_words(self):
+        assert password_checker.has_banned_words("password") is True
+        assert password_checker.has_banned_words("passwords") is True
+        assert password_checker.has_banned_words("PAssWord!") is True
+        assert password_checker.has_banned_words("p@ssw0rd") is False
+
     def test_against_password_policy(self):
         test = [
             "123#%Txrte2323yrtyhrtyhrtyrtyrty3",  # 33 chars
@@ -65,6 +71,7 @@ class TestPasswordCheckerFunctions:
             "Us!4567",  # too short
             "Us004567",  # no special characters
             "你好213AD!s12xd",  # has forbidden characters
+            "Passwords!are!c00l",  # forbidden word
         ]
 
         for i in range(len(test)):
