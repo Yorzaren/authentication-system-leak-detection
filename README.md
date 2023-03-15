@@ -242,7 +242,6 @@ Password: `password`
 You should change the password to admin immediately for security.
 
 Alternatively, you should create a new admin account, test that the new admin account works, then delete the default admin account.
-```
 
 ## Style / Linting / Unit Testing
 
