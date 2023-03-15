@@ -206,7 +206,7 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
             f"\nAttempting to delete account..."
         )
         if db_controller.user_exists(username):
-            if db_controller.is_only_admin() is True:
+            if db_controller.is_admin(username) is True and db_controller.is_only_admin() is True:
                 print(f"FAILURE: You can't delete {username} because they are the only admin.")
                 return False
             # Delete the user if they exist
