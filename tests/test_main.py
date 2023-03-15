@@ -1,3 +1,9 @@
+"""
+
+This will test the functions of main.py to make sure they work.
+
+"""
+
 import os  # Used to get the .env file
 
 import mysql.connector

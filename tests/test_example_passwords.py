@@ -1,13 +1,14 @@
 """
-This just makes sure you haven't added something to the wrong file
 
-The file used are located in example_passwords folder
+This just makes sure you haven't added something to the wrong file.
 
-For some reason this test never wants to read the files in correctly.
+The file used are located in example_passwords folder.
 
-If you use pycharm's built in runner it will have issues.
+Don't use PyCharm. If you use PyCharm's built-in runner, it will have issues.
+For some reason this test never wants to read the files in correctly when you do.
+Don't try and modify this to work with PyCharm's runner because it will break the GitHub check.
 
-Running pytest in the root of the project is fine tho.
+Running pytest in the root of the project should work, instead of PyCharm.
 
 """
 

@@ -2,8 +2,8 @@
 
 This file connects to the database and allows for the other parts of the program to communicate with the database.
 
-There is no authentication before the commands are used, so check if the user calling for it has the proper
-credentials in scripts that invoke the commands created in here.
+There is no authentication before the commands execute, so check if the user calling for it has the proper
+credentials in scripts that call the functions created here.
 
 """
 
@@ -20,32 +20,21 @@ colorama_init()
 # Pull data from .env and set up the database connection
 load_dotenv()  # Load the secrets from the .env file
 database_password = os.environ.get("DB_PASSWORD")
-db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
+database_user = os.environ.get("DB_USER")
+
+if database_user is None:  # If it's not defined, default to root
+    database_user = "root"
+
+db_config = {"user": database_user, "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
 
 """
-
-These are the intended users of the commands.
-If it's marked as system is is meant for internal calls to verify things.
 Admins:
     - add_user
     - delete_user
     - unlock_user
+    - unlock_account
 
-Who should be calling what:
-
-user_exists : sys
-is_admin : sys
-is_locked_out : sys
-add_user : admin
-delete_user : admin
-get_passwords : sys -> array_passwords & update_last_queried in the back end
-update_password : must be the user (the admin can't change a user's password)
-lock_account : sys | triggers on 10 bad password entries on the account
-unlock_account : admin   --> also call reset_failed_attempts
-get_failed_count : sys
-increment_failed_attempts : sys
-reset_failed_attempts : sys | reset on successful login | on unlock_account
-
+Everything else is used by the system to verify or set states.
 """
 
 
@@ -307,6 +296,12 @@ def reset_failed_attempts(username: str):
 
 
 def is_only_admin() -> bool:
+    """
+    This function returns true if there's only one admin in the system.
+    It does not identify which account is the admin.
+    When you call this, you need to combine it with an is_admin.
+    :return: bool
+    """
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)

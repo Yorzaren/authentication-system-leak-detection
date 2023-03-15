@@ -1,5 +1,7 @@
 """
-This is a pytest to make sure that none of the helper functions in username_checker.py are corrupted
+
+This is a pytest to make sure that the helper functions in username_checker.py are not corrupted.
+
 """
 
 from python_scripts import username_checker

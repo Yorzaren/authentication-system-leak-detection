@@ -1,8 +1,6 @@
 """
 database_controller.py requires a connection to the database so can't be tested automatically on GitHub.
 
-The test should skip
-
 Make sure the database is running and is database entries are fresh from initialize_database.sql
 
 If the database isn't in default config, then the test will throw errors.
@@ -25,7 +23,12 @@ class TestDatabaseController:
     def test_db_functions(self):
         print("\n-->Resetting the system back to the default state\n")
         database_password = os.environ.get("DB_PASSWORD")
-        db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
+        database_user = os.environ.get("DB_USER")
+        if database_user is None:
+            database_user = "root"
+
+        db_config = {"user": database_user, "password": database_password,
+                     "host": "127.0.0.1", "database": "passwordKeepers"}
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
         my_cursor.execute("CALL ResetDatabase()")
