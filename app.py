@@ -283,7 +283,7 @@ def do_delete_account():
                     flash("Error: Given username does not match confirmation username")
                     return redirect(url_for("admin"))
                 if user_exists(username_delete) is False:
-                    flash(f"Error: {username_delete} not exist in the system.")
+                    flash(f"Error: {username_delete} does not exist in the system.")
                     return redirect(url_for("admin"))
 
                 if delete_user(requesting_admin_username, requesting_admin_password, username_delete) is True:
@@ -293,7 +293,7 @@ def do_delete_account():
                     flash(f"Error: {username_delete} could not be deleted from the system.")
                     if is_admin(username_delete) and is_only_admin():
                         flash(
-                            f"Error: You requesting the only admin account to be deleted."
+                            f"Error: You requesting the only admin account to be deleted. "
                             f"is_only_admin: {is_only_admin()}"
                         )
                     return redirect(url_for("admin"))
