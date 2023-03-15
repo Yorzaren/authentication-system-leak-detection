@@ -58,6 +58,33 @@ apt install python3-pip
 ```cmd
 apt install mysql-server
 ```
+Optional: 
+
+Because there's a bug with MySQL installation, you may also use MariaDB instead. 
+If you do, replace mysql command with mariadb.
+
+```cmd
+apt install mariadb-server
+```
+
+Note: You can quickly set the MariaDB root password using in the MariaDB console: 
+```cmd
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'; flush privileges; exit; 
+```
+
+If you want to run this in a venv (virtual environment):
+```cmd
+apt install python3.10-venv
+```
+
+Create venv:
+```cmd
+python3 -m venv venv
+```
+Activate venv:
+```cmd
+. venv/bin/activate
+```
 
 #### Windows - Install Git, Pip, MySQL
 You need to have Git, Python3, and MySQL on your system if you don't already have them installed.
@@ -201,6 +228,20 @@ python cmdline_driver.py
 ### Start Site Using Flask
 ```cmd
 flask run
+```
+
+The database has one default account to get you started. 
+
+You can access it using the following information:
+
+### Login to the Default Admin Account
+Username: `admin`
+
+Password: `password`
+
+You should change the password to admin immediately for security.
+
+Alternatively, you should create a new admin account, test that the new admin account works, then delete the default admin account.
 ```
 
 ## Style / Linting / Unit Testing
