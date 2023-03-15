@@ -1,5 +1,5 @@
 """
-This script should check that the username conforms to the username policy
+This script should check that the username conforms to the username policy.
 """
 
 import string as alphabet_string

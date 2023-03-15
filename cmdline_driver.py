@@ -35,9 +35,14 @@ colorama_init()
 # Pull data from .env and set up the database connection
 load_dotenv()  # Load the secrets from the .env file
 database_password = os.environ.get("DB_PASSWORD")
-db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
+database_user = os.environ.get("DB_USER")
 
-print(f"{Fore.CYAN}|--------------------------------------------------------------------------|{Style.RESET_ALL}")
+if database_user is None:  # If it's not defined, default to root
+    database_user = "root"
+
+db_config = {"user": database_user, "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
+
+print(f"{Fore.CYAN}|==========================================================================|{Style.RESET_ALL}")
 print(
     f"{Fore.CYAN}|------------- {Fore.RED}Authentication System Leak Detection Prototype"
     f"{Fore.CYAN} -------------|{Style.RESET_ALL}"
@@ -51,6 +56,12 @@ print(
     f"{Style.RESET_ALL}{Fore.CYAN} ----|{Style.RESET_ALL}"
 )
 print(f"{Fore.CYAN}|--------------------------------------------------------------------------|{Style.RESET_ALL}")
+print(
+    f"{Fore.CYAN}|--------------------  This is only meant for testing  --------------------|{Style.RESET_ALL}"
+)
+print(f"{Fore.CYAN}|------------------  Run the front-end using: flask run  ------------------|{Style.RESET_ALL}")
+print(f"{Fore.CYAN}|----------------  Delete this file once done with testing  ---------------|{Style.RESET_ALL}")
+print(f"{Fore.CYAN}|==========================================================================|{Style.RESET_ALL}")
 
 try:
     print(f"{Fore.YELLOW}{Style.BRIGHT}Testing Database Connection...{Style.RESET_ALL}")

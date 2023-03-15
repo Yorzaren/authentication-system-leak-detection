@@ -1,3 +1,9 @@
+"""
+
+This is a pytest to make sure that the helper functions in password_analysis_helper.py are not corrupted.
+
+"""
+
 from python_scripts import password_analysis_helper
 
 

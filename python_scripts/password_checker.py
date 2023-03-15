@@ -12,7 +12,7 @@ MIN_LOWERCASE_LETTERS = 1
 MIN_AMOUNT_DIGITS = 1
 MIN_AMOUNT_SPECIAL_CHAR = 1
 # Bitwarden generator and https://www.ibm.com/support/pages/password-policy-and-passwords-special-characters
-ALLOWED_SPECIAL_CHAR = "!@#$%^&*"  # Remember to manually update the pytest to match the new count
+ALLOWED_SPECIAL_CHAR = "!@#$%^&*"  # Remember to manually update the pytest to match if you add or remove characters
 BANNED_WORDS = ["password"]
 
 

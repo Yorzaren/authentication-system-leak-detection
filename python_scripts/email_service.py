@@ -12,9 +12,12 @@ Mailslurp has a limit to how many emails can be sent and received so use it spar
 
 USAGE:
 
-send_email(system_type, msg_type, account_name)
+send_email(msg_type, account_name, using_mailslurp)
 
-system_type: test | live
+using_mailslurp:
+ - False (default)
+ - True
+
 msg_type:
  - 1 for user account getting locked out
  - 2 for decoy password getting used
@@ -63,13 +66,13 @@ def __mailslurp_send_email(subject_string: str, message_string: str):
                 smtp.login(user=smtp_access.smtp_username, password=smtp_access.smtp_password)
                 smtp.sendmail(from_addr=system_email.email_address, to_addrs=[admin_email.email_address], msg=msg)
                 smtp.quit()
-
+            print("Successfully sent email using MailSlurp")
     except AssertionError:
         print("Missing or incorrectly configured .env file")
     except mailslurp_client.ApiException as x:
         # The mailslurp_client.ApiException returns a body with json format
         # Read back the message to know which is the issue.
-        print("Mailslurp variables are misconfigured.\n" + str(json.loads(x.body)["message"]))
+        print("MailSlurp variables are misconfigured.\n" + str(json.loads(x.body)["message"]))
 
 
 # Requires you to use commandline to open the port
@@ -87,13 +90,13 @@ def __localhost_send_email(sender_email: str, recipient_email: str, email_subjec
     try:
         with smtplib.SMTP("localhost", port) as server:
             server.sendmail(sender, receivers, msg.as_string())
-            print("Successfully sent email")
+            print("Successfully sent email using the local DebugginServer")
     except Exception as e:
         print(e)
         print("Error: Cant send email\nIf using localhost run:\npython -m smtpd -c DebuggingServer -n localhost:1025")
 
 
-def send_email(email_system: str, msg_type: int, account_name: str):
+def send_email(msg_type: int, account_name: str, using_mailslurp=False):
     email_title = "default title"
     message = "default message"
 
@@ -112,9 +115,9 @@ def send_email(email_system: str, msg_type: int, account_name: str):
             f"You should take action to lock the system."
         )
 
-    if email_system == "test":
-        # sender_email, recipient_email are made up because they don't really exist beyond the DebuggingServer
-        __localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)
-    elif email_system == "live":
+    if using_mailslurp is True:
         # Use sparingly
         __mailslurp_send_email(email_title, message)
+    else:
+        # sender_email, recipient_email are made up because they don't really exist beyond the DebuggingServer
+        __localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)

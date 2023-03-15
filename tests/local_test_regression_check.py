@@ -1,5 +1,5 @@
 """
-This shouldn't be used as a production test because it can through a lot of issues
+This shouldn't be used as a production test because it can create a lot of issues.
 This is just to test if things work more or less.
 """
 import pytest

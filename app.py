@@ -1,9 +1,10 @@
 """
 
+This file runs the front-end website as a python web application.
+
 Start it using: flask run
 
 Components are stored in `static` and `templates`
-
 
 """
 import os  # Used to get the .env file
@@ -39,7 +40,7 @@ login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
 
-# Define User Class
+# Define User Class - You've modified this.
 class User:
     def __init__(self, id, admin=False):
         self.id = id
@@ -76,17 +77,6 @@ def request_loader(request):
     user.id = username
     user.admin = is_admin(username)
     return user
-
-
-"""if session is not None:
-    # Get the session data is it exists
-    if "username" in session:
-        current_username = session["username"]
-    if "signed_in" in session:
-        is_signed_in = session["signed_in"]
-    if "admin" in session:
-        user_is_admin = session["is_admin"]
-"""
 
 
 @app.route("/")
@@ -127,7 +117,7 @@ def login():
     # Tell the user if their account is locked
     if is_locked_out(username):
         flash(
-            "Your account has had too many failed login attempts. Your account has been locked contact an "
+            "Your account had too many failed login attempts. Your account has been locked. Contact an "
             "administrator to unlock it."
         )
         return redirect(url_for("login"))
@@ -167,7 +157,7 @@ def admin():
             admin=flask_login.current_user.admin,
         )
     else:
-        return "You can not be here"
+        return "You can not be here"  # You shouldn't see this message if everything is set up correctly.
 
 
 @app.route("/settings")
@@ -213,7 +203,7 @@ def do_add_account():
 
                 # Check if username follows the policy
                 if is_valid_username(new_account_username) is False:
-                    flash("Username doesn't meet the username policy")
+                    flash("Username doesn't meet the username policy.")
                     return redirect(url_for("admin"))
 
                 # Check if the password don't match
@@ -223,7 +213,7 @@ def do_add_account():
 
                 # Check if password follows the policy
                 if password_valid_to_policy_rules(new_account_password) is False:
-                    flash("Password doesn't meet the password policy")
+                    flash("Password doesn't meet the password policy.")
                     return redirect(url_for("admin"))
 
                 # Passed the checks
@@ -280,7 +270,7 @@ def do_delete_account():
             if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if they match
                 if username_delete != confirm_delete_username:
-                    flash("Error: Given username does not match confirmation username")
+                    flash("Error: Given username does not match confirmation username.")
                     return redirect(url_for("admin"))
                 if user_exists(username_delete) is False:
                     flash(f"Error: {username_delete} does not exist in the system.")
@@ -329,7 +319,7 @@ def do_unlock_account():
             if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if they match
                 if username_unlock != confirm_unlock_username:
-                    flash("Error: Given username does not match confirmation username")
+                    flash("Error: Given username does not match confirmation username.")
                     return redirect(url_for("admin"))
 
                 if user_exists(username_unlock) is False:
@@ -372,7 +362,7 @@ def do_update_password():
         if is_authenticated(username, confirm_old_password) is True:
             # Check if they match
             if new_password != confirm_new_password:
-                flash("Error: Updated password does not match confirmation password")
+                flash("Error: Updated password does not match confirmation password.")
                 return redirect(url_for("settings"))
 
             if password_valid_to_policy_rules(new_password) is True:
