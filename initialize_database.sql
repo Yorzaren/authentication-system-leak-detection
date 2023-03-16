@@ -218,7 +218,7 @@ END//
 
 CREATE PROCEDURE ResetDatabase()
 BEGIN
-	TRUNCATE passwordtable;
+	TRUNCATE passwordTable;
 	CALL AddAdminUser("admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password");
 END//
 
