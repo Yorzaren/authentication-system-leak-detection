@@ -52,9 +52,7 @@ print(
     f"{Style.RESET_ALL}{Fore.CYAN} ----|{Style.RESET_ALL}"
 )
 print(f"{Fore.CYAN}|--------------------------------------------------------------------------|{Style.RESET_ALL}")
-print(
-    f"{Fore.CYAN}|--------------------  This is only meant for testing  --------------------|{Style.RESET_ALL}"
-)
+print(f"{Fore.CYAN}|--------------------  This is only meant for testing  --------------------|{Style.RESET_ALL}")
 print(f"{Fore.CYAN}|------------------  Run the front-end using: flask run  ------------------|{Style.RESET_ALL}")
 print(f"{Fore.CYAN}|----------------  Delete this file once done with testing  ---------------|{Style.RESET_ALL}")
 print(f"{Fore.CYAN}|==========================================================================|{Style.RESET_ALL}")
