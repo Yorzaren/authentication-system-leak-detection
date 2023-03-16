@@ -9,8 +9,8 @@ The system will lock out a user account if they fail three times to type their p
 Before the first run of the code.
 1) Set up the MySQL database using the initialize_database.sql
 2) Set up the .env file
-3) Make sure the mailslurp credentials are up-to-date
-    OR have smtpd running by using: python -m smtpd -c DebuggingServer -n localhost:1025
+3) Make sure the MailSlurp credentials are up-to-date
+    OR have aiosmtpd running by using: python -m aiosmtpd -n -l localhost:1025
 
 """
 import os

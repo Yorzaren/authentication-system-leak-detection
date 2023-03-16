@@ -3,6 +3,7 @@ colorama==0.4.6 # https://pypi.org/project/colorama/ - This allows for colorful 
 
 mailslurp-client==15.16.22 # https://www.mailslurp.com/ - This is for sending test emails in email_service
 
+aiosmtpd # Local mail server for testing
 mysql-connector-python==8.0.32 # MySQL Database connector
 
 nltk==3.8.1 # This is for language processing in password_analysis
