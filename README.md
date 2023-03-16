@@ -4,16 +4,17 @@
 
 ## Table of Contents
 1. [About](#about)
-2. [Requirements](#requirements)
-3. [Installation](#installation)
-4. [Development Testing/Style Notes](#style--linting--unit-testing)
+2. [Contributors](#contributors)
+3. [Requirements](#requirements)
+4. [Installation](#installation)
+5. [Development Testing/Style Notes](#style--linting--unit-testing)
 
 
 ## About
 This is a work in progress.
 
 
-This project is an experimental proof of concept.
+⚠️ This project is an experimental proof of concept. ⚠️
 
 
 The goal is to detect a password database breach by hiding the users password with a bunch of decoy passwords.
@@ -30,6 +31,17 @@ If they use a decoy password while attempting to get into a user's account, it w
 5. Must develop algorithm to uniquely assign valid password in user's account password list.
 6. Provide a mechanism of notification if false password is used compared to incorrect entry or simple guess.
 7. Runs on Linux.
+
+## Contributors 
+This repository is a part of Senior Project where teams are assigned a real world client to create a solution for their problem(s) based off of their requirements.
+
+**Password F.M.** is the name of our team.
+
+### Members
+* F. Nice ([Yorzaren](https://github.com/Yorzaren)) - Project Leader/Lead Developer
+* J. Hopper ([Mega-Zawesome](https://github.com/Mega-Zawesome))
+* M. James ([Mikaylabj98](https://github.com/Mikaylabj98))
+* J. Lewis ([jalewis7](https://github.com/jalewis7))
 
 ## Installation
 The project is intended Linux based systems. 
@@ -172,20 +184,27 @@ In the root of the `authentication-system-leak-detection` folder you need to mak
 
 It should look something like this:
 ```txt
+DB_USER=root
 DB_PASSWORD=password
 RANDOM_NOISE=somestring
 RANDOM_NUMBER=123
 FLASK_SECRET=secret
+USE_MAILSLURP=False
 MAILSLURP_API_KEY=
 MAILSLURP_SENDER_EMAIL_ID=
 MAILSLURP_RECIEVER_EMAIL_ID=
 ```
+* `DB_PASSWORD` is the password to the database.
+* `DB_USER` (optional) It defines the database user. The default is set to `root`. This variable is optional.
+* `RANDOM_NOISE` (optional) It is a random string. Do NOT change this value after adding accounts.
+* `RANDOM_NUMBER` (optional) It is a random int you can set. It is optional. Do NOT change this value after adding accounts.
+  * If you change `RANDOM_NOISE` or `RANDOM_NUMBER` later on, the system will not be able to locate the correct passwords for accounts.
+* `FLASK_SECRET` is a random string. It can NOT be left undefined. 
+* `USE_MAILSLURP` (optional) See below for more info
 
 The [MailSlurp](https://www.mailslurp.com/) variables are optional. The system automatically sends test emails to the local DebuggingServer.
 
-If you wish to use MailSlurp, set the variables and modify `main.py`. 
-
-All instances of `test` in `send_email()` should be swapped to `live`.
+If you wish to use MailSlurp, set `USE_MAILSLURP` to `True`. 
 
 MailSlurp can be used to send the test emails.
 
