@@ -181,7 +181,7 @@ MAILSLURP_SENDER_EMAIL_ID=
 MAILSLURP_RECIEVER_EMAIL_ID=
 ```
 
-The [MailSlurp](https://www.mailslurp.com/) variables are optional. The system automatically sends test emails to the local DebuggingServer.
+The [MailSlurp](https://www.mailslurp.com/) variables are optional. The system automatically sends test emails to the local aiosmtpd server.
 
 If you wish to use MailSlurp, set the variables and modify `main.py`. 
 
@@ -198,17 +198,17 @@ However, it doesn't really matter.
 
 **Note:** Free MailSlurp users can only keep their Inbox IDs for a short duration, so you'll have to update the ID a lot.
 
-### Run smtpd DebuggingServer
+### Run aiosmtpd mail server
 In a separate terminal or command-line prompt, run:
 
 **Linux:**
 ```cmd
-python3 -m smtpd -c DebuggingServer -n localhost:1025
+python3 -m aiosmtpd -n -l localhost:1025
 ```
 
 **Windows:**
 ```cmd
-python -m smtpd -c DebuggingServer -n localhost:1025
+python -m aiosmtpd -n -l localhost:1025
 ```
 
 **Note:** Don't close out of the window. You will see the emails being sent here.

@@ -3,11 +3,7 @@
 
 Test driver to check some stuff using the command line
 
-call venv/Scripts/activate.bat
-python cmdline_driver.py
-deactivate
-
-python -m smtpd -c DebuggingServer -n localhost:1025
+python -m aiosmtpd -n -l localhost:1025
 
 """
 

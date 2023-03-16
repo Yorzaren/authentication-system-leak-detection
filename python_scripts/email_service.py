@@ -3,12 +3,12 @@
 Basic python script to send emails
 
 Google doesn't allow for us to use an account to send mails insecurely,
-so we'll use mailslurp.com to generate test email accounts to send and receive
+so we'll use MailSlurp.com to generate test email accounts to send and receive
 messages.
 
-Also included is a localhost DebuggingServer
+Also included is a localhost aiosmtpd server
 
-Mailslurp has a limit to how many emails can be sent and received so use it sparingly.
+MailSlurp has a limit to how many emails can be sent and received so use it sparingly.
 
 USAGE:
 
@@ -76,7 +76,7 @@ def __mailslurp_send_email(subject_string: str, message_string: str):
 
 
 # Requires you to use commandline to open the port
-# python -m smtpd -c DebuggingServer -n localhost:1025
+# python -m aiosmtpd -n -l localhost:1025
 def __localhost_send_email(sender_email: str, recipient_email: str, email_subject: str, email_body: str):
     sender = sender_email
     receivers = recipient_email
@@ -90,10 +90,10 @@ def __localhost_send_email(sender_email: str, recipient_email: str, email_subjec
     try:
         with smtplib.SMTP("localhost", port) as server:
             server.sendmail(sender, receivers, msg.as_string())
-            print("Successfully sent email using the local DebugginServer")
+            print("Successfully sent email using the local aiosmtpd server")
     except Exception as e:
         print(e)
-        print("Error: Cant send email\nIf using localhost run:\npython -m smtpd -c DebuggingServer -n localhost:1025")
+        print("Error: Cant send email\nIf using localhost run:\npython -m aiosmtpd -n -l localhost:1025")
 
 
 def send_email(msg_type: int, account_name: str, using_mailslurp=False):
@@ -119,5 +119,5 @@ def send_email(msg_type: int, account_name: str, using_mailslurp=False):
         # Use sparingly
         __mailslurp_send_email(email_title, message)
     else:
-        # sender_email, recipient_email are made up because they don't really exist beyond the DebuggingServer
+        # sender_email, recipient_email are made up because they don't really exist beyond the local aiosmtpd server
         __localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)
