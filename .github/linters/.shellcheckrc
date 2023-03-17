@@ -1,2 +1,0 @@
-# ~/.shellcheckrc
-disable=SC1091 # Disable individual error codes
