@@ -57,7 +57,7 @@ def user_exists(username: str) -> bool:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        query = f'CALL UserExists("{username}")'
+        query = f'CALL UserExists("{username}");'
         my_cursor.execute(query)
         count = my_cursor.fetchone()[0]
 
@@ -77,7 +77,7 @@ def is_admin(username: str) -> bool:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        query = f'CALL IsUserAdmin("{username}")'
+        query = f'CALL IsUserAdmin("{username}");'
         my_cursor.execute(query)
         count = my_cursor.fetchone()[0]
 
@@ -97,7 +97,7 @@ def is_locked_out(username: str) -> bool:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        query = f'CALL IsUserLockedOut("{username}")'
+        query = f'CALL IsUserLockedOut("{username}");'
         my_cursor.execute(query)
         count = my_cursor.fetchone()[0]
 
@@ -121,13 +121,13 @@ def add_user(username: str, password_array, create_admin_account=False):
             f'CALL AddAdminUser("{username}", "{password_array[0]}", "{password_array[1]}", '
             f'"{password_array[2]}", "{password_array[3]}", "{password_array[4]}", '
             f'"{password_array[5]}", "{password_array[6]}", "{password_array[7]}", '
-            f'"{password_array[8]}", "{password_array[9]}", "{password_array[10]}")'
+            f'"{password_array[8]}", "{password_array[9]}", "{password_array[10]}");'
         )
         command_create_normal = (
             f'CALL AddNormalUser("{username}", "{password_array[0]}", "{password_array[1]}", '
             f'"{password_array[2]}", "{password_array[3]}", "{password_array[4]}", '
             f'"{password_array[5]}", "{password_array[6]}", "{password_array[7]}", '
-            f'"{password_array[8]}", "{password_array[9]}", "{password_array[10]}")'
+            f'"{password_array[8]}", "{password_array[9]}", "{password_array[10]}");'
         )
 
         if create_admin_account is True:
@@ -149,7 +149,7 @@ def delete_user(username: str):
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        command = f'CALL DeleteUser("{username}")'
+        command = f'CALL DeleteUser("{username}");'
 
         my_cursor.execute(command)
 
@@ -169,13 +169,13 @@ def get_passwords(username: str) -> list:  # Return a list/array
         my_cursor = cnx.cursor(buffered=True)
 
         # Update the last queried date
-        command = f'CALL UpdateLastQuery("{username}")'
+        command = f'CALL UpdateLastQuery("{username}");'
         my_cursor.execute(command)
 
         # Commit the changes
         cnx.commit()
 
-        query = f'CALL GetPasswords("{username}")'
+        query = f'CALL GetPasswords("{username}");'
         my_cursor.execute(query)
 
         # Close the connector
@@ -195,7 +195,7 @@ def update_password(username: str, password_array):
             f'CALL UpdatePassword("{username}", "{password_array[0]}", "{password_array[1]}", '
             f'"{password_array[2]}", "{password_array[3]}", "{password_array[4]}", "{password_array[5]}", '
             f'"{password_array[6]}", "{password_array[7]}", "{password_array[8]}", "{password_array[9]}", '
-            f'"{password_array[10]}")'
+            f'"{password_array[10]}");'
         )
         my_cursor.execute(command)
 
@@ -213,7 +213,7 @@ def lock_account(username: str):
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        command = f'CALL LockUser("{username}")'
+        command = f'CALL LockUser("{username}");'
         my_cursor.execute(command)
 
         # Commit the changes
@@ -230,10 +230,10 @@ def unlock_account(username: str):
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        command = f'CALL UnlockUser("{username}")'
+        command = f'CALL UnlockUser("{username}");'
         my_cursor.execute(command)
         # You need to reset this or the account will re-lock next time
-        command2 = f'CALL ResetFails("{username}")'
+        command2 = f'CALL ResetFails("{username}");'
         my_cursor.execute(command2)
 
         # Commit the changes
@@ -250,7 +250,7 @@ def get_failed_count(username: str) -> int:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        query = f'CALL GetFailsCount("{username}")'
+        query = f'CALL GetFailsCount("{username}");'
         my_cursor.execute(query)
 
         # Close the connector
@@ -266,7 +266,7 @@ def increment_failed_attempts(username: str):
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        command = f'CALL IncrementFails("{username}")'
+        command = f'CALL IncrementFails("{username}");'
         my_cursor.execute(command)
 
         # Commit the changes
@@ -283,7 +283,7 @@ def reset_failed_attempts(username: str):
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        command = f'CALL ResetFails("{username}")'
+        command = f'CALL ResetFails("{username}");'
         my_cursor.execute(command)
 
         # Commit the changes
@@ -306,7 +306,7 @@ def is_only_admin() -> bool:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        query = "CALL GetAdminCount()"
+        query = "CALL GetAdminCount();"
         my_cursor.execute(query)
 
         # Close the connector
@@ -320,12 +320,81 @@ def is_only_admin() -> bool:
         __db_connection_error(err)
 
 
+def lock_system():
+    """
+    When this is called, it will set the database to lockout every user.
+    There is no recovery from this unless you manually unlock the accounts.
+    However, you should NOT attempt to recover the system.
+    This function should be called when there's more than one account
+    that has used a decoy password.
+    :return: none
+    """
+    try:
+        # Create the connector
+        cnx = mysql.connector.connect(**db_config)
+        my_cursor = cnx.cursor(buffered=True)
+        command = "CALL LockAllUsers();"
+        my_cursor.execute(command)
+
+        # Commit the changes
+        cnx.commit()
+
+        # Close the connector
+        cnx.close()
+
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
+
+
+def log_used_decoy(username: str):
+    """
+    This will add a user a decoy password associated with their account was used
+    :param username: username of the account suspected be breached
+    :return: none
+    """
+    try:
+        # Create the connector
+        cnx = mysql.connector.connect(**db_config)
+        my_cursor = cnx.cursor(buffered=True)
+        command = f'CALL AddDecoyUsedFromUser("{username}");'
+        my_cursor.execute(command)
+
+        # Commit the changes
+        cnx.commit()
+
+        # Close the connector
+        cnx.close()
+
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
+
+
+def get_global_decoy_usage() -> int:
+    """
+    This pulls the number of entries from passwordBreached.
+    :return: int
+    """
+    try:
+        # Create the connector
+        cnx = mysql.connector.connect(**db_config)
+        my_cursor = cnx.cursor(buffered=True)
+        query = "CALL GetGlobalDecoyUsedCount();"
+        my_cursor.execute(query)
+
+        # Close the connector
+        cnx.close()
+
+        return int(my_cursor.fetchone()[0])
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
+
+
 def print_table():
     # Debugging DUMP THE TABLE
     print(f"{Fore.CYAN}{Back.BLACK}--- DUMPING TABLE ---{Style.RESET_ALL}")
     cnx = mysql.connector.connect(**db_config)
     my_cursor = cnx.cursor(buffered=True)
-    my_cursor.execute("CALL GetTable()")
+    my_cursor.execute("CALL GetTable();")
     records = my_cursor.fetchall()
     for row in records:
         print(row)
