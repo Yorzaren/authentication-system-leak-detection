@@ -27,3 +27,4 @@ jobs:
           VALIDATE_SQLFLUFF: false
           VALIDATE_PYTHON_MYPY: false
           VALIDATE_PYTHON_ISORT: false
+          VALIDATE_SQL: false
