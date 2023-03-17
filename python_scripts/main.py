@@ -21,9 +21,11 @@ from colorama import init as colorama_init
 from dotenv import load_dotenv  # Used to load info from the .env file
 
 import python_scripts.database_controller as db_controller
+from python_scripts.alg_redux import generate_decoy_passwords_redux
 from python_scripts.email_service import send_email
 from python_scripts.password_checker import password_valid_to_policy_rules
-from python_scripts.password_generator import generate_decoy_passwords
+
+# from python_scripts.password_generator import generate_decoy_passwords  # TODO: Remember to uncomment this
 from python_scripts.username_checker import is_valid_username
 
 # Pull data from .env and set up the database connection
@@ -95,7 +97,9 @@ def __create_password_array(username: str, password: str) -> list:
     :return: array list of decoys with the real password hidden in it
     """
 
-    array_decoys = generate_decoy_passwords(password)  # Generate decoys
+    # TODO: Replaced the old with the new alg
+    # array_decoys = generate_decoy_passwords(password)  # Generate decoys
+    array_decoys = generate_decoy_passwords_redux(password)  # Generate decoys
     real_placement = __hide_password(username)
     random.shuffle(array_decoys)  # Randomize the array
     array_decoys.insert(real_placement, password)  # Place the real password in the array
