@@ -52,8 +52,8 @@ CREATE TABLE `passwordTable` (
 	UNIQUE KEY `Username_UNIQUE` (`Username`)
 );
 
-DROP TABLE IF EXISTS `passwordBreached`;
-CREATE TABLE `passwordBreached` (
+DROP TABLE IF EXISTS `passwordBreachedUserTable`;
+CREATE TABLE `passwordBreachedUserTable` (
 	`UID` int NOT NULL AUTO_INCREMENT,
 	`Username` varchar(50) NOT NULL,
 	PRIMARY KEY (`Username`),
@@ -231,19 +231,19 @@ END//
 CREATE PROCEDURE ResetDatabase()
 BEGIN
 	TRUNCATE passwordTable;
-	TRUNCATE passwordBreached;
+	TRUNCATE passwordBreachedUserTable;
 	CALL AddAdminUser("admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password");
 END//
 
 CREATE PROCEDURE AddDecoyUsedFromUser(Username varchar(50))
 BEGIN
-	INSERT INTO passwordBreached(Username)
+	INSERT INTO passwordBreachedUserTable(Username)
 	VALUES (Username);
 END//
 
 CREATE PROCEDURE GetGlobalDecoyUsedCount()
 BEGIN
-	SELECT COUNT(*) FROM passwordBreached;
+	SELECT COUNT(*) FROM passwordBreachedUserTable;
 END//
 
 CREATE PROCEDURE LockAllUsers()
