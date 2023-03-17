@@ -234,7 +234,7 @@ def __is_distanced(real: str, decoy: str, dist: int = 2) -> bool:
 
 
 def __is_new_and_valid(real: str, decoy: str, array: list) -> bool:
-    # if you use this in a while. You should have a NOT in front of it.
+    # If you use this in a while loop, you should have a NOT in front of it.
     if (
         password_checker.password_valid_to_policy_rules(decoy) is False
         or decoy == real

@@ -7,8 +7,8 @@ This should be enough to generate the database and table needed for the program
 - Create the table called passwordTable
 - Create the stored procedures to be used by the python scripts to cut down on SQL commands in the scripts
 - Add a default administrator account
-        username: admin 
-        password: password
+		username: admin 
+		password: password
 - The password needs to be changed after setup to something more secure through the web interface.
 - This is will ensure the decoy passwords are randomized based off the new password.
 
@@ -30,26 +30,35 @@ ALTER DATABASE passwordKeepers DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
 
 DROP TABLE IF EXISTS `passwordTable`;
 CREATE TABLE `passwordTable` (
-  `UID` int NOT NULL AUTO_INCREMENT,
-  `Username` varchar(50) NOT NULL,
-  `IsAdmin` tinyint NOT NULL,
-  `IsLockedOut` tinyint DEFAULT 0,
-  `FailedLoginAttempts` int DEFAULT 0,
-  `LastQueried` DATETIME DEFAULT NULL,
-  `Password0` varchar(32) DEFAULT NULL,
-  `Password1` varchar(32) DEFAULT NULL,
-  `Password2` varchar(32) DEFAULT NULL,
-  `Password3` varchar(32) DEFAULT NULL,
-  `Password4` varchar(32) DEFAULT NULL,
-  `Password5` varchar(32) DEFAULT NULL,
-  `Password6` varchar(32) DEFAULT NULL,
-  `Password7` varchar(32) DEFAULT NULL,
-  `Password8` varchar(32) DEFAULT NULL,
-  `Password9` varchar(32) DEFAULT NULL,
-  `Password10` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`Username`),
-  KEY (`UID`), -- If this isn't marked as a key the table will break
-  UNIQUE KEY `Username_UNIQUE` (`Username`)
+	`UID` int NOT NULL AUTO_INCREMENT,
+	`Username` varchar(50) NOT NULL,
+	`IsAdmin` tinyint NOT NULL,
+	`IsLockedOut` tinyint DEFAULT 0,
+	`FailedLoginAttempts` int DEFAULT 0,
+	`LastQueried` DATETIME DEFAULT NULL,
+	`Password0` varchar(32) DEFAULT NULL,
+	`Password1` varchar(32) DEFAULT NULL,
+	`Password2` varchar(32) DEFAULT NULL,
+	`Password3` varchar(32) DEFAULT NULL,
+	`Password4` varchar(32) DEFAULT NULL,
+	`Password5` varchar(32) DEFAULT NULL,
+	`Password6` varchar(32) DEFAULT NULL,
+	`Password7` varchar(32) DEFAULT NULL,
+	`Password8` varchar(32) DEFAULT NULL,
+	`Password9` varchar(32) DEFAULT NULL,
+	`Password10` varchar(32) DEFAULT NULL,
+	PRIMARY KEY (`Username`),
+	KEY (`UID`), -- If this isn't marked as a key the table will break
+	UNIQUE KEY `Username_UNIQUE` (`Username`)
+);
+
+DROP TABLE IF EXISTS `passwordBreached`;
+CREATE TABLE `passwordBreached` (
+	`UID` int NOT NULL AUTO_INCREMENT,
+	`Username` varchar(50) NOT NULL,
+	PRIMARY KEY (`Username`),
+	KEY (`UID`), -- If this isn't marked as a key the table will break
+	UNIQUE KEY `Username_UNIQUE` (`Username`)
 );
 
 --
@@ -86,6 +95,9 @@ DROP PROCEDURE IF EXISTS IncrementFails;
 DROP PROCEDURE IF EXISTS ResetFails;
 DROP PROCEDURE IF EXISTS GetAdminCount;
 DROP PROCEDURE IF EXISTS ResetDatabase;
+DROP PROCEDURE IF EXISTS AddDecoyUsedFromUser;
+DROP PROCEDURE IF EXISTS GetGlobalDecoyUsedCount;
+DROP PROCEDURE IF EXISTS LockAllUsers;
 
 /* Set the delimiter for the stored procedure */
 DELIMITER //
@@ -102,13 +114,13 @@ END//
 
 CREATE PROCEDURE AddAdminUser(Username varchar(50), Password0 varchar(32), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32))
 BEGIN
-    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10)
+	INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10)
 	VALUES (Username, 1, 0, 0, NOW(), Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10); 
 END //
 
 CREATE PROCEDURE AddNormalUser(Username varchar(50), Password0 varchar(32), Password1 varchar(32), Password2 varchar(32), Password3 varchar(32), Password4 varchar(32), Password5 varchar(32), Password6 varchar(32), Password7 varchar(32), Password8 varchar(32), Password9 varchar(32), Password10 varchar(32))
 BEGIN
-    INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10)
+	INSERT INTO passwordTable (Username, IsAdmin, IsLockedOut, FailedLoginAttempts, LastQueried, Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10)
 	VALUES (Username, 0, 0, 0, NOW(), Password0, Password1, Password2, Password3, Password4, Password5, Password6, Password7, Password8, Password9, Password10); 
 END //
 
@@ -132,7 +144,7 @@ BEGIN
 		Password8,
 		Password9,
 		Password10
-    FROM passwordTable
+	FROM passwordTable
 	WHERE Username = inputUsername;
 END//
 
@@ -170,27 +182,27 @@ CREATE PROCEDURE LockUser(inputUsername varchar(50))
 BEGIN
 	UPDATE passwordTable
 	SET IsLockedOut = 1
-    WHERE Username = inputUsername;
+	WHERE Username = inputUsername;
 END//
 
 CREATE PROCEDURE UnlockUser(inputUsername varchar(50))
 BEGIN
 	UPDATE passwordTable
 	SET IsLockedOut = 0
-    WHERE Username = inputUsername;
+	WHERE Username = inputUsername;
 END//
 
 CREATE PROCEDURE UpdateLastQuery(inputUsername varchar(50))
 BEGIN
 	UPDATE passwordTable
 	SET LastQueried = NOW()
-    WHERE Username = inputUsername;
+	WHERE Username = inputUsername;
 END//
 
 CREATE PROCEDURE GetFailsCount(inputUsername varchar(50))
 BEGIN
 	SELECT FailedLoginAttempts
-    FROM passwordTable
+	FROM passwordTable
 	WHERE Username = inputUsername;
 END//
 
@@ -219,7 +231,36 @@ END//
 CREATE PROCEDURE ResetDatabase()
 BEGIN
 	TRUNCATE passwordTable;
+	TRUNCATE passwordBreached;
 	CALL AddAdminUser("admin", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password", "password");
+END//
+
+CREATE PROCEDURE AddDecoyUsedFromUser(Username varchar(50))
+BEGIN
+	INSERT INTO passwordBreached(Username)
+	VALUES (Username);
+END//
+
+CREATE PROCEDURE GetGlobalDecoyUsedCount()
+BEGIN
+	SELECT COUNT(*) FROM passwordBreached;
+END//
+
+CREATE PROCEDURE LockAllUsers()
+BEGIN
+	/* 
+
+	Disable safeupdate for a moment. 
+	Normally I wouldn't recommend it, but if this gets called it means we probably have a breach.
+	This is just to stop all login attemps forever.
+	You shouldn't try to recover from this as the attacker probably has the database.
+	You should assume all users and passwords are compromised.
+	
+	*/
+	SET SQL_SAFE_UPDATES=0;
+	UPDATE passwordTable
+	SET IsLockedOut = 1;
+	SET SQL_SAFE_UPDATES=1; -- Enabled it again
 END//
 
 /* Set the delimiter back to normal */

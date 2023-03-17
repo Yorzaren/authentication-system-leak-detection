@@ -139,3 +139,24 @@ class TestMain:
         # Password isn't valid to rules
         assert main.update_password("jsmith", "Sm1th&W3ss0n", "invalidtoPolicy") is False
         assert main.update_password("jsmith", "Sm1th&W3ss0n", "Wcd@8sdf*dfdop#") is True  # Updated it fine.
+
+    @pytest.mark.order(11)
+    def test_system_lock(self):
+        print("\n------Messages------")
+        # This should be 1 because the attackedUser is logged bc a breached password was used in
+        # a previous test
+        assert db_controller.get_global_decoy_usage() == 1
+
+        # Admin and other accounts shouldn't be locked out yet
+        assert db_controller.is_locked_out("admin") is False
+
+        # Create another user
+        db_controller.add_user("attackedUserElectricBoogaloo", main.development_decoy_generator("attackedUserElectricBoogaloo", "realP@ssword!"))
+
+        # This should trigger the 2nd breach.
+        assert main.is_authenticated("attackedUserElectricBoogaloo", "decoy7") is False
+        assert db_controller.get_global_decoy_usage() == 2
+
+        # Admin should be locked out with the other accounts now
+        # because the system has locked itself down.
+        assert db_controller.is_locked_out("admin") is True

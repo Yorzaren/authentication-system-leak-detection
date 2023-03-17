@@ -21,6 +21,8 @@ using_mailslurp:
 msg_type:
  - 1 for user account getting locked out
  - 2 for decoy password getting used
+ - 3 for a locked account being attempted multiple times
+ - 4 for when the system has more than one decoy password used across users
 account_name: string
 
  """
@@ -114,7 +116,20 @@ def send_email(msg_type: int, account_name: str, using_mailslurp=False):
             f"Dear Admin,\nA decoy password for user {account_name} has been used. The database might be breached. "
             f"You should take action to lock the system."
         )
-
+    elif msg_type == 3:
+        print(f"Mail system has received notice: Continued Bad Login Attempts from {account_name}")
+        email_title = f"[System] Account named {account_name} continues their bad login attempts"
+        message = (
+            f"Dear Admin,\nThe account named {account_name} continues their attempt to get into the locked account."
+            f"No action necessary. However, you should continue to watch for suspicious activity across the system."
+        )
+    elif msg_type == 4:
+        print("Mail system has received notice: System Breach")
+        email_title = f"[VERY IMPORTANT ALERT] More than one account had their decoy password used"
+        message = (
+            f"Dear Admin,\nMultiple decoy passwords across they system has been used. The system has auto-locked every "
+            f"account including the admin accounts."
+        )
     if using_mailslurp is True:
         # Use sparingly
         __mailslurp_send_email(email_title, message)

@@ -35,10 +35,10 @@ colorama_init()
 USE_MAILSLURP = os.environ.get("USE_MAILSLURP")
 
 # Define it as False if it's not provided by the .env
-if USE_MAILSLURP is None or USE_MAILSLURP == "False" or USE_MAILSLURP == "false":
+if USE_MAILSLURP is None or USE_MAILSLURP == "False" or USE_MAILSLURP == "false":  # pragma: no cover
     USE_MAILSLURP = False
 else:  # Accept anything that isn't false as an agreement to use MailSlurp
-    USE_MAILSLURP = True
+    USE_MAILSLURP = True  # pragma: no cover
 
 print(f"MAILSLURP: {USE_MAILSLURP}\nType: {type(USE_MAILSLURP)}")
 
@@ -133,8 +133,26 @@ def is_authenticated(username: str, input_password: str) -> bool:
                 # The password is a decoy
                 __print_system_auth_resp(f"DECOY USED for {Fore.CYAN}{username}{Fore.RESET}.")
 
+                # Increase fails counter
+                db_controller.increment_failed_attempts(username)
+
+                # Lock the account
+                db_controller.lock_account(username)
+
+                # Add it to the list of breached accounts
+                db_controller.log_used_decoy(username)
+
                 # Send the breach alert email to the admin
                 send_email(2, username, using_mailslurp=USE_MAILSLURP)
+
+                # Check decoy usage
+                if db_controller.get_global_decoy_usage() >= 2:
+                    # Lock the entire system
+                    db_controller.lock_system()
+                    # Send email
+                    send_email(4, "NULL", using_mailslurp=USE_MAILSLURP)
+                    return False
+
                 return False
             # The password is wrong but not a decoy
             else:
@@ -154,6 +172,13 @@ def is_authenticated(username: str, input_password: str) -> bool:
                     return False
         else:
             __print_system_auth_resp("Your account was locked for your safety. Contact an admin to unlock it.")
+
+            # Increase fail counter
+            db_controller.increment_failed_attempts(username)
+
+            # Send another email
+            send_email(3, username, using_mailslurp=USE_MAILSLURP)
+
             return False
     # Username doesn't exist
     else:

@@ -27,11 +27,15 @@ class TestDatabaseController:
         if database_user is None:
             database_user = "root"
 
-        db_config = {"user": database_user, "password": database_password,
-                     "host": "127.0.0.1", "database": "passwordKeepers"}
+        db_config = {
+            "user": database_user,
+            "password": database_password,
+            "host": "127.0.0.1",
+            "database": "passwordKeepers",
+        }
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
-        my_cursor.execute("CALL ResetDatabase()")
+        my_cursor.execute("CALL ResetDatabase();")
         # Commit the changes and close
         cnx.commit()
         cnx.close()
@@ -118,3 +122,11 @@ class TestDatabaseController:
         db.delete_user("testadmin")
         assert db.user_exists("testadmin") is False
         assert db.is_only_admin() is True
+
+        print("Check System Lock...")
+        assert db.is_locked_out("testuser") is False
+        assert db.is_locked_out("admin") is False
+        db.lock_system()
+        assert db.is_locked_out("testuser") is True
+        assert db.is_locked_out("admin") is True
+
