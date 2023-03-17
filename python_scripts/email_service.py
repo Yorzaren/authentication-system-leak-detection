@@ -125,10 +125,10 @@ def send_email(msg_type: int, account_name: str, using_mailslurp=False):
         )
     elif msg_type == 4:
         print("Mail system has received notice: System Breach")
-        email_title = f"[VERY IMPORTANT ALERT] More than one account had their decoy password used"
+        email_title = "[VERY IMPORTANT ALERT] More than one account had their decoy password used"
         message = (
-            f"Dear Admin,\nMultiple decoy passwords across they system has been used. The system has auto-locked every "
-            f"account including the admin accounts."
+            "Dear Admin,\nMultiple decoy passwords across they system has been used. The system has auto-locked every "
+            "account including the admin accounts."
         )
     if using_mailslurp is True:
         # Use sparingly

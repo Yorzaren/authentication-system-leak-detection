@@ -129,4 +129,3 @@ class TestDatabaseController:
         db.lock_system()
         assert db.is_locked_out("testuser") is True
         assert db.is_locked_out("admin") is True
-

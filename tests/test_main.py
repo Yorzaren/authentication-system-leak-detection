@@ -151,7 +151,10 @@ class TestMain:
         assert db_controller.is_locked_out("admin") is False
 
         # Create another user
-        db_controller.add_user("attackedUserElectricBoogaloo", main.development_decoy_generator("attackedUserElectricBoogaloo", "realP@ssword!"))
+        db_controller.add_user(
+            "attackedUserElectricBoogaloo",
+            main.development_decoy_generator("attackedUserElectricBoogaloo", "realP@ssword!"),
+        )
 
         # This should trigger the 2nd breach.
         assert main.is_authenticated("attackedUserElectricBoogaloo", "decoy7") is False
