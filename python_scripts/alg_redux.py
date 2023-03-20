@@ -14,7 +14,7 @@ import string as alphabet_string
 from random import choice
 
 from colorama import Back, Fore, Style
-from nltk import edit_distance
+# from nltk import edit_distance
 
 from python_scripts import password_checker
 from python_scripts.password_checker import ALLOWED_SPECIAL_CHAR
@@ -70,22 +70,22 @@ def generate_decoy_passwords_redux(real_password: str) -> list:
 
     for i in range(0, AMOUNT_OF_DECOYS):
         new_decoy = make_password(real_password)
-        print(f"Generated: {new_decoy}")
+        # print(f"Generated: {new_decoy}")
         counter = 0
         while not __is_new_and_valid(real_password, new_decoy, decoy_passwords):
             # print("Failed to be good")
             new_decoy = make_password(real_password)
-            print(f"New Generated: {new_decoy} - {edit_distance(real_password, new_decoy)}")
+            # print(f"New Generated: {new_decoy} - {edit_distance(real_password, new_decoy)}")
             if counter == 1000:
                 print("FAILED to generate decoy")
                 break
             counter += 1
 
         decoy_passwords.append(new_decoy)
-        print(f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}")
+        # print(f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}")
 
     # Debugging
-    print(*decoy_passwords, sep=" | ")
+    # print(*decoy_passwords, sep=" | ")
 
     # Return the array for the other functions to use
     return decoy_passwords

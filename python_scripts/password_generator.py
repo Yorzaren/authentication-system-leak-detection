@@ -273,11 +273,11 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
 
     # If the string is random, it doesn't matter what we do to it.
     if password_analysis_randomness(real_password, debugging=False) is True:
-        print(
+        """print(
             f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} "
             f"is assumed to be very random.{Style.RESET_ALL}"
-        )
-        print(f"Real Password: {Back.BLACK}{real_password}{Style.RESET_ALL}")
+        )"""
+        # print(f"Real Password: {Back.BLACK}{real_password}{Style.RESET_ALL}")
         # Generate X amount of decoys - The string is assumed to be very random.
         # Therefore, we can just generate the max amount of decoys requested.
         for i in range(0, AMOUNT_OF_DECOYS):  # The number is 10 to generate 10 decoy passwords
@@ -294,31 +294,31 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
 
     # String is not really random, so we have to handle it carefully
     else:
-        print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} is not random.{Style.RESET_ALL}")
+        # print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} is not random.{Style.RESET_ALL}")
 
         # Check if it has a series of 4 digits in a row, because it might be a date or year
         if has_x_digits_in_a_row(real_password, 4):
-            print("-->Method: 4 digits in a row")
+            # print("-->Method: 4 digits in a row")
             """
             The goal here is to figure out how to break them into groups.
-            Basically, if someone were to know which set of 4 digits are in 
+            Basically, if someone were to know which set of 4 digits are in
             the password, they shouldn't be able to pick it out quickly.
-            
+
             If we have real password + 2 or 3 decoys with the same digits
             pass_set_1 which is a different set of numbers
             pass_set_2 which is a different set of numbers from the prior two
             Ex. A^RealChallenge1203
-            
+
             Real password has digits of 1203
             pass_set_1 is 0608
             pass_set_2 is 0723
-            
+
             We can generate decoys derived from a common numerical base to hide it better:
                 A^RealChallenge1203 --> A*Re@lChal3nge1203 | A^realch@llenge1203 | A^Re4lhallenge1203
                 A^RealChallenge0608 --> @^RealCha1lenge0608 | A!RealChallenge0608 | etc.
                 A^RealChallenge0723 --> etc.
-            
-            Note: You are forcing the convert_4_digits to give out numbers which can only be MM/DD valid 
+
+            Note: You are forcing the convert_4_digits to give out numbers which can only be MM/DD valid
             """
             pass_set_with_real = randint(2, 3)  # 2 or 3
             pass_set_1 = randint(3, 4)  # 3 or 4
@@ -365,7 +365,7 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
                 # print(f"Added: {new_decoy}")
 
         else:
-            print("Handle Randomly by doing whatever")
+            # print("Handle Randomly by doing whatever")
             for i in range(0, AMOUNT_OF_DECOYS):
                 new_decoy = regular_handler(real_password)
                 # print(f"Generated: {new_decoy}")
@@ -380,9 +380,9 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
                     counter += 1
 
                 decoy_passwords.append(new_decoy)
-                print(f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}")
+                # print(f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}")
     # Debugging
-    print(*decoy_passwords, sep=" | ")
+    # print(*decoy_passwords, sep=" | ")
 
     # Return the array for the other functions to use
     return decoy_passwords
