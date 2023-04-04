@@ -192,7 +192,7 @@ FLASK_SECRET=secret
 USE_MAILSLURP=False
 MAILSLURP_API_KEY=
 MAILSLURP_SENDER_EMAIL_ID=
-MAILSLURP_RECIEVER_EMAIL_ID=
+MAILSLURP_RECEIVER_EMAIL_ID=
 ```
 * `DB_PASSWORD` is the password to the database.
 * `DB_USER` (optional) It defines the database user. The default is set to `root`. This variable is optional.
@@ -210,7 +210,7 @@ MailSlurp can be used to send the test emails.
 
 `MAILSLURP_API_KEY` refers to the 64 character long string. Its marked as `API KEY` on the dashboard.
 `MAILSLURP_SENDER_EMAIL_ID` refers to the Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
-`MAILSLURP_RECIEVER_EMAIL_ID` refers to an Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
+`MAILSLURP_RECEIVER_EMAIL_ID` refers to an Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
 
 Because free MailSlurp accounts have 1 permanent Inbox ID, it's easier to set the sender as that ID.
 However, it doesn't really matter.
