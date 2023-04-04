@@ -41,12 +41,12 @@ def __mailslurp_send_email(subject_string: str, message_string: str):
         load_dotenv()  # Load the secrets from the .env file
         api_key = os.environ.get("MAILSLURP_API_KEY")
         sender_id = os.environ.get("MAILSLURP_SENDER_EMAIL_ID")
-        receiver_id = os.environ.get("MAILSLURP_RECIEVER_EMAIL_ID")
+        receiver_id = os.environ.get("MAILSLURP_RECEIVER_EMAIL_ID")
 
         # Check for the keys
         assert "MAILSLURP_API_KEY" in os.environ
         assert "MAILSLURP_SENDER_EMAIL_ID" in os.environ
-        assert "MAILSLURP_RECIEVER_EMAIL_ID" in os.environ
+        assert "MAILSLURP_RECEIVER_EMAIL_ID" in os.environ
 
         # create a mailslurp configuration
         configuration = mailslurp_client.Configuration()
