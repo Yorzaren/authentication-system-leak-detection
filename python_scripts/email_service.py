@@ -120,7 +120,7 @@ def send_email(msg_type: int, account_name: str, using_mailslurp=False):
         print(f"Mail system has received notice: Continued Bad Login Attempts from {account_name}")
         email_title = f"[System] Account named {account_name} continues their bad login attempts"
         message = (
-            f"Dear Admin,\nThe account named {account_name} continues their attempt to get into the locked account."
+            f"Dear Admin,\nThe account named {account_name} continues their attempt to get into the locked account. "
             f"No action necessary. However, you should continue to watch for suspicious activity across the system."
         )
     elif msg_type == 4:
