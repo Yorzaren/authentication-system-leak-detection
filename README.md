@@ -246,7 +246,21 @@ python cmdline_driver.py
 
 ### Start Site Using Flask
 ```cmd
-flask run
+flask --app web run
+```
+
+or 
+
+**Windows:**
+```cmd
+win_start_site.bat
+```
+
+or 
+
+**Linux:**
+```cmd
+lin_start_site.sh
 ```
 
 The database has one default account to get you started. 
