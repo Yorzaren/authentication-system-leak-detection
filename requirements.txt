@@ -6,7 +6,7 @@ mailslurp-client==15.16.22 # https://www.mailslurp.com/ - This is for sending te
 aiosmtpd # Local mail server for testing
 mysql-connector-python==8.0.32 # MySQL Database connector
 
-nltk==3.8.1 # This is for language processing in password_analysis
+nltk==3.9 # This is for language processing in password_analysis
 git+https://github.com/casics/nostril.git # This is for language processing in password_analysis - ver @fbc0c91249283a9fbc9036206391ce1138826fd3
 
 Flask==2.3.2
