@@ -1,7 +1,7 @@
 python-dotenv==1.2.2 # .env files to prevent credential leaks during testing
 colorama==0.4.6 # https://pypi.org/project/colorama/ - This allows for colorful print messages
 
-mailslurp-client==17.2.0 # https://www.mailslurp.com/ - This is for sending test emails in email_service
+mailslurp-client==17.3.0 # https://www.mailslurp.com/ - This is for sending test emails in email_service
 
 aiosmtpd # Local mail server for testing
 mysql-connector-python==9.6.0 # MySQL Database connector
