@@ -1,12 +1,12 @@
 python-dotenv==1.2.2 # .env files to prevent credential leaks during testing
 colorama==0.4.6 # https://pypi.org/project/colorama/ - This allows for colorful print messages
 
-mailslurp-client==17.2.0 # https://www.mailslurp.com/ - This is for sending test emails in email_service
+mailslurp-client==17.3.0 # https://www.mailslurp.com/ - This is for sending test emails in email_service
 
 aiosmtpd # Local mail server for testing
 mysql-connector-python==9.6.0 # MySQL Database connector
 
-nltk==3.9.3 # This is for language processing in password_analysis
+nltk==3.9.4 # This is for language processing in password_analysis
 git+https://github.com/casics/nostril.git # This is for language processing in password_analysis - ver @fbc0c91249283a9fbc9036206391ce1138826fd3
 
 Flask==3.1.3
