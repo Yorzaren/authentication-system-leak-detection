@@ -1,7 +1,4 @@
 # authentication-system-leak-detection
-
-[![GitHub Super-Linter](https://github.com/Yorzaren/authentication-system-leak-detection/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
-
 ## Table of Contents
 1. [About](#about)
 2. [Contributors](#contributors)
@@ -18,7 +15,7 @@ This is a work in progress.
 
 
 The goal is to detect a password database breach by hiding the user's password with a bunch of decoy passwords.
-If an attacker gets the password database, they should have a hard time figuring out which of the many passwords associated with a single account is the correct password. 
+If an attacker gets the password database, they should have a hard time figuring out which of the many passwords associated with a single account is the correct password.
 If they use a decoy password while attempting to get into a user's account, it will alert the admin to a possible database leak.
 
 
@@ -32,7 +29,7 @@ If they use a decoy password while attempting to get into a user's account, it w
 6. Provide a mechanism of notification if false password is used compared to incorrect entry or simple guess.
 7. Runs on Linux.
 
-## Contributors 
+## Contributors
 This repository is a part of Senior Project where teams are assigned a real world client to create a solution for their problem(s) based off of their requirements.
 
 **Password F.M.** is the name of our team.
@@ -44,7 +41,7 @@ This repository is a part of Senior Project where teams are assigned a real worl
 * J. Lewis ([jalewis7](https://github.com/jalewis7))
 
 ## Installation
-The project is intended Linux based systems. 
+The project is intended Linux based systems.
 
 ### Requirements
 - Git
@@ -53,10 +50,10 @@ The project is intended Linux based systems.
 - MySQL (or MariaDB)
 
 ### Install Git, Pip, MySQL
-These instructions are for Ubuntu 22.04.2 LTS but might work for other versions. 
+These instructions are for Ubuntu 22.04.2 LTS but might work for other versions.
 
 #### Linux - Install Git, Pip, MySQL
-You should already have Python3. 
+You should already have Python3.
 
 If you don't already have these, install them now:
 ```cmd
@@ -70,16 +67,16 @@ apt install python3-pip
 ```cmd
 apt install mysql-server
 ```
-Optional: 
+Optional:
 
-Because there's a bug with MySQL installation, you may also use MariaDB instead. 
+Because there's a bug with MySQL installation, you may also use MariaDB instead.
 If you do, replace mysql command with mariadb.
 
 ```cmd
 apt install mariadb-server
 ```
 
-Note: You can quickly set the MariaDB root password using in the MariaDB console: 
+Note: You can quickly set the MariaDB root password using in the MariaDB console:
 ```cmd
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'; flush privileges; exit; 
 ```
@@ -107,9 +104,9 @@ You can download Python from <https://www.python.org/>.
 
 **Note:** When you install Python add it to the PATH and install pip.
 
-You can download MySQL from <https://dev.mysql.com/downloads/>. 
+You can download MySQL from <https://dev.mysql.com/downloads/>.
 
-The easiest way is to get MySQL Installer. You only need to install the database. When using the installer, you are given a prompt to configure the database with a password. 
+The easiest way is to get MySQL Installer. You only need to install the database. When using the installer, you are given a prompt to configure the database with a password.
 
 
 **_Make sure you remember the password for later._**
@@ -165,7 +162,7 @@ source [path of initialize_database.sql]
 
 #### Windows - Initialize the Database
 <!-- textlint-disable -->
-Find and run the MySQL Command Line Client. 
+Find and run the MySQL Command Line Client.
 <!-- textlint-enable -->
 
 Enter the password.
@@ -199,12 +196,12 @@ MAILSLURP_RECEIVER_EMAIL_ID=
 * `RANDOM_NOISE` (optional) It is a random string. Do NOT change this value after adding accounts.
 * `RANDOM_NUMBER` (optional) It is a random int you can set. It is optional. Do NOT change this value after adding accounts.
   * If you change `RANDOM_NOISE` or `RANDOM_NUMBER` later on, the system will not be able to locate the correct passwords for accounts.
-* `FLASK_SECRET` is a random string. It can NOT be left undefined. 
+* `FLASK_SECRET` is a random string. It can NOT be left undefined.
 * `USE_MAILSLURP` (optional) See below for more info
 
 The [MailSlurp](https://www.mailslurp.com/) variables are optional. The system automatically sends test emails to the local aiosmtpd server.
 
-If you wish to use MailSlurp, set `USE_MAILSLURP` to `True`. 
+If you wish to use MailSlurp, set `USE_MAILSLURP` to `True`.
 
 MailSlurp can be used to send the test emails.
 
@@ -249,21 +246,21 @@ python cmdline_driver.py
 flask --app web run
 ```
 
-or 
+or
 
 **Windows:**
 ```cmd
 win_start_site.bat
 ```
 
-or 
+or
 
 **Linux:**
 ```cmd
 lin_start_site.sh
 ```
 
-The database has one default account to get you started. 
+The database has one default account to get you started.
 
 You can access it using the following information:
 
@@ -290,14 +287,34 @@ You can test for coverage using:
 pytest --cov --cov-report=html
 ```
 
-[![Code style: black](https://img.shields.io/badge/Code%20Style-Black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
+### Linter and Format
 
-
-```text
-isort --profile black .
-black --line-length 120 .
-flake8 --append-config=.github/linters/.flake8
+```commandline
+ruff check . --config .github/linters/.ruff.toml
+ruff format . --config .github/linters/.ruff.toml
 ```
+
+### Install
+
+```commandline
+pip install -r requirements.txt -r requirements-dev.txt
+```
+
+### Update Requirements
+
+Update: Packages
+
+```commandline
+pip-compile --generate-hashes --upgrade requirements.in
+pip-compile --allow-unsafe --generate-hashes -c requirements.txt requirements-dev.in -o requirements-dev.txt
+```
+
+Sync Environment:
+
+```commandline
+pip-sync requirements.txt requirements-dev.txt
+```
+
 
 ### JavaScript
 [![Tested with QUnit](https://img.shields.io/badge/Tested%20with-QUnit-green?style=for-the-badge)](https://qunitjs.com/)
