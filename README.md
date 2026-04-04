@@ -290,14 +290,34 @@ You can test for coverage using:
 pytest --cov --cov-report=html
 ```
 
-[![Code style: black](https://img.shields.io/badge/Code%20Style-Black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
+### Linter and Format
 
-
-```text
-isort --profile black .
-black --line-length 120 .
-flake8 --append-config=.github/linters/.flake8
+```commandline
+ruff check . --config .github/linters/.ruff.toml
+ruff format . --config .github/linters/.ruff.toml
 ```
+
+### Install
+
+```commandline
+pip install -r requirements.txt -r requirements-dev.txt
+```
+
+### Update Requirements
+
+Update: Packages
+
+```commandline
+pip-compile --generate-hashes --upgrade requirements.in
+pip-compile --allow-unsafe --generate-hashes -c requirements.txt requirements-dev.in -o requirements-dev.txt
+```
+
+Sync Environment:
+
+```commandline
+pip-sync requirements.txt requirements-dev.txt
+```
+
 
 ### JavaScript
 [![Tested with QUnit](https://img.shields.io/badge/Tested%20with-QUnit-green?style=for-the-badge)](https://qunitjs.com/)
