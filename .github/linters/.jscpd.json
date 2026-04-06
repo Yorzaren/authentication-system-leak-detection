@@ -1,10 +1,4 @@
 {
-  "threshold": 40,
-  "reporters": [
-    "consoleFull"
-  ],
-  "ignore": [
-    "**/__snapshots__/**"
-  ],
-  "absolute": true
+  "threshold": 3,
+  "ignore": ["**/tests/data/**"]
 }
