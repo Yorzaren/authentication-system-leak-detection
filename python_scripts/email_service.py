@@ -25,7 +25,8 @@ msg_type:
  - 4 for when the system has more than one decoy password used across users
 account_name: string
 
- """
+"""
+
 import json  # To help read the mailslurp error message
 import os  # Used to get the .env file
 import smtplib
@@ -61,12 +62,22 @@ def __mailslurp_send_email(subject_string: str, message_string: str):
             # print(admin_email)
 
             # get smtp imap access
-            smtp_access = inbox_controller.get_imap_smtp_access(inbox_id=system_email.id)
+            smtp_access = inbox_controller.get_imap_smtp_access(
+                inbox_id=system_email.id
+            )
             msg = "Subject: " + subject_string + "\r\n\r\n" + message_string
 
-            with SMTP(host=smtp_access.smtp_server_host, port=smtp_access.smtp_server_port) as smtp:
-                smtp.login(user=smtp_access.smtp_username, password=smtp_access.smtp_password)
-                smtp.sendmail(from_addr=system_email.email_address, to_addrs=[admin_email.email_address], msg=msg)
+            with SMTP(
+                host=smtp_access.smtp_server_host, port=smtp_access.smtp_server_port
+            ) as smtp:
+                smtp.login(
+                    user=smtp_access.smtp_username, password=smtp_access.smtp_password
+                )
+                smtp.sendmail(
+                    from_addr=system_email.email_address,
+                    to_addrs=[admin_email.email_address],
+                    msg=msg,
+                )
                 smtp.quit()
             print("Successfully sent email using MailSlurp")
     except AssertionError:
@@ -74,12 +85,17 @@ def __mailslurp_send_email(subject_string: str, message_string: str):
     except mailslurp_client.ApiException as x:
         # The mailslurp_client.ApiException returns a body with json format
         # Read back the message to know which is the issue.
-        print("MailSlurp variables are misconfigured.\n" + str(json.loads(x.body)["message"]))
+        print(
+            "MailSlurp variables are misconfigured.\n"
+            + str(json.loads(x.body)["message"])
+        )
 
 
 # Requires you to use commandline to open the port
 # python -m aiosmtpd -n -l localhost:1025
-def __localhost_send_email(sender_email: str, recipient_email: str, email_subject: str, email_body: str):
+def __localhost_send_email(
+    sender_email: str, recipient_email: str, email_subject: str, email_body: str
+):
     sender = sender_email
     receivers = recipient_email
 
@@ -95,7 +111,9 @@ def __localhost_send_email(sender_email: str, recipient_email: str, email_subjec
             print("Successfully sent email using the local aiosmtpd server")
     except Exception as e:
         print(e)
-        print("Error: Cant send email\nIf using localhost run:\npython -m aiosmtpd -n -l localhost:1025")
+        print(
+            "Error: Cant send email\nIf using localhost run:\npython -m aiosmtpd -n -l localhost:1025"
+        )
 
 
 def send_email(msg_type: int, account_name: str, using_mailslurp=False):
@@ -103,7 +121,9 @@ def send_email(msg_type: int, account_name: str, using_mailslurp=False):
     message = "default message"
 
     if msg_type == 1:
-        print(f"Mail system has received notice: User Account Locked for {account_name}")
+        print(
+            f"Mail system has received notice: User Account Locked for {account_name}"
+        )
         email_title = f"[System] Account named {account_name} as been locked for suspicious activity"
         message = (
             f"Dear Admin,\nThe account named {account_name} has made 3 bad attempts to get into their account. "
@@ -111,21 +131,29 @@ def send_email(msg_type: int, account_name: str, using_mailslurp=False):
         )
     elif msg_type == 2:
         print("Mail system has received notice: System Breach")
-        email_title = f"[IMPORTANT ALERT] A decoy password has been used for {account_name}"
+        email_title = (
+            f"[IMPORTANT ALERT] A decoy password has been used for {account_name}"
+        )
         message = (
             f"Dear Admin,\nA decoy password for user {account_name} has been used. The database might be breached. "
             f"You should take action to lock the system."
         )
     elif msg_type == 3:
-        print(f"Mail system has received notice: Continued Bad Login Attempts from {account_name}")
-        email_title = f"[System] Account named {account_name} continues their bad login attempts"
+        print(
+            f"Mail system has received notice: Continued Bad Login Attempts from {account_name}"
+        )
+        email_title = (
+            f"[System] Account named {account_name} continues their bad login attempts"
+        )
         message = (
             f"Dear Admin,\nThe account named {account_name} continues their attempt to get into the locked account. "
             f"No action necessary. However, you should continue to watch for suspicious activity across the system."
         )
     elif msg_type == 4:
         print("Mail system has received notice: System Breach")
-        email_title = "[VERY IMPORTANT ALERT] More than one account had their decoy password used"
+        email_title = (
+            "[VERY IMPORTANT ALERT] More than one account had their decoy password used"
+        )
         message = (
             "Dear Admin,\nMultiple decoy passwords across they system has been used. The system has auto-locked every "
             "account including the admin accounts."
@@ -135,4 +163,6 @@ def send_email(msg_type: int, account_name: str, using_mailslurp=False):
         __mailslurp_send_email(email_title, message)
     else:
         # sender_email, recipient_email are made up because they don't really exist beyond the local aiosmtpd server
-        __localhost_send_email("no-reply@example.com", "admin@example.com", email_title, message)
+        __localhost_send_email(
+            "no-reply@example.com", "admin@example.com", email_title, message
+        )

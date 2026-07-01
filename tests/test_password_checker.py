@@ -46,17 +46,38 @@ class TestPasswordCheckerFunctions:
         assert password_checker.count_digits("SDF213DSDF") == 3
 
     def test_count_special_char(self):
-        assert password_checker.count_special_char("-?rC5z}*") == 1  # Only thing allowed is *
-        assert password_checker.count_special_char("!@#$%^&*") == 8  # Matches all the allowed special chars
-        assert password_checker.count_special_char("!@#E3b$%^&*") == 8  # Matches all the allowed special chars
+        assert (
+            password_checker.count_special_char("-?rC5z}*") == 1
+        )  # Only thing allowed is *
+        assert (
+            password_checker.count_special_char("!@#$%^&*") == 8
+        )  # Matches all the allowed special chars
+        assert (
+            password_checker.count_special_char("!@#E3b$%^&*") == 8
+        )  # Matches all the allowed special chars
 
     def test_has_forbidden_characters(self):
-        assert password_checker.has_forbidden_characters("你123123DS好ca2@$%@346,.") is True  # 你
-        assert password_checker.has_forbidden_characters("sdfkjsdēf398njdssdifu83!@#ds") is True  # ē
-        assert password_checker.has_forbidden_characters("32SDJАF9JDH29N0") is True  # А is a cyrillic letter A
-        assert password_checker.has_forbidden_characters("123.4567") is True  # dot is not in the list
+        assert (
+            password_checker.has_forbidden_characters("你123123DS好ca2@$%@346,.")
+            is True
+        )  # 你
+        assert (
+            password_checker.has_forbidden_characters("sdfkjsdēf398njdssdifu83!@#ds")
+            is True
+        )  # ē
+        assert (
+            password_checker.has_forbidden_characters("32SDJАF9JDH29N0") is True
+        )  # А is a cyrillic letter A
+        assert (
+            password_checker.has_forbidden_characters("123.4567") is True
+        )  # dot is not in the list
         assert password_checker.has_forbidden_characters("213AD!sxd你") is True  # 你
-        assert password_checker.has_forbidden_characters("123#%Txrte2323yrtyhrtyhrtyrtyrty3") is False  # This is fine
+        assert (
+            password_checker.has_forbidden_characters(
+                "123#%Txrte2323yrtyhrtyhrtyrtyrty3"
+            )
+            is False
+        )  # This is fine
 
     def test_has_banned_words(self):
         assert password_checker.has_banned_words("password") is True
@@ -77,8 +98,12 @@ class TestPasswordCheckerFunctions:
         ]
 
         for i in range(len(test)):
-            outcome = password_checker.password_valid_to_policy_rules(test[i], debugging=True)
+            outcome = password_checker.password_valid_to_policy_rules(
+                test[i], debugging=True
+            )
             assert outcome is False  # All the passwords in test are going to fail
 
         # This is from valid_passwords.txt
-        assert password_checker.password_valid_to_policy_rules("KeyboardW@rr10r") is True
+        assert (
+            password_checker.password_valid_to_policy_rules("KeyboardW@rr10r") is True
+        )

@@ -25,7 +25,12 @@ database_user = os.environ.get("DB_USER")
 if database_user is None:  # If it's not defined, default to root
     database_user = "root"
 
-db_config = {"user": database_user, "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
+db_config = {
+    "user": database_user,
+    "password": database_password,
+    "host": "127.0.0.1",
+    "database": "passwordKeepers",
+}
 
 """
 Admins:
@@ -47,7 +52,9 @@ def __db_connection_error(err) -> None:  # pragma: no cover
     if err.errno == 1049:  # Can't find the database
         print("Make sure you have created the database by using the script.")
     elif err.errno == 1045:
-        print("You haven't passed the password for the database from the .env file OR the password is incorrect.")
+        print(
+            "You haven't passed the password for the database from the .env file OR the password is incorrect."
+        )
     else:
         print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
 

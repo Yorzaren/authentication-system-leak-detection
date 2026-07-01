@@ -80,8 +80,12 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
     policy_diff_special = special_char_count - password_checker.MIN_AMOUNT_SPECIAL_CHAR
 
     # Track info about the string composition
-    max_uppercase_string_length = len(max(split_uppercase_strings(real_password), key=len))
-    max_lowercase_string_length = len(max(split_lowercase_strings(real_password), key=len))
+    max_uppercase_string_length = len(
+        max(split_uppercase_strings(real_password), key=len)
+    )
+    max_lowercase_string_length = len(
+        max(split_lowercase_strings(real_password), key=len)
+    )
     max_capital_string_length = len(max(split_capital_strings(real_password), key=len))
     max_digital_string_length = len(max(split_digit_strings(real_password), key=len))
     count_uppercase_strings = len(split_uppercase_strings(real_password))
@@ -91,7 +95,12 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
 
     # Debugging information
     if debugging is True:
-        print(f"{Back.BLACK}password: " + f"{Fore.GREEN}" + real_password + f"{Style.RESET_ALL}")
+        print(
+            f"{Back.BLACK}password: "
+            + f"{Fore.GREEN}"
+            + real_password
+            + f"{Style.RESET_ALL}"
+        )
 
         if DEBUG_GENERAL is True:
             print(f"{Back.CYAN}{Fore.BLACK}General Analysis:{Style.RESET_ALL}")
@@ -132,9 +141,13 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
 
         # Change the color based off the answer
         if is_random_string(real_password):
-            print(f"is_likely_random_string: {Fore.GREEN}{is_random_string(real_password)}{Style.RESET_ALL}")
+            print(
+                f"is_likely_random_string: {Fore.GREEN}{is_random_string(real_password)}{Style.RESET_ALL}"
+            )
         else:
-            print(f"is_likely_random_string: {Fore.RED}{is_random_string(real_password)}{Style.RESET_ALL}")
+            print(
+                f"is_likely_random_string: {Fore.RED}{is_random_string(real_password)}{Style.RESET_ALL}"
+            )
         print(f"{Back.BLACK}PASSWORD: {Fore.GREEN}{real_password}{Style.RESET_ALL}")
 
         print("\n|****************************************************|\n")
@@ -173,7 +186,9 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
             ANALYSIS_SCORE += 2
 
         if debugging is True:
-            print(f"ANALYSIS_SCORE--After adding bonuses: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}")
+            print(
+                f"ANALYSIS_SCORE--After adding bonuses: {Fore.GREEN}{ANALYSIS_SCORE}{Style.RESET_ALL}"
+            )
 
         # If it barely meets the policy is probably not random.
         if policy_diff_upper == 0:
@@ -214,7 +229,9 @@ def password_analysis_randomness(real_password, debugging=False) -> bool:
     if debugging is True:
         print(f"IsRandom: {is_random}")
 
-        print("\n|******************************************************************|\n")
+        print(
+            "\n|******************************************************************|\n"
+        )
 
     return is_random
 
@@ -280,21 +297,29 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
         print(f"Real Password: {Back.BLACK}{real_password}{Style.RESET_ALL}")
         # Generate X amount of decoys - The string is assumed to be very random.
         # Therefore, we can just generate the max amount of decoys requested.
-        for i in range(0, AMOUNT_OF_DECOYS):  # The number is 10 to generate 10 decoy passwords
+        for i in range(
+            0, AMOUNT_OF_DECOYS
+        ):  # The number is 10 to generate 10 decoy passwords
             # Generate the potential decoy
             new_decoy = random_corruption(real_password, int(len(real_password) / 2))
             # Check that the decoy follows the policy, if it doesn't keep trying until we get one.
             while password_checker.password_valid_to_policy_rules(new_decoy) is False:
-                new_decoy = random_corruption(real_password, int(len(real_password) / 2))
+                new_decoy = random_corruption(
+                    real_password, int(len(real_password) / 2)
+                )
             # Shouldn't be needed, but just incase, regen if its already in the decoy password array.
             while new_decoy in decoy_passwords:
-                new_decoy = random_corruption(real_password, int(len(real_password) / 2))
+                new_decoy = random_corruption(
+                    real_password, int(len(real_password) / 2)
+                )
             # If it passed the tests, then add it to the array.
             decoy_passwords.append(new_decoy)
 
     # String is not really random, so we have to handle it carefully
     else:
-        print(f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} is not random.{Style.RESET_ALL}")
+        print(
+            f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} is not random.{Style.RESET_ALL}"
+        )
 
         # Check if it has a series of 4 digits in a row, because it might be a date or year
         if has_x_digits_in_a_row(real_password, 4):
@@ -380,7 +405,9 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
                     counter += 1
 
                 decoy_passwords.append(new_decoy)
-                print(f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}")
+                print(
+                    f"Added: {new_decoy} - L_Distance: {edit_distance(real_password, new_decoy)}"
+                )
     # Debugging
     print(*decoy_passwords, sep=" | ")
 
@@ -411,7 +438,14 @@ if __name__ == "__main__":
         "ratiop1us%plusL",
     ]
     issues = ["ABCD1234@me!"]
-    issues_r = ["ZYx@6z&W%aDb", "D32$jr#Q^VpD", "9Sk5yRyY2^8D", "Cq6#pBkyddv2", "QydZx2qB&#Liz@", "5Brom2n*J$%Fsz"]
+    issues_r = [
+        "ZYx@6z&W%aDb",
+        "D32$jr#Q^VpD",
+        "9Sk5yRyY2^8D",
+        "Cq6#pBkyddv2",
+        "QydZx2qB&#Liz@",
+        "5Brom2n*J$%Fsz",
+    ]
     pass_test = []
     with open("../example_passwords/valid_passwords.txt") as file:
         for line in file:
@@ -422,7 +456,9 @@ if __name__ == "__main__":
         try:
             generate_decoy_passwords(s)
         except ValueError:
-            print("You can't use this password because it doesn't conform to the policy")
+            print(
+                "You can't use this password because it doesn't conform to the policy"
+            )
 
     """try:
         generate_decoy_passwords("BAD PASSWORD")

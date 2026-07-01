@@ -13,6 +13,7 @@ Before the first run of the code.
     OR have aiosmtpd running by using: python -m aiosmtpd -n -l localhost:1025
 
 """
+
 import os
 import random
 
@@ -35,7 +36,9 @@ colorama_init()
 USE_MAILSLURP = os.environ.get("USE_MAILSLURP")
 
 # Define it as False if it's not provided by the .env
-if USE_MAILSLURP is None or USE_MAILSLURP == "False" or USE_MAILSLURP == "false":  # pragma: no cover
+if (
+    USE_MAILSLURP is None or USE_MAILSLURP == "False" or USE_MAILSLURP == "false"
+):  # pragma: no cover
     USE_MAILSLURP = False
 else:  # Accept anything that isn't false as an agreement to use MailSlurp
     USE_MAILSLURP = True  # pragma: no cover
@@ -79,10 +82,23 @@ def development_decoy_generator(username: str, password: str) -> list:
     allows you to see the real password in the database.
     :return: list of filler
     """
-    array_decoys = ["decoy1", "decoy2", "decoy3", "decoy4", "decoy5", "decoy6", "decoy7", "decoy8", "decoy9", "decoy10"]
+    array_decoys = [
+        "decoy1",
+        "decoy2",
+        "decoy3",
+        "decoy4",
+        "decoy5",
+        "decoy6",
+        "decoy7",
+        "decoy8",
+        "decoy9",
+        "decoy10",
+    ]
     real_placement = __hide_password(username)
     random.shuffle(array_decoys)  # Randomize the array
-    array_decoys.insert(real_placement, password)  # Place the real password in the array
+    array_decoys.insert(
+        real_placement, password
+    )  # Place the real password in the array
     return array_decoys
 
 
@@ -98,7 +114,9 @@ def __create_password_array(username: str, password: str) -> list:
     array_decoys = generate_decoy_passwords(password)  # Generate decoys
     real_placement = __hide_password(username)
     random.shuffle(array_decoys)  # Randomize the array
-    array_decoys.insert(real_placement, password)  # Place the real password in the array
+    array_decoys.insert(
+        real_placement, password
+    )  # Place the real password in the array
     return array_decoys
 
 
@@ -121,7 +139,9 @@ def is_authenticated(username: str, input_password: str) -> bool:
             # The real password was used
             if input_password == real_password:
                 # The password is the real password
-                __print_system_auth_resp(f"Signed in as {Fore.CYAN}{username}{Fore.RESET}.")
+                __print_system_auth_resp(
+                    f"Signed in as {Fore.CYAN}{username}{Fore.RESET}."
+                )
 
                 # Reset the fail counter to zero
                 db_controller.reset_failed_attempts(username)
@@ -131,7 +151,9 @@ def is_authenticated(username: str, input_password: str) -> bool:
             # A decoy was used
             elif input_password in user_passwords:
                 # The password is a decoy
-                __print_system_auth_resp(f"DECOY USED for {Fore.CYAN}{username}{Fore.RESET}.")
+                __print_system_auth_resp(
+                    f"DECOY USED for {Fore.CYAN}{username}{Fore.RESET}."
+                )
 
                 # Increase fails counter
                 db_controller.increment_failed_attempts(username)
@@ -168,10 +190,14 @@ def is_authenticated(username: str, input_password: str) -> bool:
                     return False
                 else:
                     count = db_controller.get_failed_count(username)
-                    __print_system_auth_resp("Wrong password - Wrong Attempt Count: " + str(count))
+                    __print_system_auth_resp(
+                        "Wrong password - Wrong Attempt Count: " + str(count)
+                    )
                     return False
         else:
-            __print_system_auth_resp("Your account was locked for your safety. Contact an admin to unlock it.")
+            __print_system_auth_resp(
+                "Your account was locked for your safety. Contact an admin to unlock it."
+            )
 
             # Increase fail counter
             db_controller.increment_failed_attempts(username)
@@ -182,11 +208,19 @@ def is_authenticated(username: str, input_password: str) -> bool:
             return False
     # Username doesn't exist
     else:
-        __print_system_auth_resp(f"Error: Username {Fore.CYAN}{username}{Fore.RESET} doesn't exist.")
+        __print_system_auth_resp(
+            f"Error: Username {Fore.CYAN}{username}{Fore.RESET} doesn't exist."
+        )
         return False
 
 
-def add_user_account(admin_name: str, auth_password: str, username: str, new_user_password: str, add_as_admin=False):
+def add_user_account(
+    admin_name: str,
+    auth_password: str,
+    username: str,
+    new_user_password: str,
+    add_as_admin=False,
+):
     """
     When an admin requests it, they can create a new user with password of their choosing.
     :param admin_name: username of the admin account adding the new user
@@ -197,7 +231,9 @@ def add_user_account(admin_name: str, auth_password: str, username: str, new_use
     :return: None
     """
 
-    if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
+    if db_controller.is_admin(admin_name) and is_authenticated(
+        admin_name, auth_password
+    ):
         print(
             f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
             f"\nAttempting to add account..."
@@ -208,18 +244,26 @@ def add_user_account(admin_name: str, auth_password: str, username: str, new_use
                 print(f"Username: {Fore.CYAN}{username}{Fore.RESET} is unique.")
                 if password_valid_to_policy_rules(new_user_password):
                     # Generate fake passwords
-                    password_array = __create_password_array(username, new_user_password)
+                    password_array = __create_password_array(
+                        username, new_user_password
+                    )
                     db_controller.add_user(username, password_array, add_as_admin)
                     print(f"Success: Account named {username} had been created.")
                     return True  # Success
                 else:
-                    print(f"Error: Password {Fore.CYAN}{new_user_password}{Fore.RESET} didn't meet standards.")
+                    print(
+                        f"Error: Password {Fore.CYAN}{new_user_password}{Fore.RESET} didn't meet standards."
+                    )
                     return False
         else:
-            print(f"Error: Username {Fore.CYAN}{username}{Fore.RESET} already exists in the system.")
+            print(
+                f"Error: Username {Fore.CYAN}{username}{Fore.RESET} already exists in the system."
+            )
             return False
     else:
-        print(f"FAILURE: The requesting account, {admin_name} is NOT an admin OR wrong password.")
+        print(
+            f"FAILURE: The requesting account, {admin_name} is NOT an admin OR wrong password."
+        )
         return False
 
 
@@ -232,14 +276,21 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
     :return: action_successful: A boolean telling if the action was completed or if where was an error
     """
     # Check if the requesting account is the admin and is authenticated
-    if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
+    if db_controller.is_admin(admin_name) and is_authenticated(
+        admin_name, auth_password
+    ):
         print(
             f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin."
             f"\nAttempting to delete account..."
         )
         if db_controller.user_exists(username):
-            if db_controller.is_admin(username) is True and db_controller.is_only_admin() is True:
-                print(f"FAILURE: You can't delete {username} because they are the only admin.")
+            if (
+                db_controller.is_admin(username) is True
+                and db_controller.is_only_admin() is True
+            ):
+                print(
+                    f"FAILURE: You can't delete {username} because they are the only admin."
+                )
                 return False
             # Delete the user if they exist
             db_controller.delete_user(username)
@@ -249,7 +300,9 @@ def delete_user(admin_name: str, auth_password: str, username: str) -> bool:
             print("Error: The user you have requested to delete doesn't exist.")
             return False
     else:
-        print(f"FAILURE: The requesting account, {admin_name} is NOT an admin OR Wrong Password.")
+        print(
+            f"FAILURE: The requesting account, {admin_name} is NOT an admin OR Wrong Password."
+        )
         return False
 
 
@@ -262,7 +315,9 @@ def unlock_account(admin_name: str, auth_password: str, username: str) -> bool:
     :return: action_successful: A boolean telling if the action was completed or if where was an error
     """
     # Check if the requesting account is the admin and is authenticated
-    if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
+    if db_controller.is_admin(admin_name) and is_authenticated(
+        admin_name, auth_password
+    ):
         print("Admin is really admin.")
         if db_controller.user_exists(username):
             # Unlock the account
@@ -273,7 +328,9 @@ def unlock_account(admin_name: str, auth_password: str, username: str) -> bool:
             print("The user account you have requested to unlock doesn't exist.")
             return False
     else:
-        print(f"FAILURE: The requesting account, {admin_name} is NOT an admin OR Wrong Password.")
+        print(
+            f"FAILURE: The requesting account, {admin_name} is NOT an admin OR Wrong Password."
+        )
         return False
 
 

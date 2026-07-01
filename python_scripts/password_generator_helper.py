@@ -44,7 +44,12 @@ def random_date(month_first=True) -> str:
     ):
         day_number = randint(1, 31)
     # Months with 30 days
-    elif month_number == "04" or month_number == "06" or month_number == "09" or month_number == "11":
+    elif (
+        month_number == "04"
+        or month_number == "06"
+        or month_number == "09"
+        or month_number == "11"
+    ):
         day_number = randint(1, 30)
     else:  # Feb
         day_number = randint(1, 28)  # 28 days
@@ -181,7 +186,9 @@ def convert_4_digits(string: str, corruption_type=1):
     # 1 is MM-DD numbers (default)
     # 2 is DD-MM
     # 3 is XXXX random numbers
-    set_of_4_digits = re.findall(r"\d{4}", string)  # If there's 4 digits near each other, group them into the array
+    set_of_4_digits = re.findall(
+        r"\d{4}", string
+    )  # If there's 4 digits near each other, group them into the array
 
     if len(set_of_4_digits) > 0:
         target_set_of_digits = choice(set_of_4_digits)  # Select from the array
@@ -196,9 +203,13 @@ def convert_4_digits(string: str, corruption_type=1):
                 string = random_date().join(string.rsplit(target_set_of_digits, 1))
         elif corruption_type == 2:  # Replace it with DD-MM numbers
             if randint(0, 1) == 0:
-                string = string.replace(target_set_of_digits, random_date(month_first=False), 1)
+                string = string.replace(
+                    target_set_of_digits, random_date(month_first=False), 1
+                )
             else:  # Replace last occurrence
-                string = random_date(month_first=False).join(string.rsplit(target_set_of_digits, 1))
+                string = random_date(month_first=False).join(
+                    string.rsplit(target_set_of_digits, 1)
+                )
         else:  # Replace it with random numbers to stop it from being to predictably a date
             if randint(0, 1) == 0:
                 string = string.replace(target_set_of_digits, random_4_numbers(), 1)
@@ -209,26 +220,44 @@ def convert_4_digits(string: str, corruption_type=1):
 
 
 def random_leet(string: str) -> str:
-    leetable_positions = [pos for pos, char in enumerate(string) if char in LEETABLE_CHARS]
+    leetable_positions = [
+        pos for pos, char in enumerate(string) if char in LEETABLE_CHARS
+    ]
     if len(leetable_positions) > 0:
         random_place = choice(leetable_positions)
-        string = string[:random_place] + leet_letters(string[random_place]) + string[random_place + 1 :]
+        string = (
+            string[:random_place]
+            + leet_letters(string[random_place])
+            + string[random_place + 1 :]
+        )
     return string
 
 
 def random_symbol_change(string: str) -> str:
-    symbol_positions = [pos for pos, char in enumerate(string) if char in password_checker.ALLOWED_SPECIAL_CHAR]
+    symbol_positions = [
+        pos
+        for pos, char in enumerate(string)
+        if char in password_checker.ALLOWED_SPECIAL_CHAR
+    ]
     if len(symbol_positions) > 0:
         random_place = choice(symbol_positions)
-        string = string[:random_place] + create_random_symbol() + string[random_place + 1 :]
+        string = (
+            string[:random_place] + create_random_symbol() + string[random_place + 1 :]
+        )
     return string
 
 
 def random_case_change(string: str) -> str:
-    letter_positions = [pos for pos, char in enumerate(string) if char in alphabet_string.ascii_letters]
+    letter_positions = [
+        pos for pos, char in enumerate(string) if char in alphabet_string.ascii_letters
+    ]
     if len(letter_positions) > 0:
         random_place = choice(letter_positions)
-        string = string[:random_place] + string[random_place].swapcase() + string[random_place + 1 :]
+        string = (
+            string[:random_place]
+            + string[random_place].swapcase()
+            + string[random_place + 1 :]
+        )
     return string
 
 
@@ -279,8 +308,12 @@ def regular_handler(string: str) -> str:
             string = random_leet(string)
     if randint(0, 1) == 0:  # Random symbol change
         string = random_symbol_change(string)
-    if randint(0, 1) == 0:  # Change the string to Cap first letter lower everything else.
-        return first_cap_lower_else(string)  # Next part would change it, so return it now.
+    if (
+        randint(0, 1) == 0
+    ):  # Change the string to Cap first letter lower everything else.
+        return first_cap_lower_else(
+            string
+        )  # Next part would change it, so return it now.
     if randint(0, 1) == 0:  # Random case change
         string = random_case_change(string)
     return string

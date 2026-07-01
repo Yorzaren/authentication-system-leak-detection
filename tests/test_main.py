@@ -22,7 +22,12 @@ class TestMain:
     if os.environ.get("DB_PASSWORD"):
         print("\n-->Resetting the system back to the default state\n")
         database_password = os.environ.get("DB_PASSWORD")
-        db_config = {"user": "root", "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
+        db_config = {
+            "user": "root",
+            "password": database_password,
+            "host": "127.0.0.1",
+            "database": "passwordKeepers",
+        }
         cnx = mysql.connector.connect(**db_config)
         my_cursor = cnx.cursor(buffered=True)
         my_cursor.execute("CALL ResetDatabase()")
@@ -30,18 +35,27 @@ class TestMain:
         cnx.commit()
         cnx.close()
         # Create a user to be breached
-        db_controller.add_user("attackedUser", main.development_decoy_generator("attackedUser", "realP@ssword!"))
+        db_controller.add_user(
+            "attackedUser",
+            main.development_decoy_generator("attackedUser", "realP@ssword!"),
+        )
 
     @pytest.mark.order(1)
     def test_basic_auth(self):
         print("\n------Messages------")
-        assert main.is_authenticated("admin", "password") is True  # Correct Username + Password
-        assert main.is_authenticated("nonUser", "somepassword") is False  # Username doesn't exist
+        assert (
+            main.is_authenticated("admin", "password") is True
+        )  # Correct Username + Password
+        assert (
+            main.is_authenticated("nonUser", "somepassword") is False
+        )  # Username doesn't exist
 
     @pytest.mark.order(2)
     def test_prevent_only_admin_deletion(self):
         print("\n------Messages------")
-        assert main.delete_user("admin", "password", "admin") is False  # Can't delete as only admin
+        assert (
+            main.delete_user("admin", "password", "admin") is False
+        )  # Can't delete as only admin
 
     @pytest.mark.order(3)
     def test_add_accounts(self):
@@ -55,9 +69,13 @@ class TestMain:
         # Create them
         main.add_user_account("admin", "password", "testuser", "Q49^y1z!uxV!")
         main.add_user_account("admin", "password", "jsmith", "Sm1th&W3ss0n")
-        main.add_user_account("admin", "password", "oldUser", "@4Ix45@USJq8", add_as_admin=True)
+        main.add_user_account(
+            "admin", "password", "oldUser", "@4Ix45@USJq8", add_as_admin=True
+        )
         main.add_user_account("admin", "password", "oldUser2", "8Pc7!PX5e^CR")
-        main.add_user_account("admin", "password", "admin2", "s49^yxz!*xV!", add_as_admin=True)
+        main.add_user_account(
+            "admin", "password", "admin2", "s49^yxz!*xV!", add_as_admin=True
+        )
         # Test they were made
         assert main.is_authenticated("testuser", "Q49^y1z!uxV!") is True
         assert main.is_authenticated("jsmith", "Sm1th&W3ss0n") is True
@@ -86,28 +104,45 @@ class TestMain:
     @pytest.mark.order(5)
     def test_use_decoy(self):
         print("\n------Messages------")
-        assert main.is_authenticated("oldUser2", "decoy5") is False  # This shouldn't send an email.
-        assert main.is_authenticated("attackedUser", "decoy5") is False  # THis should trigger the breach.
+        assert (
+            main.is_authenticated("oldUser2", "decoy5") is False
+        )  # This shouldn't send an email.
+        assert (
+            main.is_authenticated("attackedUser", "decoy5") is False
+        )  # THis should trigger the breach.
 
     @pytest.mark.order(6)
     def test_auth_lockout(self):
         print("\n------Messages------")
-        assert main.is_authenticated("admin2", "s49^yxz!*xV!") is True  # Reset the counter
+        assert (
+            main.is_authenticated("admin2", "s49^yxz!*xV!") is True
+        )  # Reset the counter
         # Lock out
         assert main.is_authenticated("admin2", "asdasd") is False
         assert main.is_authenticated("admin2", "asdasd") is False
         assert main.is_authenticated("admin2", "asdasd") is False  # This should email.
         # Trigger the account being locked
-        assert main.is_authenticated("admin2", "asdasd") is False  # Print msg the account has been locked out.
+        assert (
+            main.is_authenticated("admin2", "asdasd") is False
+        )  # Print msg the account has been locked out.
         # Check that the admin account can't do anything when locked
-        assert main.add_user_account("admin2", "s49^yxz!*xV!", "sstestss", "8Pc79!Ph5e!CR") is False
+        assert (
+            main.add_user_account("admin2", "s49^yxz!*xV!", "sstestss", "8Pc79!Ph5e!CR")
+            is False
+        )
 
     @pytest.mark.order(7)
     def test_fail_adding_users(self):
         print("\n------Messages------")
-        assert main.add_user_account("admin", "password", "testuser", "dasd") is False  # Already exists
-        assert main.add_user_account("admin5", "password", "newUser", "dasd") is False  # Bad admin
-        assert main.add_user_account("admin", "password", "newUser", "dasd") is False  # New user's password isn't good.
+        assert (
+            main.add_user_account("admin", "password", "testuser", "dasd") is False
+        )  # Already exists
+        assert (
+            main.add_user_account("admin5", "password", "newUser", "dasd") is False
+        )  # Bad admin
+        assert (
+            main.add_user_account("admin", "password", "newUser", "dasd") is False
+        )  # New user's password isn't good.
 
     @pytest.mark.order(8)
     def test_delete_user_msg(self):
@@ -117,7 +152,9 @@ class TestMain:
         assert main.delete_user("oldUser", "@4Ix45@USJq8", "oldUser") is True
         assert main.is_authenticated("oldUser", "@4Ix45@USJq8") is False
         # Try to delete something that doesn't exist.
-        assert main.delete_user("admin", "password", "oldUser") is False  # Doesn't exist
+        assert (
+            main.delete_user("admin", "password", "oldUser") is False
+        )  # Doesn't exist
 
     @pytest.mark.order(9)
     def test_unlock_account(self):
@@ -135,10 +172,16 @@ class TestMain:
     @pytest.mark.order(10)
     def test_change_password(self):
         print("\n------Messages------")
-        assert main.update_password("jsmith", "notpassword", "Wcd@8sdf*dfdop#") is False  # Not the right password
+        assert (
+            main.update_password("jsmith", "notpassword", "Wcd@8sdf*dfdop#") is False
+        )  # Not the right password
         # Password isn't valid to rules
-        assert main.update_password("jsmith", "Sm1th&W3ss0n", "invalidtoPolicy") is False
-        assert main.update_password("jsmith", "Sm1th&W3ss0n", "Wcd@8sdf*dfdop#") is True  # Updated it fine.
+        assert (
+            main.update_password("jsmith", "Sm1th&W3ss0n", "invalidtoPolicy") is False
+        )
+        assert (
+            main.update_password("jsmith", "Sm1th&W3ss0n", "Wcd@8sdf*dfdop#") is True
+        )  # Updated it fine.
 
     @pytest.mark.order(11)
     def test_system_lock(self):
@@ -153,7 +196,9 @@ class TestMain:
         # Create another user
         db_controller.add_user(
             "attackedUserElectricBoogaloo",
-            main.development_decoy_generator("attackedUserElectricBoogaloo", "realP@ssword!"),
+            main.development_decoy_generator(
+                "attackedUserElectricBoogaloo", "realP@ssword!"
+            ),
         )
 
         # This should trigger the 2nd breach.
