@@ -128,7 +128,7 @@ Open MySQL / MariaDB as root to change the password.
 #### Linux - Set up the Database
 MySQL's installation is a bit bugged on Linux.
 
-If you have issues, go [here](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
+If you have issues, go [read this article](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
 
 **_Make sure you remember the password for later._**
 
