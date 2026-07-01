@@ -32,15 +32,15 @@ colorama_init()
 
 """
 Type of passwords:
-- Passwords that wont be remembered 
+- Passwords that wont be remembered
     --> Handle with random letter, symbol, and number corruption.
-- Passwords with social engineering weakness (dates/pet names/important life people) 
-    --> Change letter case, leet it, change symbols, simplify, corrupt some numbers, 
+- Passwords with social engineering weakness (dates/pet names/important life people)
+    --> Change letter case, leet it, change symbols, simplify, corrupt some numbers,
     but leave multiple cases with the correct numbers but wrong symbols and cases
 - Passwords of fandom/pop culture
     --> This might be a sub type of the previous and can probably be handled the same way.
 - Passwords of immaturity (69, 420)
-    --> Leave the numbers, leet it, change symbols, simplify 
+    --> Leave the numbers, leet it, change symbols, simplify
 - Passwords on keys patterns (probably wont be addressing this)
     --> Won't be handle in this iteration
 """
@@ -256,7 +256,7 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
 
     """
     AMOUNT_OF_DECOYS is here if we choose to change the number later
-    However, its probably not likely because more testing would be needed 
+    However, its probably not likely because more testing would be needed
     to make sure nothing breaks.
     """
 
@@ -271,7 +271,7 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
         raise ValueError  # Catch this with try-except block when you call the generate_decoy_passwords just incase.
 
     # If the string is random, it doesn't matter what we do to it.
-    if password_analysis_randomness(real_password, debugging=False) is True:
+    if password_analysis_randomness(real_password, debugging=False):
         print(
             f"{Fore.CYAN}[INFO] The string {Back.BLACK}{real_password}{Back.RESET} "
             f"is assumed to be very random.{Style.RESET_ALL}"
@@ -283,7 +283,7 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
             # Generate the potential decoy
             new_decoy = random_corruption(real_password, int(len(real_password) / 2))
             # Check that the decoy follows the policy, if it doesn't keep trying until we get one.
-            while password_checker.password_valid_to_policy_rules(new_decoy) is False:
+            while not password_checker.password_valid_to_policy_rules(new_decoy):
                 new_decoy = random_corruption(real_password, int(len(real_password) / 2))
             # Shouldn't be needed, but just incase, regen if its already in the decoy password array.
             while new_decoy in decoy_passwords:
@@ -300,24 +300,24 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
             print("-->Method: 4 digits in a row")
             """
             The goal here is to figure out how to break them into groups.
-            Basically, if someone were to know which set of 4 digits are in 
+            Basically, if someone were to know which set of 4 digits are in
             the password, they shouldn't be able to pick it out quickly.
-            
+            .
             If we have real password + 2 or 3 decoys with the same digits
             pass_set_1 which is a different set of numbers
             pass_set_2 which is a different set of numbers from the prior two
             Ex. A^RealChallenge1203
-            
+            .
             Real password has digits of 1203
             pass_set_1 is 0608
             pass_set_2 is 0723
-            
+            .
             We can generate decoys derived from a common numerical base to hide it better:
                 A^RealChallenge1203 --> A*Re@lChal3nge1203 | A^realch@llenge1203 | A^Re4lhallenge1203
                 A^RealChallenge0608 --> @^RealCha1lenge0608 | A!RealChallenge0608 | etc.
                 A^RealChallenge0723 --> etc.
-            
-            Note: You are forcing the convert_4_digits to give out numbers which can only be MM/DD valid 
+            .
+            Note: You are forcing the convert_4_digits to give out numbers which can only be MM/DD valid
             """
             pass_set_with_real = randint(2, 3)  # 2 or 3
             pass_set_1 = randint(3, 4)  # 3 or 4
