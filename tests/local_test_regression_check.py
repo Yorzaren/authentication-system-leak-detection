@@ -2,7 +2,6 @@
 This shouldn't be used as a production test because it can create a lot of issues.
 This is just to test if things work more or less.
 """
-
 import pytest
 
 from python_scripts.password_analysis_helper import is_random_string

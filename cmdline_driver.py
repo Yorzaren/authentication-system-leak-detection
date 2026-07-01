@@ -7,6 +7,7 @@ python -m aiosmtpd -n -l localhost:1025
 
 """
 
+
 import os  # Used to get the .env file
 import sys
 
@@ -35,16 +36,9 @@ database_user = os.environ.get("DB_USER")
 if database_user is None:  # If it's not defined, default to root
     database_user = "root"
 
-db_config = {
-    "user": database_user,
-    "password": database_password,
-    "host": "127.0.0.1",
-    "database": "passwordKeepers",
-}
+db_config = {"user": database_user, "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
 
-print(
-    f"{Fore.CYAN}|==========================================================================|{Style.RESET_ALL}"
-)
+print(f"{Fore.CYAN}|==========================================================================|{Style.RESET_ALL}")
 print(
     f"{Fore.CYAN}|------------- {Fore.RED}Authentication System Leak Detection Prototype"
     f"{Fore.CYAN} -------------|{Style.RESET_ALL}"
@@ -57,44 +51,29 @@ print(
     f"{Fore.CYAN}|---- {Fore.GREEN}{Style.BRIGHT}https://github.com/Yorzaren/authentication-system-leak-detection"
     f"{Style.RESET_ALL}{Fore.CYAN} ----|{Style.RESET_ALL}"
 )
-print(
-    f"{Fore.CYAN}|--------------------------------------------------------------------------|{Style.RESET_ALL}"
-)
-print(
-    f"{Fore.CYAN}|--------------------  This is only meant for testing  --------------------|{Style.RESET_ALL}"
-)
-print(
-    f"{Fore.CYAN}|------------------  Run the front-end using: flask run  ------------------|{Style.RESET_ALL}"
-)
-print(
-    f"{Fore.CYAN}|----------------  Delete this file once done with testing  ---------------|{Style.RESET_ALL}"
-)
-print(
-    f"{Fore.CYAN}|==========================================================================|{Style.RESET_ALL}"
-)
+print(f"{Fore.CYAN}|--------------------------------------------------------------------------|{Style.RESET_ALL}")
+print(f"{Fore.CYAN}|--------------------  This is only meant for testing  --------------------|{Style.RESET_ALL}")
+print(f"{Fore.CYAN}|------------------  Run the front-end using: flask run  ------------------|{Style.RESET_ALL}")
+print(f"{Fore.CYAN}|----------------  Delete this file once done with testing  ---------------|{Style.RESET_ALL}")
+print(f"{Fore.CYAN}|==========================================================================|{Style.RESET_ALL}")
 
 try:
     print(f"{Fore.YELLOW}{Style.BRIGHT}Testing Database Connection...{Style.RESET_ALL}")
     connection = mysql.connector.connect(**db_config)
     if connection.is_connected():
         db_Info = connection.get_server_info()
-        print(
-            f"{Fore.GREEN}SUCCESS: Connected to MySQL Server version {db_Info}{Style.RESET_ALL}"
-        )
+        print(f"{Fore.GREEN}SUCCESS: Connected to MySQL Server version {db_Info}{Style.RESET_ALL}")
 
 except mysql.connector.Error as err:
     print(
-        f"{Fore.RED}FAILED: Make you have the .env setup and the database running.{Style.RESET_ALL}\n"
-        f"Error: {err}"
+        f"{Fore.RED}FAILED: Make you have the .env setup and the database running.{Style.RESET_ALL}\n" f"Error: {err}"
     )
     if err.errno == 2003:
         print("--> Check that the mysql service is running.")
     if err.errno == 1045:
         print("--> The password is wrong check the .env file.")
     if err.errno == 1049:
-        print(
-            "--> Make sure you have created the mysql database using initialize_database.sql"
-        )
+        print("--> Make sure you have created the mysql database using initialize_database.sql")
     sys.exit("Program closing. No database connection.")
 
 
@@ -118,9 +97,7 @@ def add_predefined_users():
     add_user_account("admin", "password", "jsmith", "9Jl%62EQMK4%")
     add_user_account("admin", "password", "mwilliams", "GreatLakes!1")
     add_user_account("admin", "password", "cReynolds23", "Bubble*t3a!!")
-    add_user_account(
-        "admin", "password", "xzhang", "tngL9yWYZAaqV25E7&^$*kbKREq", add_as_admin=True
-    )
+    add_user_account("admin", "password", "xzhang", "tngL9yWYZAaqV25E7&^$*kbKREq", add_as_admin=True)
 
 
 def menu():
@@ -128,7 +105,7 @@ def menu():
     has_added_predefined_users = False
 
     while loop_condition:
-        print(f"\n{Fore.LIGHTMAGENTA_EX}|~~~~~~~~~~~~~~ MENU ~~~~~~~~~~~~~~|")
+        print(f"\n{Fore.LIGHTMAGENTA_EX}" f"|~~~~~~~~~~~~~~ MENU ~~~~~~~~~~~~~~|")
         print("\nPlease enter a number for what you want to do.\n")
         print("Enter 1 To Login.")
         print(f"Enter 2 {Fore.RED}[DEV]{Fore.LIGHTMAGENTA_EX} - Dump TABLE.")
@@ -137,9 +114,7 @@ def menu():
                 f"Enter 3 {Fore.RED}[DEV]{Fore.LIGHTMAGENTA_EX} - Add Predefined Test Users.* \n"
                 f"    * (Only works if you have not changed the default admin account / password)"
             )
-        print(
-            f"Enter 4 {Fore.RED}[DEV]{Fore.LIGHTMAGENTA_EX} - Reset Database to Default."
-        )
+        print(f"Enter 4 {Fore.RED}[DEV]{Fore.LIGHTMAGENTA_EX} - Reset Database to Default.")
         print("Enter 0 to quit.\n")
         print(f"|~~~~~~~~~~~~ END MENU ~~~~~~~~~~~~|\n{Style.RESET_ALL}")
 
@@ -158,9 +133,7 @@ def menu():
                 password = input("Password: ")
 
                 if is_authenticated(username, password):
-                    print(
-                        f"You have logged in as {Back.WHITE}{Fore.BLACK}{username}{Style.RESET_ALL}"
-                    )
+                    print(f"You have logged in as {Back.WHITE}{Fore.BLACK}{username}{Style.RESET_ALL}")
                     logged_in = True
 
                     while logged_in:  # Start USER MENU LOOP
@@ -192,40 +165,21 @@ def menu():
                             elif user_choice == 2:
                                 print("You are adding a normal user...")
                                 username_to_be_added = input("New username to add: ")
-                                new_user_password = input(
-                                    "Create Password for new user: "
-                                )
-                                add_user_account(
-                                    username,
-                                    password,
-                                    username_to_be_added,
-                                    new_user_password,
-                                )
+                                new_user_password = input("Create Password for new user: ")
+                                add_user_account(username, password, username_to_be_added, new_user_password)
                                 print()
                             elif user_choice == 3:
                                 print("You are adding an admin user...")
                                 username_to_be_added = input("New username to add: ")
-                                new_user_password = input(
-                                    "Create Password for new user: "
-                                )
-                                add_user_account(
-                                    username,
-                                    password,
-                                    username_to_be_added,
-                                    new_user_password,
-                                    True,
-                                )
+                                new_user_password = input("Create Password for new user: ")
+                                add_user_account(username, password, username_to_be_added, new_user_password, True)
                             elif user_choice == 4:
                                 print("You are deleting a user account...")
-                                delete_user_named = input(
-                                    "Username of the account to delete: "
-                                )
+                                delete_user_named = input("Username of the account to delete: ")
                                 delete_user(username, password, delete_user_named)
                             elif user_choice == 5:
                                 print("You are unlocking a user account...")
-                                unlock_user_named = input(
-                                    "Username of the account to unlock: "
-                                )
+                                unlock_user_named = input("Username of the account to unlock: ")
                                 unlock_account(username, password, unlock_user_named)
                             else:
                                 print("No selection")

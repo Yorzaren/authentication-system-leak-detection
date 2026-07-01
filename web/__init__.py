@@ -7,7 +7,6 @@ Start it using: flask run
 Components are stored in `static` and `templates`
 
 """
-
 import os  # Used to get the .env file
 
 import flask_login
@@ -196,10 +195,7 @@ def do_add_account():
             requesting_admin_password = request.form["confirm-admin-password-add"]
 
             # Check the admin password confirmation first
-            if (
-                is_authenticated(requesting_admin_username, requesting_admin_password)
-                is True
-            ):
+            if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if the username is already taken
                 if user_exists(new_account_username) is True:
                     flash("The username is already taken.")
@@ -229,9 +225,7 @@ def do_add_account():
                         new_account_password,
                         add_as_admin=False,
                     )
-                    flash(
-                        f"Normal user account named: {new_account_username} has been created."
-                    )
+                    flash(f"Normal user account named: {new_account_username} has been created.")
                 elif new_account_type == "1":
                     add_user_account(
                         requesting_admin_username,
@@ -240,17 +234,13 @@ def do_add_account():
                         new_account_password,
                         add_as_admin=True,
                     )
-                    flash(
-                        f"Admin user account named: {new_account_username} has been created."
-                    )
+                    flash(f"Admin user account named: {new_account_username} has been created.")
                 else:  # This shouldn't be reached, normally.
                     flash("An error: Occurred")
                 return redirect(url_for("admin"))
 
             elif is_locked_out(requesting_admin_username) is True:
-                flash(
-                    "Your admin password was wrong too many times. Your account has been locked."
-                )
+                flash("Your admin password was wrong too many times. Your account has been locked.")
                 return redirect(url_for("admin"))
             else:
                 flash("The admin password is incorrect.")
@@ -277,10 +267,7 @@ def do_delete_account():
             requesting_admin_password = request.form["confirm-admin-password-delete"]
 
             # Check the admin password confirmation first
-            if (
-                is_authenticated(requesting_admin_username, requesting_admin_password)
-                is True
-            ):
+            if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if they match
                 if username_delete != confirm_delete_username:
                     flash("Error: Given username does not match confirmation username.")
@@ -289,22 +276,11 @@ def do_delete_account():
                     flash(f"Error: {username_delete} does not exist in the system.")
                     return redirect(url_for("admin"))
 
-                if (
-                    delete_user(
-                        requesting_admin_username,
-                        requesting_admin_password,
-                        username_delete,
-                    )
-                    is True
-                ):
-                    flash(
-                        f"Success: {username_delete} has been deleted from the system."
-                    )
+                if delete_user(requesting_admin_username, requesting_admin_password, username_delete) is True:
+                    flash(f"Success: {username_delete} has been deleted from the system.")
                     return redirect(url_for("admin"))
                 else:
-                    flash(
-                        f"Error: {username_delete} could not be deleted from the system."
-                    )
+                    flash(f"Error: {username_delete} could not be deleted from the system.")
                     if is_admin(username_delete) and is_only_admin():
                         flash(
                             f"Error: You requesting the only admin account to be deleted. "
@@ -313,9 +289,7 @@ def do_delete_account():
                     return redirect(url_for("admin"))
 
             elif is_locked_out(requesting_admin_username) is True:
-                flash(
-                    "Your admin password was wrong too many times. Your account has been locked."
-                )
+                flash("Your admin password was wrong too many times. Your account has been locked.")
                 return redirect(url_for("admin"))
             else:
                 flash("The admin password is incorrect.")
@@ -342,10 +316,7 @@ def do_unlock_account():
             requesting_admin_password = request.form["confirm-admin-password-unlock"]
 
             # Check the admin password confirmation first
-            if (
-                is_authenticated(requesting_admin_username, requesting_admin_password)
-                is True
-            ):
+            if is_authenticated(requesting_admin_username, requesting_admin_password) is True:
                 # Check if they match
                 if username_unlock != confirm_unlock_username:
                     flash("Error: Given username does not match confirmation username.")
@@ -355,29 +326,16 @@ def do_unlock_account():
                     flash(f"Error: {username_unlock} not exist in the system.")
                     return redirect(url_for("admin"))
 
-                if (
-                    unlock_account(
-                        requesting_admin_username,
-                        requesting_admin_password,
-                        username_unlock,
-                    )
-                    is True
-                ):
-                    flash(
-                        f"Success: {username_unlock} has been unlocked on the system."
-                    )
+                if unlock_account(requesting_admin_username, requesting_admin_password, username_unlock) is True:
+                    flash(f"Success: {username_unlock} has been unlocked on the system.")
                     return redirect(url_for("admin"))
                 else:
                     # This shouldn't be reached.
-                    flash(
-                        f"Error: {username_unlock} could not be unlocked on the system."
-                    )
+                    flash(f"Error: {username_unlock} could not be unlocked on the system.")
                     return redirect(url_for("admin"))
 
             elif is_locked_out(requesting_admin_username) is True:
-                flash(
-                    "Your admin password was wrong too many times. Your account has been locked."
-                )
+                flash("Your admin password was wrong too many times. Your account has been locked.")
                 return redirect(url_for("admin"))
             else:
                 flash("The admin password is incorrect.")
@@ -408,30 +366,19 @@ def do_update_password():
                 return redirect(url_for("settings"))
 
             if password_valid_to_policy_rules(new_password) is True:
-                if (
-                    update_password(username, confirm_old_password, new_password)
-                    is True
-                ):
-                    flash(
-                        f"Success: {username}, you have changed your password system."
-                    )
+                if update_password(username, confirm_old_password, new_password) is True:
+                    flash(f"Success: {username}, you have changed your password system.")
                     return redirect(url_for("settings"))
                 else:
                     # This shouldn't be reached.
-                    flash(
-                        f"Error: {username}, you can not change your password on the system."
-                    )
+                    flash(f"Error: {username}, you can not change your password on the system.")
                     return redirect(url_for("settings"))
             else:
-                flash(
-                    f"Error: {username}, your new password does not follow the password policy."
-                )
+                flash(f"Error: {username}, your new password does not follow the password policy.")
                 return redirect(url_for("settings"))
 
         elif is_locked_out(username) is True:
-            flash(
-                "Your password was wrong too many times. Your account has been locked."
-            )
+            flash("Your password was wrong too many times. Your account has been locked.")
             return redirect(url_for("settings"))
         else:
             flash("Your current password is incorrect.")

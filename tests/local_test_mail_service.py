@@ -6,7 +6,6 @@ python -m aiosmtpd -n -l localhost:1025
 Also, if you want to test with MailSlurp, you have to reset the accounts for fresh credentials.
 
 """
-
 from python_scripts.email_service import send_email
 
 print("--- Starting LocalTest of email_service.py ---")

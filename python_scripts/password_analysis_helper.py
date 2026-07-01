@@ -140,9 +140,7 @@ def is_random_string(string: str, debugging=False) -> bool:
     if debugging is True:
         print("\n---- Start Array Info ----")
         print("capital_split_array : " + str(capital_split_array))
-        print(
-            "pp_capital_split_array_unleeted : " + str(pp_capital_split_array_unleeted)
-        )
+        print("pp_capital_split_array_unleeted : " + str(pp_capital_split_array_unleeted))
         print("pp_symbols_capital_split_array : " + str(pp_symbols_capital_split_array))
         print("----  End Array Info  ----\n")
 
@@ -159,12 +157,7 @@ def is_random_string(string: str, debugging=False) -> bool:
         print("Unleet: " + unleeted_string)
 
         print("Strings (" + str(size_string_array) + "): " + str(string_array))
-        print(
-            "Strings After Unleeting ("
-            + str(size_unleeted_array)
-            + "): "
-            + str(unleeted_array)
-        )
+        print("Strings After Unleeting (" + str(size_unleeted_array) + "): " + str(unleeted_array))
         print("Max Length String Array: " + str(max_len_string_array))
         print("Max Length Unleeted Array: " + str(max_len_unleeted_array))
 
@@ -237,9 +230,7 @@ def is_random_string(string: str, debugging=False) -> bool:
             randomness_score += 2
             if VIEW_SCOREING is True:
                 print("+2")
-    except (
-        ValueError
-    ):  # Have this here, so it doesn't blow up when the string is too short.
+    except ValueError:  # Have this here, so it doesn't blow up when the string is too short.
         pass
 
     if debugging is True:
@@ -317,12 +308,7 @@ def return_words_maybe(string: str) -> str:
 
 
 if __name__ == "__main__":
-    pass_s = [
-        "9Sk5yRyY2^8D",
-        "PoLHrs#jG!a#zaU!zXPbfSCk%an4#6yx",
-        "M8wyg5sYg8P^L9",
-        "WDcrQBnAtfDtn4Tg$#W96At86tJh%t3F",
-    ]
+    pass_s = ["9Sk5yRyY2^8D", "PoLHrs#jG!a#zaU!zXPbfSCk%an4#6yx", "M8wyg5sYg8P^L9", "WDcrQBnAtfDtn4Tg$#W96At86tJh%t3F"]
     pass_test = [
         "1Am4Gr8C0d3r",
         "D32$jr#Q^VpD",

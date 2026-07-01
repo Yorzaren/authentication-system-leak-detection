@@ -5,7 +5,6 @@ Make sure the database is running and is database entries are fresh from initial
 
 If the database isn't in default config, then the test will throw errors.
 """
-
 import os  # Used to get the .env file
 
 import mysql.connector
@@ -20,9 +19,7 @@ load_dotenv()  # Load the secrets from the .env file
 class TestDatabaseController:
     # Skip if not able to make a database connection because password missing in .env
     # @pytest.mark.skip(reason="DISABLED")
-    @pytest.mark.skipif(
-        not os.environ.get("DB_PASSWORD"), reason="No database connection"
-    )
+    @pytest.mark.skipif(not os.environ.get("DB_PASSWORD"), reason="No database connection")
     def test_db_functions(self):
         print("\n-->Resetting the system back to the default state\n")
         database_password = os.environ.get("DB_PASSWORD")
@@ -43,9 +40,7 @@ class TestDatabaseController:
         cnx.commit()
         cnx.close()
 
-        print(
-            "\n----- database_controller test -----\n->Make sure you have the system in the default state\n"
-        )
+        print("\n----- database_controller test -----\n->Make sure you have the system in the default state\n")
         print("Check case-sensitivity...")
         assert db.is_admin("Admin") is False
         assert db.is_admin("admin") is True
@@ -60,19 +55,7 @@ class TestDatabaseController:
 
         db.print_table()
 
-        array = [
-            "test1",
-            "test2",
-            "test3",
-            "test4",
-            "test5",
-            "test6",
-            "test7",
-            "test8",
-            "test9",
-            "test10",
-            "test11",
-        ]
+        array = ["test1", "test2", "test3", "test4", "test5", "test6", "test7", "test8", "test9", "test10", "test11"]
         array2 = [
             "random1",
             "random2",
