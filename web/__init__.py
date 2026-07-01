@@ -7,6 +7,7 @@ Start it using: flask run
 Components are stored in `static` and `templates`
 
 """
+
 import os  # Used to get the .env file
 
 import flask_login

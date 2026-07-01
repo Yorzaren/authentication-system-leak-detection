@@ -266,8 +266,7 @@ def generate_decoy_passwords(real_password: str) -> list:  # Returns an array
     # We will also check this somewhere else too, but this is to warn us of issues.
     if password_checker.password_valid_to_policy_rules(real_password) is False:
         print(
-            f"{Fore.RED}{Back.BLACK}[ERROR] The real_password: {real_password} "
-            f"doesn't follow policy.{Style.RESET_ALL}"
+            f"{Fore.RED}{Back.BLACK}[ERROR] The real_password: {real_password} doesn't follow policy.{Style.RESET_ALL}"
         )
         raise ValueError  # Catch this with try-except block when you call the generate_decoy_passwords just incase.
 
