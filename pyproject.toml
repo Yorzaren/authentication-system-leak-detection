@@ -19,12 +19,12 @@ nostril = { url = "https://github.com/casics/nostril/archive/fbc0c91249283a9fbc9
 
 [dependency-groups]
 dev = [
-    "black==26.3.1",
-    "flake8==7.3.0",
-    "isort==8.0.1",
+    "pre-commit>=4.6.0",
     "pytest==9.0.3",
     "pytest-cov==7.0.0",
     "pytest-order==1.3.0",
+    "ruff==0.15.18",
+    "uv==0.11.23",
 ]
 
 # --- RUFF CONFIGURATION ---

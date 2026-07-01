@@ -22,8 +22,8 @@ If they use a decoy password while attempting to get into a user's account, it w
 **Project Requirements:**
 
 1. Must use at least 10 false passwords per account.
-2. Creation of user account must randomly create associated false passwords in similar format to avoid detection.  
-3. Changing of user account password must regenerate associated false passwords in similar format to avoid detection.  
+2. Creation of user account must randomly create associated false passwords in similar format to avoid detection.
+3. Changing of user account password must regenerate associated false passwords in similar format to avoid detection.
 4. Allow for deletion of accounts.
 5. Must develop algorithm to uniquely assign valid password in user's account password list.
 6. Provide a mechanism of notification if false password is used compared to incorrect entry or simple guess.
@@ -78,7 +78,7 @@ apt install mariadb-server
 
 Note: You can quickly set the MariaDB root password using in the MariaDB console:
 ```cmd
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'; flush privileges; exit; 
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'; flush privileges; exit;
 ```
 
 If you want to run this in a venv (virtual environment):
@@ -273,8 +273,6 @@ You should change the password to admin immediately for security.
 
 Alternatively, you should create a new admin account, test that the new admin account works, then delete the default admin account.
 
-## Style / Linting / Unit Testing
-
 ### Python
 [![Tested with Pytest](https://img.shields.io/badge/Tested%20with-Pytest-red?style=for-the-badge)](https://docs.pytest.org/)
 
@@ -284,37 +282,31 @@ Run pytest from the root of the project.
 
 You can test for coverage using:
 ```text
-pytest --cov --cov-report=html
+python -m uv run pytest
 ```
 
 ### Linter and Format
 
 ```commandline
-ruff check . --config .github/linters/.ruff.toml
-ruff format . --config .github/linters/.ruff.toml
+python -m uv run ruff check .
+python -m uv run ruff format .
 ```
 
-### Install
+```text
+npx --prefix .github/linters/ prettier --write "**/*.{yaml,yml}" --config .github/linters/.prettierrc --ignore-path .github/linters/.prettierignore
+```
+
+### Update Requirements / Sync Enviroment
 
 ```commandline
-pip install -r requirements.txt -r requirements-dev.txt
+python -m uv lock --upgrade && python -m uv sync
 ```
 
-### Update Requirements
-
-Update: Packages
+### Pre-commit
 
 ```commandline
-pip-compile --generate-hashes --upgrade requirements.in
-pip-compile --allow-unsafe --generate-hashes -c requirements.txt requirements-dev.in -o requirements-dev.txt
+python -m uv run pre-commit run --all-files
 ```
-
-Sync Environment:
-
-```commandline
-pip-sync requirements.txt requirements-dev.txt
-```
-
 
 ### JavaScript
 [![Tested with QUnit](https://img.shields.io/badge/Tested%20with-QUnit-green?style=for-the-badge)](https://qunitjs.com/)
