@@ -60,7 +60,7 @@ sudo apt install git mysql-server -y
 sudo systemctl start mysql
 ```
 
-Get UV from https://docs.astral.sh/uv/getting-started/installation/
+Get UV from <https://docs.astral.sh/uv/getting-started/installation/>
 ```cmd
 wget -qO- https://astral.sh/uv/install.sh | sh
 ```
