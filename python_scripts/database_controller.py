@@ -8,12 +8,13 @@ credentials in scripts that call the functions created here.
 """
 
 import os  # Used to get the .env file
+from pathlib import Path
 
 import mysql.connector
 from colorama import Back, Fore, Style
 from colorama import init as colorama_init
 from dotenv import load_dotenv  # Used to load info from the .env file
-from pathlib import Path
+
 # Initialize for to use colorful print messages later
 colorama_init()
 
@@ -58,7 +59,7 @@ def init_db_values():
         my_cursor = cnx.cursor(buffered=True)
         relative_location = "./initialize_database.sql"
         init_script_location = Path(relative_location).resolve()
-        with open(init_script_location, 'r') as file:
+        with open(init_script_location, "r") as file:
             init_script = file.read()
 
         print(f"Executing {init_script_location}...")
@@ -81,6 +82,7 @@ def init_db_values():
 
     except mysql.connector.Error as err:  # pragma: no cover
         __db_connection_error(err)
+
 
 def user_exists(username: str) -> bool | None:
     try:
