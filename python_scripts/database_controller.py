@@ -8,6 +8,7 @@ credentials in scripts that call the functions created here.
 """
 
 import os  # Used to get the .env file
+from pathlib import Path
 
 import mysql.connector
 from colorama import Back, Fore, Style
@@ -26,7 +27,7 @@ if database_user is None:  # If it's not defined, default to root
     database_user = "root"
 
 db_config = {"user": database_user, "password": database_password, "host": "127.0.0.1", "database": "passwordKeepers"}
-
+db_init = {"user": database_user, "password": database_password, "host": "127.0.0.1"}
 """
 Admins:
     - add_user
@@ -52,7 +53,38 @@ def __db_connection_error(err) -> None:  # pragma: no cover
         print(f"{Fore.RED}{Back.BLACK}[ERROR]: {err}{Style.RESET_ALL}")
 
 
-def user_exists(username: str) -> bool:
+def init_db_values():
+    try:
+        cnx = mysql.connector.connect(**db_init)
+        my_cursor = cnx.cursor(buffered=True)
+        relative_location = "./initialize_database.sql"
+        init_script_location = Path(relative_location).resolve()
+        with open(init_script_location, "r") as file:
+            init_script = file.read()
+
+        print(f"Executing {init_script_location}...")
+
+        my_cursor.execute(init_script)
+
+        while True:
+            if my_cursor.description:
+                my_cursor.fetchall()
+            if not my_cursor.nextset():
+                break
+
+        # Commit the changes
+        cnx.commit()
+
+        # Close the connector
+        cnx.close()
+
+        print(f"Finished running {init_script_location}...")
+
+    except mysql.connector.Error as err:  # pragma: no cover
+        __db_connection_error(err)
+
+
+def user_exists(username: str) -> bool | None:
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -72,7 +104,7 @@ def user_exists(username: str) -> bool:
         __db_connection_error(err)
 
 
-def is_admin(username: str) -> bool:
+def is_admin(username: str) -> bool | None:
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -92,7 +124,7 @@ def is_admin(username: str) -> bool:
         __db_connection_error(err)
 
 
-def is_locked_out(username: str) -> bool:
+def is_locked_out(username: str) -> bool | None:
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -112,7 +144,7 @@ def is_locked_out(username: str) -> bool:
         __db_connection_error(err)
 
 
-def add_user(username: str, password_array, create_admin_account=False):
+def add_user(username: str, password_array, create_admin_account=False) -> None:
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -144,7 +176,7 @@ def add_user(username: str, password_array, create_admin_account=False):
         __db_connection_error(err)
 
 
-def delete_user(username: str):
+def delete_user(username: str) -> None:
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -162,7 +194,7 @@ def delete_user(username: str):
         __db_connection_error(err)
 
 
-def get_passwords(username: str) -> list:  # Return a list/array
+def get_passwords(username: str) -> list | None:  # Return a list/array
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -186,7 +218,7 @@ def get_passwords(username: str) -> list:  # Return a list/array
         __db_connection_error(err)
 
 
-def update_password(username: str, password_array):
+def update_password(username: str, password_array) -> None:
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -245,7 +277,7 @@ def unlock_account(username: str):
         __db_connection_error(err)
 
 
-def get_failed_count(username: str) -> int:
+def get_failed_count(username: str) -> int | None:
     try:
         # Create the connector
         cnx = mysql.connector.connect(**db_config)
@@ -295,7 +327,7 @@ def reset_failed_attempts(username: str):
         __db_connection_error(err)
 
 
-def is_only_admin() -> bool:
+def is_only_admin() -> bool | None:
     """
     This function returns true if there's only one admin in the system.
     It does not identify which account is the admin.
@@ -369,7 +401,7 @@ def log_used_decoy(username: str):
         __db_connection_error(err)
 
 
-def get_global_decoy_usage() -> int:
+def get_global_decoy_usage() -> int | None:
     """
     This pulls the number of entries from passwordBreached.
     :return: int

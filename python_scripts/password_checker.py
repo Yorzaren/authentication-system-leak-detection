@@ -2,6 +2,7 @@
 This contains the password policy rules and functions to determine if the given string meets
 the password policy.
 """
+
 import string as alphabet_string
 
 # CONFIG VARS

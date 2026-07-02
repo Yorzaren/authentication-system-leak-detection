@@ -5,6 +5,7 @@ Make sure the database is running and is database entries are fresh from initial
 
 If the database isn't in default config, then the test will throw errors.
 """
+
 import os  # Used to get the .env file
 
 import mysql.connector

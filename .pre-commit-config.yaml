@@ -1,0 +1,35 @@
+# Manual call: python -m uv run pre-commit run --all-files
+default_stages: [pre-commit, pre-push]
+
+repos:
+    # Update uv.lock
+    - repo: https://github.com/astral-sh/uv-pre-commit
+      rev: 0.11.21
+      hooks:
+          - id: uv-lock
+
+    # Standard quality-of-life file checkers
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v4.6.0
+      hooks:
+          - id: name-tests-test
+            args: [--pytest-test-first]
+          - id: check-yaml
+          - id: check-json
+          - id: check-case-conflict
+          - id: check-executables-have-shebangs
+          - id: check-shebang-scripts-are-executable
+          - id: trailing-whitespace
+          - id: end-of-file-fixer
+          - id: check-merge-conflict
+          - id: no-commit-to-branch
+
+    # Python Linting & Formatting (Config in pyproject.toml)
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.15.17
+      hooks:
+          # Linter & Import Sorter
+          - id: ruff
+            args: [--fix]
+          # Formatter
+          - id: ruff-format

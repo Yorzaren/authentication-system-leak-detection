@@ -25,7 +25,8 @@ msg_type:
  - 4 for when the system has more than one decoy password used across users
 account_name: string
 
- """
+"""
+
 import json  # To help read the mailslurp error message
 import os  # Used to get the .env file
 import smtplib
