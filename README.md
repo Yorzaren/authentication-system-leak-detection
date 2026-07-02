@@ -4,7 +4,7 @@
 2. [Contributors](#contributors)
 3. [Requirements](#requirements)
 4. [Installation](#installation)
-5. [Development Testing/Style Notes](#style--linting--unit-testing)
+5. [Development Testing/Style Notes](#linter-and-format)
 
 
 ## About
@@ -40,40 +40,28 @@ This repository is a part of Senior Project where teams are assigned a real worl
 * M. James ([Mikaylabj98](https://github.com/Mikaylabj98))
 * J. Lewis ([jalewis7](https://github.com/jalewis7))
 
+## Requirements
+- Git
+- Python
+- MySQL (or MariaDB)
+- UV
+
 ## Installation
 The project is intended Linux based systems.
 
-### Requirements
-- Git
-- Python
-- Pip
-- MySQL (or MariaDB)
-
-### Install Git, Pip, MySQL
+### Linux - Install Git, MySQL, and UV
 These instructions are for Ubuntu 22.04.2 LTS but might work for other versions.
 
-#### Linux - Install Git, Pip, MySQL
-You should already have Python3.
+You should already have Python 3.
 
 If you don't already have these, install them now:
 ```cmd
-apt install git
+sudo apt install git mysql-server -y
+sudo systemctl start mysql
 ```
 
 ```cmd
-apt install python3-pip
-```
-
-```cmd
-apt install mysql-server
-```
-Optional:
-
-Because there's a bug with MySQL installation, you may also use MariaDB instead.
-If you do, replace mysql command with mariadb.
-
-```cmd
-apt install mariadb-server
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 Note: You can quickly set the MariaDB root password using in the MariaDB console:
@@ -81,21 +69,8 @@ Note: You can quickly set the MariaDB root password using in the MariaDB console
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'; flush privileges; exit;
 ```
 
-If you want to run this in a venv (virtual environment):
-```cmd
-apt install python3.10-venv
-```
 
-Create venv:
-```cmd
-python3 -m venv venv
-```
-Activate venv:
-```cmd
-. venv/bin/activate
-```
-
-#### Windows - Install Git, Pip, MySQL
+### Windows - Install Git, MySQL, and UV
 You need to have Git, Python3, and MySQL on your system if you don't already have them installed.
 
 You can download Git from <https://git-scm.com/download/win>.
@@ -105,9 +80,6 @@ You can download Python from <https://www.python.org/>.
 **Note:** When you install Python add it to the PATH and install pip.
 
 You can download MySQL from <https://dev.mysql.com/downloads/>.
-
-The easiest way is to get MySQL Installer. You only need to install the database. When using the installer, you are given a prompt to configure the database with a password.
-
 
 **_Make sure you remember the password for later._**
 
@@ -119,60 +91,10 @@ git clone https://github.com/Yorzaren/authentication-system-leak-detection.git
 
 ### Install Requirements
 ```cmd
-pip install -r requirements.txt
+cd authentication-system-leak-detection
 ```
-
-### Set up the Database
-Open MySQL / MariaDB as root to change the password.
-
-#### Linux - Set up the Database
-MySQL's installation is a bit bugged on Linux.
-
-If you have issues, go [read this article](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
-
-**_Make sure you remember the password for later._**
-
-See: <https://stackoverflow.com/a/64550826>
-
-#### Windows - Set up the Database
-You should have already set up the password for the database when you installed it.
-
-### Initialize the Database
-
-#### Linux - Initialize the Database
-Copy the path of `initialize_database.sql` located in the root of the repository
-
 ```cmd
-readlink -f initialize_database.sql
-```
-
-Open MySQL or MariaDB
-
-```cmd
-mysql -u root -p
-```
-
-You should see `MariaDB[none]>` or `mysql>`.
-
-Initialize the database with the following command:
-
-```cmd
-source [path of initialize_database.sql]
-```
-
-#### Windows - Initialize the Database
-<!-- textlint-disable -->
-Find and run the MySQL Command Line Client.
-<!-- textlint-enable -->
-
-Enter the password.
-
-You should see `MariaDB[none]>` or `mysql>`.
-
-Then enter:
-
-```txt
-source [path of initialize_database.sql]
+uv sync
 ```
 
 ### Create the .env
@@ -205,7 +127,7 @@ If you wish to use MailSlurp, set `USE_MAILSLURP` to `True`.
 
 MailSlurp can be used to send the test emails.
 
-`MAILSLURP_API_KEY` refers to the 64 character long string. Its marked as `API KEY` on the dashboard.
+`MAILSLURP_API_KEY` refers to the 64 character long string. It's marked as `API KEY` on the dashboard.
 `MAILSLURP_SENDER_EMAIL_ID` refers to the Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
 `MAILSLURP_RECEIVER_EMAIL_ID` refers to an Inbox ID. `XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`
 
@@ -214,17 +136,87 @@ However, it doesn't really matter.
 
 **Note:** Free MailSlurp users can only keep their Inbox IDs for a short duration, so you'll have to update the ID a lot.
 
+### Set up the Database (Automatically)
+If the database credentials are in the .env the init.py can automatically set up the tables.
+
+```commandline
+uv run init.py
+```
+
+If you configured the .env it should be able to autoload database. 
+
+### Set up the Database (Manually)
+<details>
+
+#### Linux - Set up the Database
+MySQL's installation is a bit bugged on Linux.
+
+If you have issues, go [read this article](https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-20-04).
+
+**_Make sure you remember the password for later._**
+
+See: <https://stackoverflow.com/a/64550826>
+
+Copy the path of `initialize_database.sql` located in the root of the repository
+
+
+```cmd
+readlink -f initialize_database.sql
+```
+
+Open MySQL or MariaDB
+
+```cmd
+mysql -u root -p
+```
+
+You should see  `mysql>` or `MariaDB[none]>`.
+
+Initialize the database with the following command:
+
+```cmd
+source [path of initialize_database.sql]
+```
+
+#### Windows - Set up the Database
+You should have already set up the password for the database when you installed it.
+
+Find and run the MySQL Command Line Client.
+
+Enter the password.
+
+You should see `MariaDB[none]>` or `mysql>`.
+
+Then enter:
+
+```txt
+source [path of initialize_database.sql]
+```
+
+</details>
+
+### Run the Console and Background Services (Automatically)
+#### Linux
+
+```terminaloutput
+chmod +x launch.sh
+./launch.sh
+```
+
+#### Windows
+```commandline
+launch.bat
+```
+
+### Background Services (Manually)
+<details>
+
 ### Run aiosmtpd mail server
 In a separate terminal or command-line prompt, run:
 
-**Linux:**
-```cmd
-python3 -m aiosmtpd -n -l localhost:1025
-```
 
-**Windows:**
 ```cmd
-python -m aiosmtpd -n -l localhost:1025
+uv run aiosmtpd -n -l localhost:1025
 ```
 
 **Note:** Don't close out of the window. You will see the emails being sent here.
@@ -232,33 +224,19 @@ python -m aiosmtpd -n -l localhost:1025
 ### Run cmdline_driver.py to Test
 If you have everything setup, you should be able to run `cmdline_driver.py` to test if the scripts and database are communicating properly.
 
-**Linux:**
 ```cmd
-python3 cmdline_driver.py
-```
-**Windows:**
-```cmd
-python cmdline_driver.py
+uv run  cmdline_driver.py
 ```
 
 ### Start Site Using Flask
 ```cmd
-flask --app web run
+uv run flask --app web run
 ```
 
-or
+</details>
 
-**Windows:**
-```cmd
-win_start_site.bat
-```
-
-or
-
-**Linux:**
-```cmd
-lin_start_site.sh
-```
+## Using the Demo
+Use a web browser to navigate to website location mentioned in the "Front-end: Website" window. 
 
 The database has one default account to get you started.
 
@@ -282,30 +260,31 @@ Run pytest from the root of the project.
 
 You can test for coverage using:
 ```text
-python -m uv run pytest
+uv run pytest
 ```
 
 ### Linter and Format
 
 ```commandline
-python -m uv run ruff check .
-python -m uv run ruff format .
+uv run ruff check .
+uv run ruff format .
 ```
 
 ```text
 npx --prefix .github/linters/ prettier --write "**/*.{yaml,yml}" --config .github/linters/.prettierrc --ignore-path .github/linters/.prettierignore
 ```
 
-### Update Requirements / Sync Enviroment
+### Update Requirements / Sync Environment
 
 ```commandline
-python -m uv lock --upgrade && python -m uv sync
+uv lock --upgrade
+uv sync
 ```
 
 ### Pre-commit
 
 ```commandline
-python -m uv run pre-commit run --all-files
+uv run pre-commit run --all-files
 ```
 
 ### JavaScript
