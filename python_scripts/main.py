@@ -13,6 +13,7 @@ Before the first run of the code.
     OR have aiosmtpd running by using: python -m aiosmtpd -n -l localhost:1025
 
 """
+
 import os
 import random
 
@@ -198,10 +199,7 @@ def add_user_account(admin_name: str, auth_password: str, username: str, new_use
     """
 
     if db_controller.is_admin(admin_name) and is_authenticated(admin_name, auth_password):
-        print(
-            f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin"
-            f"\nAttempting to add account..."
-        )
+        print(f"The requesting account, {Fore.CYAN}{admin_name}{Fore.RESET}, IS an admin\nAttempting to add account...")
 
         if db_controller.user_exists(username) is False:
             if is_valid_username(username) is True:

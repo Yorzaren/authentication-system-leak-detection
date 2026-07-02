@@ -7,7 +7,6 @@ python -m aiosmtpd -n -l localhost:1025
 
 """
 
-
 import os  # Used to get the .env file
 import sys
 
@@ -65,9 +64,7 @@ try:
         print(f"{Fore.GREEN}SUCCESS: Connected to MySQL Server version {db_Info}{Style.RESET_ALL}")
 
 except mysql.connector.Error as err:
-    print(
-        f"{Fore.RED}FAILED: Make you have the .env setup and the database running.{Style.RESET_ALL}\n" f"Error: {err}"
-    )
+    print(f"{Fore.RED}FAILED: Make you have the .env setup and the database running.{Style.RESET_ALL}\nError: {err}")
     if err.errno == 2003:
         print("--> Check that the mysql service is running.")
     if err.errno == 1045:
@@ -105,7 +102,7 @@ def menu():
     has_added_predefined_users = False
 
     while loop_condition:
-        print(f"\n{Fore.LIGHTMAGENTA_EX}" f"|~~~~~~~~~~~~~~ MENU ~~~~~~~~~~~~~~|")
+        print(f"\n{Fore.LIGHTMAGENTA_EX}|~~~~~~~~~~~~~~ MENU ~~~~~~~~~~~~~~|")
         print("\nPlease enter a number for what you want to do.\n")
         print("Enter 1 To Login.")
         print(f"Enter 2 {Fore.RED}[DEV]{Fore.LIGHTMAGENTA_EX} - Dump TABLE.")
