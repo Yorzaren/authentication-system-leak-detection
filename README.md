@@ -65,9 +65,18 @@ Get UV from https://docs.astral.sh/uv/getting-started/installation/
 wget -qO- https://astral.sh/uv/install.sh | sh
 ```
 
+Optional:
+
+Because there's a bug with MySQL installation, you may also use MariaDB instead.
+If you do, replace mysql command with mariadb.
+
+```cmd
+apt install mariadb-server
+```
+
 Note: You can quickly set the MariaDB root password using in the MariaDB console:
 ```cmd
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'; flush privileges; exit;
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password'; flush privileges; exit; 
 ```
 
 
