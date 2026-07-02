@@ -49,15 +49,14 @@ This repository is a part of Senior Project where teams are assigned a real worl
 ## Installation
 The project is intended Linux based systems.
 
-### Linux - Install Git, MySQL, and UV
+### Linux - Install Git, Gnome-Terminal, MySQL, and UV
 These instructions are for Ubuntu 22.04.2 LTS but might work for other versions.
 
 You should already have Python 3.
 
 If you don't already have these, install them now:
 ```cmd
-sudo apt install git mysql-server -y
-sudo systemctl start mysql
+sudo apt install git gnome-terminal mysql-server -y
 ```
 
 Get UV from <https://docs.astral.sh/uv/getting-started/installation/>
