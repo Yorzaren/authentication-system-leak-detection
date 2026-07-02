@@ -60,8 +60,9 @@ sudo apt install git mysql-server -y
 sudo systemctl start mysql
 ```
 
+Get UV from https://docs.astral.sh/uv/getting-started/installation/
 ```cmd
-curl -LsSf https://astral.sh/uv/install.sh | sh
+wget -qO- https://astral.sh/uv/install.sh | sh
 ```
 
 Note: You can quickly set the MariaDB root password using in the MariaDB console:
