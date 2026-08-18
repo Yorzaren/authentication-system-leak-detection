@@ -19,7 +19,7 @@ nostril = { url = "https://github.com/casics/nostril/archive/fbc0c91249283a9fbc9
 
 [dependency-groups]
 dev = [
-    "pre-commit>=4.6.1",
+    "pre-commit>=4.6.2",
     "pytest==9.1.1",
     "pytest-cov==7.1.0",
     "pytest-html==4.2.0",
