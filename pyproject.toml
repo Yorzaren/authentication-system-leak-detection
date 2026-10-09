@@ -11,7 +11,7 @@ dependencies = [
     "mysql-connector-python==26.7.0",
     "nltk==3.10.3",
     "nostril",
-    "python-dotenv==1.2.3",
+    "python-dotenv==1.2.4",
 ]
 
 [tool.uv.sources]
@@ -24,8 +24,8 @@ dev = [
     "pytest-cov==7.1.0",
     "pytest-html==4.2.0",
     "pytest-order==1.5.0",
-    "ruff==0.16.9",
-    "uv==0.12.20",
+    "ruff==0.16.10",
+    "uv==0.12.22",
 ]
 
 # --- RUFF CONFIGURATION ---
