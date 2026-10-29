@@ -9,7 +9,7 @@ dependencies = [
     "flask-login==0.6.3",
     "mailslurp-client==17.5.0",
     "mysql-connector-python==26.7.0",
-    "nltk==3.10.3",
+    "nltk==3.10.4",
     "nostril",
     "python-dotenv==1.2.4",
 ]
@@ -24,8 +24,8 @@ dev = [
     "pytest-cov==7.1.0",
     "pytest-html==4.2.0",
     "pytest-order==1.5.0",
-    "ruff==0.17.0",
-    "uv==0.13.1",
+    "ruff==0.17.1",
+    "uv==0.13.5",
 ]
 
 # --- RUFF CONFIGURATION ---
